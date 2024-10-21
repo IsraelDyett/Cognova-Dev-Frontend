@@ -1,0 +1,17 @@
+enum BillingCycle {
+    MONTHLY
+    YEARLY
+    ONCE
+}
+
+enum PaymentStatus {
+    SUCCESS
+    FAILED
+    PENDING
+}
+
+enum PaymentMethodStatus {
+    UNACTIVE
+    ACTIVE
+    FUTURE
+}

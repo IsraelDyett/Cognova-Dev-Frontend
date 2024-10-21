@@ -1,0 +1,125 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("POSTGRES_PRISMA_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+model Organization {
+  id           String             @id @default(uuid())
+  name         String
+  planId       String
+  pan          Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
+  ownerId      String
+  owner        User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  sources      Source[]
+  vectors      Vector[]
+  users        OrganizationUser[]
+  subscription Subscription?
+  payments     Payment[]
+  bots         Bot[]
+
+  @@map("organizations")
+}
+
+model OrganizationUser {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("organization_users")
+}
+
+model LLModel {
+  id          String   @id @default(uuid())
+  name        String
+  slugName    String   @unique
+  planId      String
+  pan         Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Bot         Bot[]
+
+  @@map("llm_models")
+}
+
+model Source {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  techniqueId    String?
+  technique      Technique?   @relation(fields: [techniqueId], references: [id], onDelete: SetNull)
+  title          String
+  url            String
+  status         String       @db.Text
+  summary        String       @db.Text
+  contentType    String
+  contentLength  Int
+  contentHash    String
+  syncTime       Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  syncs          Sync[]
+  vectors        Vector[]
+  bots           BotSources[]
+
+  @@map("sources")
+}
+
+model Sync {
+  id          String    @id @default(uuid())
+  sourceId    String
+  source      Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  message     String?
+  status      String
+  startedAt   DateTime?
+  succeedAt   DateTime?
+  errorAt     DateTime?
+  cancelledAt DateTime?
+
+  @@map("syncs")
+}
+
+model Technique {
+  id        String   @id @default(uuid())
+  name      String
+  slugName  String   @unique
+  planId    String?
+  pan       Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sources   Source[]
+
+  @@map("techniques")
+}
+
+model Vector {
+  id             String                       @id @default(uuid())
+  organizationId String
+  organization   Organization                 @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sourceId       String
+  source         Source                       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  embedding      Unsupported("vector(1024)")?
+  chunkContent   String                       @db.Text
+  metadata       Json
+  chunkLength    Int
+  createdAt      DateTime                     @default(now())
+  updatedAt      DateTime                     @updatedAt
+
+  @@map("vectors")
+}
+
+// EXAMPLE METADTA
+// {
+//   "category": "finance",
+//   "summary": "This document discusses market trends.",
+// }

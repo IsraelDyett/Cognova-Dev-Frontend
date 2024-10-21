@@ -1,0 +1,56 @@
+model Bot {
+    id                 String            @id @default(uuid())
+    organizationId     String
+    organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    name               String
+    description        String?           @db.Text
+    language           String?
+    systemMessage      String?           @db.Text
+    placeholderMessage String?           @db.Text
+    welcomeMessage     String?           @db.Text
+    starterQuestions   String[]
+    llmModelId         String
+    llmModel           LLModel           @relation(fields: [llmModelId], references: [id], onDelete: Cascade)
+    createdAt          DateTime          @default(now())
+    updatedAt          DateTime          @updatedAt
+    sources            BotSources[]
+    configurations     BotConfiguration?
+    conversations      Conversation[]
+
+    @@map("bots")
+}
+
+model BotConfiguration {
+    id                 String   @id @default(uuid())
+    botId              String   @unique
+    bot                Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+    avatarURL          String?  @db.Text
+    uAvatarURL         String?  @db.Text
+    aAvatarURL         String?
+    uMessageColor      String?
+    aMessageColor      String?
+    fontId             String
+    showSources        Boolean
+    sendButtonText     String?
+    customCSS          String?
+    embedAngle         String?
+    embedWidgetSize    String?
+    embedWidgetIconURL String?
+    embedAutoOpen      Boolean?
+    embedPingMessage   String?
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+
+    @@map("bot_configuration")
+}
+
+model BotSources {
+    id        String   @id @default(uuid())
+    botId     String
+    bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+    sourceId  String
+    source    Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+
+    @@map("bot_sources")
+}

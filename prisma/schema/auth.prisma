@@ -1,0 +1,61 @@
+model User {
+    id                 String             @id @default(uuid())
+    name               String?
+    email              String             @unique
+    password           String
+    roleId             String?
+    roles              Role?              @relation(fields: [roleId], references: [id], onDelete: SetNull)
+    emailVerified      Boolean            @default(false)
+    uplineId           String?
+    upline             User?              @relation("UserUpline", fields: [uplineId], references: [id], onDelete: SetNull)
+    downlines          User[]             @relation("UserUpline")
+    lastLoggedAt       DateTime?
+    createdAt          DateTime           @default(now())
+    updatedAt          DateTime           @updatedAt
+    sessions           Session[]
+    ownedOrganizations Organization[]
+    organizations      OrganizationUser[]
+
+    @@map("users")
+}
+
+model Session {
+    id           String   @id @default(uuid())
+    userId       String
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken  String
+    refreshToken String
+    ipAddress    String?
+    device       String?
+    os           String?
+    browser      String?
+    status       String
+    createdAt    DateTime @default(now())
+    expiresAt    DateTime
+
+    @@map("sessions")
+}
+
+model Role {
+    id          String       @id @default(uuid())
+    name        String
+    displayName String
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    Users       User[]
+    permissions  Permission[]
+
+    @@map("roles")
+}
+
+model Permission {
+    id          String   @id @default(uuid())
+    name        String
+    displayName String
+    role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    roleId      String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("permissions")
+}
