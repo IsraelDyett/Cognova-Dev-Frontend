@@ -4,10 +4,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-    const adminRole = await prisma.role.upsert({
-        where: { name: "admin" },
-        update: {},
-        create: {
+    const adminRole = await prisma.role.create({
+        data: {
             name: "admin",
             displayName: "Admin",
             permissions: {
