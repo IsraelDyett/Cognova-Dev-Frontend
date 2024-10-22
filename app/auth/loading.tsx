@@ -1,11 +1,11 @@
-// import { Card, CardContent } from '@/components/card'
-// import { Skeleton } from '@/components/skeleton'
+import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 
 export default function Loading() {
     return (
         <div className="flex flex-col items-center justify-center w-full">
-            {/* <Card className="w-full max-w-sm">
+            <Card className="w-full max-w-sm">
                 <CardContent className='!p-6'>
                     <div className="space-y-4">
                         <Skeleton className="w-2/5 h-8 rounded" />
@@ -25,7 +25,7 @@ export default function Loading() {
                         </div>
                     </div>
                 </CardContent>
-            </Card> */}
+            </Card>
         </div>
     )
 }

@@ -4,8 +4,8 @@ import { Metadata, Viewport } from "next";
 
 import { Providers } from "./providers";
 
-import { fontSans } from "@/config/fonts";
-import { siteConfig } from "@/config/site";
+import { fontSans } from "@/lib/fonts";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: {
@@ -35,16 +35,14 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <main className="container flex-grow px-6 pt-16 mx-auto max-w-7xl">
+          <main className="min-h-screen">
               {children}
-            </main>
-          </div>
+          </main>
         </Providers>
       </body>
     </html>

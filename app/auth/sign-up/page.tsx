@@ -9,10 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { signIn } from "next-auth/react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export function CardsCreateAccount() {
+export default function SignUpPage() {
   return (
     <Card>
       <CardHeader className="space-y-1">
@@ -27,7 +28,7 @@ export function CardsCreateAccount() {
             <SiGithub className="mr-2 h-4 w-4" />
             GitHub
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => signIn('google')}>
             <SiGoogle className="mr-2 h-4 w-4" />
             Google
           </Button>

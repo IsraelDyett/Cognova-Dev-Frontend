@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import { nextui } from '@nextui-org/theme'
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config: Config = {
@@ -7,7 +6,6 @@ const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
   	extend: {
@@ -45,6 +43,14 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
+			warning: {
+				DEFAULT: 'hsl(var(--warning))',
+				foreground: 'hsl(var(--warning-foreground))'
+			},
+			success: {
+				DEFAULT: 'hsl(var(--success))',
+				foreground: 'hsl(var(--success-foreground))'
+			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
@@ -64,8 +70,7 @@ const config: Config = {
   	}
   },
   plugins: [
-    require("tailwindcss-animate"), 
-    nextui()
+    require("tailwindcss-animate"),
   ]
 };
 export default config;

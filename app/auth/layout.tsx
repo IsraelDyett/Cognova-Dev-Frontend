@@ -1,4 +1,3 @@
-// import { Card } from '@/components/card'
 import React from 'react'
 
 export default function AuthLayout({
@@ -7,10 +6,10 @@ export default function AuthLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="flex flex-col items-center justify-center w-full">
-            {/* <Card className="w-full max-w-sm"> */}
+        <section className="flex min-h-screen flex-col items-center justify-center px-6 w-full">
+            <div className="mx-auto">
                 {children}
-            {/* </Card> */}
-        </div>
+            </div>
+        </section>
     )
 }
