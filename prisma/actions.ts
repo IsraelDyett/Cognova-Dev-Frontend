@@ -1,3 +1,3 @@
 "use server";
-import { prisma } from '@/services/prisma';
+import { prisma } from '@/lib/services/prisma';
 
