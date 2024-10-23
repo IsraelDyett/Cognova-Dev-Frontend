@@ -23,8 +23,7 @@ model Session {
     id           String   @id @default(uuid())
     userId       String
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    accessToken  String
-    refreshToken String
+    sessionToken  String
     ipAddress    String?
     device       String?
     os           String?

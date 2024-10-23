@@ -12,6 +12,7 @@ import {
 import { signIn } from "next-auth/react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import SignUpForm from "./form";
 
 export default function SignUpPage() {
   return (
@@ -43,18 +44,16 @@ export default function SignUpPage() {
             </span>
           </div>
         </div>
-        <div className="grid gap-2">
+        {/* <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
           <Input id="password" type="password" />
-        </div>
+        </div> */}
+        <SignUpForm/>
       </CardContent>
-      <CardFooter>
-        <Button className="w-full">Create account</Button>
-      </CardFooter>
     </Card>
   )
 }
