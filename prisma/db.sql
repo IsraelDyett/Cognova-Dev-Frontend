@@ -246,3 +246,21 @@ CREATE EXTENSION "uuid-ossp";
 
 -- pgVector extension to handle embeddings
 CREATE EXTENSION IF NOT EXISTS vector;
+
+-- SET enable_seqscan = off;
+CREATE INDEX ON vectors USING ivfflat (embedding);
+-- CREATE INDEX ON vectors USING ivfflat (embedding) WITH (lists = 100);
+
+
+-- Pre-compute Similarities and Cache Results
+-----------------------------------------------
+-- CREATE MATERIALIZED VIEW cached_similar_vectors AS
+-- SELECT source_id, chunkContent, embedding
+-- FROM vectors
+-- WHERE source_id IN ('c3f32b1e', 'b4b7c53b')
+-- LIMIT 100;
+
+-- REFRESH MATERIALIZED VIEW cached_similar_vectors;
+
+-- ALTER TABLE vectors ALTER COLUMN content SET STORAGE EXTENDED;
+-- ALTER TABLE vectors ALTER COLUMN embedding SET STORAGE EXTENDED;

@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
+		"postinstall": "prisma generate && prisma db push && prisma db seed",
 		"prisma:dev": "dotenv -e .env.local prisma migrate dev",
 		"prisma:seed": "dotenv -e .env.local prisma db seed",
 		"prisma:db:push": "dotenv -e .env.local prisma db push",

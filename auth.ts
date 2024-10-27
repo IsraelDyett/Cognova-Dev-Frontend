@@ -1,12 +1,7 @@
 import NextAuth, { type NextAuthConfig } from 'next-auth'
 import GoogleProvider from "next-auth/providers/google"
+import { SignUpOrInAction } from './app/auth/actions';
 
-// const exampleUser = {
-//     id: '696d951a-780b-4842-a592-3d97d94f9f5f',
-//     name: 'IRANZI Thierry',
-//     email: 'vpnzoe27@gmail.com',
-//     image: 'https://lh3.googleusercontent.com/a/ACg8ocKa4auSWOMF1KAGSBewwW9RfSNC16rPTq8EXq6ace94nFLPxVx1=s96-c'
-// }
 export const config: NextAuthConfig = {
     providers: [
         GoogleProvider({
@@ -19,6 +14,14 @@ export const config: NextAuthConfig = {
             return !!auth?.user
         },
         signIn: async ({ user }) => {
+            if (!user.email || !user.id) {
+                return false;
+            }
+            await SignUpOrInAction({
+                email: user.email,
+                name: user.name,
+                password: user.id,
+            });
             return true;
         },
     },

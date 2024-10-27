@@ -3,6 +3,7 @@ model User {
     name               String?
     email              String             @unique
     password           String
+    image              String?
     roleId             String?
     roles              Role?              @relation(fields: [roleId], references: [id], onDelete: SetNull)
     emailVerified      Boolean            @default(false)

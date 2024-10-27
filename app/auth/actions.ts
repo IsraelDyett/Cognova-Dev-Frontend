@@ -1,9 +1,10 @@
 "use server";
-import { z } from "zod";
 import ms from 'ms';
+import { z } from "zod";
 import { User } from "@prisma/client";
 import { exclude } from "@/lib/utils";
 import { headers } from "next/headers";
+import { prisma } from "@/lib/services/prisma";
 import { signInSchema, signUpSchema } from "@/lib/zod";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { comparePassword, hashPassword } from "@/utils/transactions";
@@ -22,13 +23,9 @@ export async function signInAction(data: z.infer<typeof signInSchema>) {
     if (!matched) {
         return { success: false, message: 'INVALID_PASSWORD' };
     }
-    try {
-        const sessionToken = await createSession(user);
-        return { success: true, message: 'USER_SIGNED_IN', user: exclude(user, 'password'), data: sessionToken };
-    } catch (error) {
-        return { success: false, message: 'SESSION_CREATION_FAILED' };
-    }
+    return await returnSession("USER_SIGNED_IN", user);
 }
+
 
 export async function signUpAction(data: z.infer<typeof signUpSchema>) {
     const existingUser = await prisma?.user.findUnique({
@@ -45,15 +42,38 @@ export async function signUpAction(data: z.infer<typeof signUpSchema>) {
     const user = await prisma?.user.create({
         data: cleanData,
     });
+    return await returnSession("USER_SIGNED_UP", user);
+}
 
+export async function SignUpOrInAction(data: z.infer<typeof signUpSchema> & { id?: string}) {
+    const existingUser = await prisma?.user.findUnique({
+        where: {
+            email: data.email,
+        },
+    });
+    if (existingUser) {
+        const { matched } = await comparePassword(data.password, existingUser.password)
+        if (!matched) {
+            return { success: false, message: 'INVALID_PASSWORD' };
+        }
+        return await returnSession("USER_SIGNED_UP", existingUser);
+    } else {
+        const cleanData = await hashPassword(data);
+        const user = await prisma?.user.create({
+            data: cleanData,
+        });
+        return await returnSession("USER_SIGNED_UP", user);
+    }
+}
+
+const returnSession = async(action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: User) => {
     try {
-        const sessionToken = await createSession(user as User);
-        return { success: true, message: 'USER_SIGNED_UP', user: exclude(user, 'password') as User, data: sessionToken };
+        const sessionToken = await createSession(user);
+        return { success: true, message: action, user: exclude(user, 'password') as User, data: sessionToken };
     } catch (error) {
         return { success: false, message: 'SESSION_CREATION_FAILED' };
     }
 }
-
 async function createSession(user: User) {
     const headersList = headers();
     const agent = userAgent({ headers: headersList });
@@ -150,7 +170,7 @@ async function validateSession(request: NextRequest) {
             action: "REDIRECT_TO_LOGIN",
         };
     }
-} 
+}
 export const hashToken = async (token: string) => {
     const encoder = new TextEncoder();
 
