@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const userSchema = z.object({
+export const UserSchema = z.object({
     id: z.string().uuid(),
     name: z.string().nullable(),
     email: z.string().email(),
@@ -13,7 +13,7 @@ export const userSchema = z.object({
     updatedAt: z.date()
 });
 
-export const sessionSchema = z.object({
+export const SessionSchema = z.object({
     id: z.string().uuid(),
     userId: z.string().uuid(),
     accessToken: z.string(),
@@ -27,7 +27,7 @@ export const sessionSchema = z.object({
     expiresAt: z.date()
 });
 
-export const roleSchema = z.object({
+export const RoleSchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
     displayName: z.string(),
@@ -35,7 +35,7 @@ export const roleSchema = z.object({
     updatedAt: z.date()
 });
 
-export const permissionSchema = z.object({
+export const PermissionSchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
     displayName: z.string(),
@@ -44,14 +44,27 @@ export const permissionSchema = z.object({
     updatedAt: z.date()
 });
 
-export const signUpSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    name: z.string().min(2).nullable().optional(),
-    uplineId: z.string().uuid().nullable().optional()
+export const SignUpSchema = z.object({
+    email: z
+        .string()
+        .email(),
+    password: z
+        .string()
+        .min(6, "Password must be at least 6 characters long")
+        .max(32, 'Password must be a maximun 32 characters'),
+    name: z
+        .string()
+        .min(2)
+        .nullable()
+        .optional(),
+    uplineId: z
+        .string()
+        .uuid()
+        .nullable()
+        .optional()
 });
 
-export const signInSchema = z.object({
+export const SignInSchema = z.object({
     email: z.string().email(),
     password: z.string().min(6)
 });

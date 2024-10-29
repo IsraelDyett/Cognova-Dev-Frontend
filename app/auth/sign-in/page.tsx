@@ -13,13 +13,13 @@ import {
 import { signIn } from "next-auth/react"
 import SignUpForm from "./form";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-xl">Create an account</CardTitle>
+        <CardTitle className="text-xl">Sign in to Cognova AI</CardTitle>
         <CardDescription>
-          Enter your email below to create your account
+        Welcome back! Please sign in to continue
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

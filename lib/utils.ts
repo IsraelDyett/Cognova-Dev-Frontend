@@ -12,3 +12,6 @@ export function exclude(data: any, ...keys: string[]): typeof data {
 
   return data;
 }
+export async function delay(ms: number) {
+  return await new Promise(resolve => setTimeout(resolve, ms));
+}

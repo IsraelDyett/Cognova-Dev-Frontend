@@ -3,13 +3,13 @@ import ms from 'ms';
 import { z } from "zod";
 import { User } from "@prisma/client";
 import { exclude } from "@/lib/utils";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { prisma } from "@/lib/services/prisma";
-import { signInSchema, signUpSchema } from "@/lib/zod";
+import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { comparePassword, hashPassword } from "@/utils/transactions";
 
-export async function signInAction(data: z.infer<typeof signInSchema>) {
+export async function signInAction(data: z.infer<typeof SignInSchema>) {
     const user = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -23,11 +23,11 @@ export async function signInAction(data: z.infer<typeof signInSchema>) {
     if (!matched) {
         return { success: false, message: 'INVALID_PASSWORD' };
     }
-    return await returnSession("USER_SIGNED_IN", user);
+    return await authenticate("USER_SIGNED_IN", user);
 }
 
 
-export async function signUpAction(data: z.infer<typeof signUpSchema>) {
+export async function signUpAction(data: z.infer<typeof SignUpSchema>) {
     const existingUser = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -42,10 +42,10 @@ export async function signUpAction(data: z.infer<typeof signUpSchema>) {
     const user = await prisma?.user.create({
         data: cleanData,
     });
-    return await returnSession("USER_SIGNED_UP", user);
+    return await authenticate("USER_SIGNED_UP", user);
 }
 
-export async function SignUpOrInAction(data: z.infer<typeof signUpSchema> & { id?: string}) {
+export async function SignUpOrInAction(data: z.infer<typeof SignUpSchema> & { id?: string }) {
     const existingUser = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -56,24 +56,32 @@ export async function SignUpOrInAction(data: z.infer<typeof signUpSchema> & { id
         if (!matched) {
             return { success: false, message: 'INVALID_PASSWORD' };
         }
-        return await returnSession("USER_SIGNED_UP", existingUser);
+        return await authenticate("USER_SIGNED_UP", existingUser);
     } else {
         const cleanData = await hashPassword(data);
         const user = await prisma?.user.create({
             data: cleanData,
         });
-        return await returnSession("USER_SIGNED_UP", user);
+        return await authenticate("USER_SIGNED_UP", user);
     }
 }
 
-const returnSession = async(action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: User) => {
+const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: User) => {
     try {
         const sessionToken = await createSession(user);
+        cookies().set("auth.session.token", sessionToken.sessionToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            sameSite: 'lax',
+            expires: sessionToken.expiresAt,
+        });
         return { success: true, message: action, user: exclude(user, 'password') as User, data: sessionToken };
     } catch (error) {
         return { success: false, message: 'SESSION_CREATION_FAILED' };
     }
 }
+
 async function createSession(user: User) {
     const headersList = headers();
     const agent = userAgent({ headers: headersList });
@@ -110,14 +118,14 @@ async function createSession(user: User) {
                 os: agent.os.name,
                 browser: agent.browser.name,
                 status: 'ACTIVE',
-                expiresAt: new Date(Date.now() + (ms(process.env.SESSION_EXPIRATION ?? '5d') * 1.2)),
+                expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d')),
             },
         });
     });
 
     return {
         sessionToken,
-        expiresAt: new Date(Date.now() + (ms(process.env.SESSION_EXPIRATION ?? '5d') * 1.2)),
+        expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d')),
     };
 }
 
@@ -150,7 +158,7 @@ async function validateSession(request: NextRequest) {
                     id: foundSession?.id,
                 },
                 data: {
-                    expiresAt: new Date(Date.now() + ms('5d'))
+                    expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d'))
                 }
             });
             return "UPDATED";

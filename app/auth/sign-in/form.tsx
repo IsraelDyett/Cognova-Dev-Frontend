@@ -15,17 +15,17 @@ import {
 } from "@/components/ui/form";
 import Link from 'next/link';
 import { getMessage } from '@/lib/lang';
-import { SignUpSchema } from '@/lib/zod';
-import { signUpAction } from '../actions';
+import { SignInSchema } from '@/lib/zod';
+import { signInAction } from '../actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRightIcon } from 'lucide-react';
 
-export default function SignUpForm() {
+export default function SignInForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const form = useForm<z.infer<typeof SignUpSchema>>({
-        resolver: zodResolver(SignUpSchema),
+    const form = useForm<z.infer<typeof SignInSchema>>({
+        resolver: zodResolver(SignInSchema),
         defaultValues: {
             email: '',
             password: '',
@@ -33,8 +33,8 @@ export default function SignUpForm() {
     })
     
     const submitButtonRef = useRef<HTMLButtonElement>(null);
-    const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
-        const result = await signUpAction(data);
+    const onSubmit = async (data: z.infer<typeof SignInSchema>) => {
+        const result = await signInAction(data);
         if (result.success) {
             toast.success(getMessage(result.message));
             router.push(searchParams.get('back') ?? '/')
@@ -82,13 +82,13 @@ export default function SignUpForm() {
                 />
                 <div className='mt-4'>
                     <FormAction disabled ref={submitButtonRef} className='[&>div>svg]:!size-5' variant="expandIcon" Icon={ArrowRightIcon} iconPlacement="right">
-                        Create account
+                        Sign In
                     </FormAction>
                 </div>
                 <p className="text-end text-sm mt-2">
-                    Already have an account?{' '}
-                    <Link href={`/auth/sign-in?back=${searchParams.get('back') ?? '/'}`} className="font-semibold">
-                        Sign in
+                    Don&apos;t have an account?{' '}
+                    <Link href={`/auth/sign-up?back=${searchParams.get('back') ?? '/'}`} className="font-semibold">
+                        Sign up
                     </Link>
                 </p>
             </form>

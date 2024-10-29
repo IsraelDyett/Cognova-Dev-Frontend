@@ -15,39 +15,37 @@ import {
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { IoIosAlert} from "react-icons/io"
 
 const Form = FormProvider
 
 function IconSpinner({ className, ...props }: React.ComponentProps<'svg'>) {
-    return (
-      // <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" className={cn('size-4 animate-spin', className)} {...props}>
-      //   <path d="M232 128a104 104 0 0 1-208 0c0-41 23.81-78.36 60.66-95.27a8 8 0 0 1 6.68 14.54C60.15 61.59 40 93.27 40 128a88 88 0 0 0 176 0c0-34.73-20.15-66.41-51.34-80.73a8 8 0 0 1 6.68-14.54C208.19 49.64 232 87 232 128Z" />
-      // </svg>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className={cn('size-4 animate-spin text-white', className)}
-        {...props}
-      >
-        <circle
-          strokeWidth={4}
-          stroke="currentColor"
-          r="10"
-          cy="12"
-          cx="12"
-          className="opacity-25"
-        />
-        <path
-          d="M4 12a8 8 0 018-8v8H4z"
-          fill="currentColor"
-          className="opacity-75"
-        />
-</svg>
-    );
-  }
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('size-4 animate-spin text-white', className)}
+      {...props}
+    >
+      <circle
+        strokeWidth={4}
+        stroke="currentColor"
+        r="10"
+        cy="12"
+        cx="12"
+        className="opacity-25"
+      />
+      <path
+        d="M4 12a8 8 0 018-8v8H4z"
+        fill="currentColor"
+        className="opacity-75"
+      />
+    </svg>
+  );
+}
 
-  
+
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -126,7 +124,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn(className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -147,6 +145,7 @@ const FormControl = React.forwardRef<
       id={formItemId}
       // @ts-ignore
       disabled={isSubmitting}
+      invalid={!!error}
       aria-describedby={
         !error
           ? `${formDescriptionId}`
@@ -194,6 +193,7 @@ const FormMessage = React.forwardRef<
       className={cn("text-[0.8rem] font-medium text-destructive", className)}
       {...props}
     >
+      <IoIosAlert className="size-4 inline-block mr-1" />
       {body}
     </p>
   )
@@ -202,8 +202,8 @@ FormMessage.displayName = "FormMessage"
 
 const FormAction = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentPropsWithoutRef<typeof Button> & { onPending?: string }
->(({ className, children, onPending, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Button>
+>(({ className, children, variant, ...props }, ref) => {
   const { formState } = useFormContext()
   const { isSubmitting } = formState
 
@@ -213,10 +213,15 @@ const FormAction = React.forwardRef<
       className={cn("mt-4 w-full", className)}
       disabled={isSubmitting}
       type="submit"
+      variant={variant === "expandIcon" && isSubmitting ? undefined : variant}
       {...props}
     >
-      {isSubmitting && <IconSpinner className="mr-2 h-4 w-4 animate-spin" />}
-      {isSubmitting ? (onPending || children) : children}
+      {children}
+      {isSubmitting && (
+        <div className="w-0 translate-x-[100%] transition-all duration-200 pl-2 opacity-100">
+          <IconSpinner className="animate-spin size-6" />
+        </div>
+      )}
     </Button>
   )
 })
