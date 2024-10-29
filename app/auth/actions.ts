@@ -8,6 +8,7 @@ import { prisma } from "@/lib/services/prisma";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { comparePassword, hashPassword } from "@/utils/transactions";
+import { redirect } from 'next/navigation';
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
     const user = await prisma?.user.findUnique({
@@ -129,54 +130,98 @@ async function createSession(user: User) {
     };
 }
 
-async function validateSession(request: NextRequest) {
+export async function validateSession(request: NextRequest) {
     const response = NextResponse.next();
-    const sessionToken = request.cookies.get("session.token")?.value;
+    const sessionToken = request.cookies.get("auth.session.token")?.value;
+
     if (!sessionToken) {
         return {
             data: response,
-            statusText: 'Unauthorized',
-            action: "REDIRECT_TO_LOGIN",
-        };
-    }
-    try {
-        const sessionFound = await prisma?.$transaction(async (tx) => {
-            const foundSession = await tx.session.findFirst({
-                where: {
-                    AND: [
-                        { sessionToken },
-                        { status: 'ACTIVE' },
-                        { expiresAt: { gt: new Date() } }
-                    ]
-                },
-            });
-            if (!foundSession) {
-                return "SESSION_ALREADY_ACTIVE";
-            }
-            await tx.session.update({
-                where: {
-                    id: foundSession?.id,
-                },
-                data: {
-                    expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d'))
-                }
-            });
-            return "UPDATED";
-
-        });
-        if (sessionFound) {
-            return {
-                data: response,
-                statusText: 'OK',
-                action: "CONTINUE",
-            };
-        }
-    } catch (error) {
-        return {
             status: 401,
             statusText: 'Unauthorized',
             action: "REDIRECT_TO_LOGIN",
         };
+    }
+
+    try {
+        const session = await prisma?.$transaction(async (tx) => {
+            const foundSession = await tx.session.findFirst({
+                where: {
+                    AND: [
+                        { sessionToken },
+                        { status: 'ACTIVE' }
+                    ],
+                },
+                select: {
+                    id: true,
+                    user: true,
+                    expiresAt: true
+                }
+            });
+
+            if (!foundSession) return null;
+
+            // Update session expiration if needed
+            if (foundSession.expiresAt < new Date()) {
+                await tx.session.update({
+                    where: { id: foundSession.id },
+                    data: {
+                        expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d'))
+                    }
+                });
+            }
+
+            return foundSession;
+        });
+
+        if (!session) {
+            return {
+                data: response,
+                status: 401,
+                statusText: 'Unauthorized',
+                action: "REDIRECT_TO_LOGIN",
+            };
+        }
+
+        return {
+            data: session.user,
+            status: 200,
+            statusText: 'OK',
+            action: "CONTINUE",
+        };
+
+    } catch (error) {
+        return {
+            data: response,
+            status: 401,
+            statusText: 'Unauthorized',
+            action: "REDIRECT_TO_LOGIN",
+        };
+    }
+}
+
+export async function authUser() {
+    try {
+        const sessionToken = cookies().get("auth.session.token")?.value;
+        if (sessionToken) {
+            const user = await prisma?.session.findFirst({
+                where: {
+                    sessionToken,
+                },
+                include: {
+                    user: true,
+                },
+            });
+            if (user) {
+                return user.user;
+            }
+            throw new Error("Unauthorized", { cause: "INVALID_SESSION" });
+        }
+        throw new Error("Unauthorized", { cause: "NO_SESSION_TOKEN" });
+    } catch (error) {
+        console.error(error);
+        const er = error as Error;
+        customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
     }
 }
 export const hashToken = async (token: string) => {
@@ -187,4 +232,10 @@ export const hashToken = async (token: string) => {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
 
     return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+};
+const customRedirect =(url: string) => {
+    try { } catch (error) { }
+    finally {
+        redirect(url)
+    }
 };

@@ -1,17 +1,17 @@
-"use client"
-import { SiGithub } from "react-icons/si";
-import { FcGoogle } from "react-icons/fc";
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { signIn } from "next-auth/react"
 import SignUpForm from "./form";
+import { Metadata } from "next";
+import OauthButtons from "@/components/ui/oauth-buttons";
+
+export const metadata: Metadata = {
+  title: 'Sign Up',
+};
 
 export default function SignUpPage() {
   return (
@@ -23,16 +23,7 @@ export default function SignUpPage() {
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="grid grid-cols-2 gap-2">
-          <Button size={'sm'} className="text-muted-foreground text-sm" variant="outline">
-            <SiGithub className="mr-2 h-4 w-4 text-black" />
-            GitHub
-          </Button>
-          <Button size={'sm'} className="text-muted-foreground text-sm" variant="outline" onClick={() => signIn('google')}>
-            <FcGoogle className="mr-2 size-4" />
-            Google
-          </Button>
-        </div>
+        <OauthButtons />
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
@@ -43,7 +34,7 @@ export default function SignUpPage() {
             </span>
           </div>
         </div>
-        <SignUpForm/>
+        <SignUpForm />
       </CardContent>
     </Card>
   )
