@@ -13,9 +13,10 @@ import {
 } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
+import { IoIosAlert } from "react-icons/io"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { IoIosAlert} from "react-icons/io"
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Form = FormProvider
 
@@ -187,15 +188,25 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive", className)}
-      {...props}
-    >
-      <IoIosAlert className="size-4 inline-block mr-1" />
-      {body}
-    </p>
+
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 'auto' }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.1 }}
+      >
+        <p
+          ref={ref}
+          id={formMessageId}
+          className={cn("text-[0.8rem] font-medium text-destructive", className)}
+          {...props}
+        >
+          <IoIosAlert className="size-4 inline-block mr-1" />
+          {body}
+        </p>
+      </motion.div>
+    </AnimatePresence>
   )
 })
 FormMessage.displayName = "FormMessage"
