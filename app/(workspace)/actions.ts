@@ -4,26 +4,26 @@ import { authUser } from "../auth/actions";
 import { prisma } from "@/lib/services/prisma";
 import { createBotSchema } from "@/lib/zod/schemas/bot";
 
-export const getOrganizations = async (userId: string) => {
-    const organizations = await prisma.organizationUser.findMany({
+export const getWorkspaces = async (userId: string) => {
+    const workspaces = await prisma.workspaceUser.findMany({
         where: {
             userId: userId,
         },
         select: {
-            organization: true,
+            workspace: true,
         }
     });
-    return organizations;
+    return workspaces;
 }
 export const getModels = async () => {
     const models = await prisma.model.findMany();
     return models;
 }
-export const getBots = async (orgSlug: string) => {
+export const getBots = async (workspaceSlug: string) => {
     const bots = await prisma.bot.findMany({
         where: {
-            organization: {
-                slugName: orgSlug
+            workspace: {
+                slugName: workspaceSlug
             },
         }
     })
@@ -35,40 +35,40 @@ export const createBot = async (data: z.infer<typeof createBotSchema>) => {
         data: {
             name: data.name,
             modelId: data.modelId,
-            organizationId: data.organizationId,
+            workspaceId: data.workspaceId,
         }
     })
     return {
         bot: bot,
         message: "Bot created successfully",
-        redirect: `/${data.organizationId}/bots/${bot.id}`
+        redirect: `/${data.workspaceId}/bots/${bot.id}`
     }
 }
-export const isUserInOrganization = async (userId: string, orgSlug: string) => {
-    const organizationUser = await prisma.organizationUser.findFirst({
+export const isUserInWorkspace = async (userId: string, workspaceSlug: string) => {
+    const workspaceUser = await prisma.workspaceUser.findFirst({
         where: {
             userId: userId,
-            organization: {
-                slugName: orgSlug
+            workspace: {
+                slugName: workspaceSlug
             }
         },
         select: {
-            organization: true,
+            workspace: true,
         }
     })
     return {
-        success: !!organizationUser,
-        organization: organizationUser?.organization
+        success: !!workspaceUser,
+        workspace: workspaceUser?.workspace
     };
 }
 export const getDefaultWorkspace = async (userId: string) => {
-    const organizationUser = await prisma.organizationUser.findFirst({
+    const workspaceUser = await prisma.workspaceUser.findFirst({
         where: {
             userId: userId,
         },
         select: {
-            organization: true,
+            workspace: true,
         }
     })
-    return organizationUser?.organization;
+    return workspaceUser?.workspace;
 }

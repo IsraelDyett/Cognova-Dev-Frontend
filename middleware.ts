@@ -1,36 +1,36 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { authUser, validateSession } from './app/auth/actions';
-import { notFound } from 'next/navigation';
-import { isUserInOrganization } from './app/(organization)/actions';
-
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+const publicPaths = ['/auth/sign-in', '/auth/sign-up', "/", "/favicon.ico"];
 export async function middleware(request: NextRequest) {
-    const session = await validateSession(request)
-    const { pathname } = request.nextUrl
-    if (session) {
-        const defaultWorkspace = await getDefaultWorkspace(session.user.id);
-        if (defaultWorkspace) {
-            try {
-                const organization = await isUserInOrganization(user?.id, orgSlug)
-                if (!organization.success) {
-                    notFound();
-                }
-
-            } catch (error) {
-                return NextResponse.redirect(new URL('/error', request.url));
-            }
-        }
-        else {
-            return NextResponse.redirect(new URL("/workspaces", req.url));
-        }
+    const { pathname } = request.nextUrl;
+    if (pathname.startsWith('/_next') || publicPaths.includes(pathname)) {
+        return NextResponse.next();
     }
 
-    return NextResponse.next()
+    const match = pathname.match(/^\/([^/]+)/);
+    const sessionToken = request.cookies.get('auth.session.token')?.value;
+    if (match && request.method == "GET" && sessionToken) {
+        const workspaceSlug = match[1];
+        try {
+            const workspaceResponse = await fetch(
+                `${request.nextUrl.origin}/api/workspace?slug=${workspaceSlug}&sessionToken=${sessionToken}`,
+            );
+            const workspaceData: { success: boolean, redirect: string } = await workspaceResponse.json();
+            if (workspaceData.redirect !== `/${workspaceSlug}`) {
+                return NextResponse.redirect(new URL(workspaceData.redirect, request.url));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        return NextResponse.next();
+    }
+
+    return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|.*\\.png$).*)',
-        '/:org_slug/:path*'
-    ]
-}
+        '/((?!api|favicon.ico|_next/static|_next/image|.*\\.png$).*)',
+        '/:workspace_slug/:path*'
+    ],
+};

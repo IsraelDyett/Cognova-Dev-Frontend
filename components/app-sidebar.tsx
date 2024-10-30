@@ -20,10 +20,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useAuth } from "@/app/(organization)/auth-context"
-import { getBots } from "@/app/(organization)/actions"
-import { Bot } from "@prisma/client"
-import { getOrgSlug } from "@/lib/utils"
+import { useAuth } from "@/app/(workspace)/auth-context"
+import { getBots } from "@/app/(workspace)/actions"
+import { getCurrentWorkspace } from "@/lib/utils"
 
 const data = {
   teams: [
@@ -34,12 +33,6 @@ const data = {
     },
   ],
   navMain: [
-    {
-      title: "Overview",
-      url: `/${getOrgSlug()}/`,
-      icon: Stars,
-      isActive: true
-    },
     {
       title: "Playground",
       url: "#",
@@ -73,7 +66,7 @@ const data = {
           url: "#",
         },
         {
-          title: "Organization",
+          title: "Workspace",
           url: "#",
         },
       ],
@@ -84,17 +77,32 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuth()
   const [bots, setBots] = React.useState<{ name: string, url: string, icon: any }[]>([])
+  const [navMain, setNavMain] = React.useState<any[]>(data.navMain)
+  const alreadyMounted = React.useRef(false)
   React.useEffect(() => {
-    const orgSlug = getOrgSlug()
-    getBots(orgSlug).then((bots) => {
-      setBots(bots.map((bot) => {
-        return {
-          name: bot.name,
-          url: `/${orgSlug}/bots/${bot.id}`,
-          icon: BotIcon,
-        }
-      }))
-    })
+    if (!alreadyMounted.current) {
+      const currentWorkspace = getCurrentWorkspace()
+      getBots(currentWorkspace).then((bots) => {
+        setBots(bots.map((bot) => {
+          return {
+            name: bot.name,
+            url: `/${currentWorkspace}/bots/${bot.id}`,
+            icon: BotIcon,
+          }
+        }))
+      })
+      setNavMain((c) => {
+        return [
+          {
+            title: "Overview",
+            url: `/${currentWorkspace}/`,
+            icon: Stars,
+            isActive: true
+          },
+          ...c]
+      })
+      alreadyMounted.current = true
+    }
   }, [])
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -102,7 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         <NavBots bots={bots} />
       </SidebarContent>
       <SidebarFooter>

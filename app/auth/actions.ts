@@ -3,12 +3,13 @@ import ms from 'ms';
 import { z } from "zod";
 import { User } from "@prisma/client";
 import { exclude } from "@/lib/utils";
+import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/services/prisma";
 import { cookies, headers } from "next/headers";
+import { NextRequest, userAgent } from "next/server";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
-import { NextRequest, NextResponse, userAgent } from "next/server";
 import { comparePassword, hashPassword } from "@/utils/transactions";
-import { redirect } from 'next/navigation';
+import { redis } from '@/lib/services/redis';
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
     const user = await prisma?.user.findUnique({
@@ -123,20 +124,35 @@ async function createSession(user: User) {
             },
         });
     });
-
+    redis.set(`user:${sessionToken}`, JSON.stringify(user), {
+        EX: ms(process.env.SESSION_EXPIRATION ?? '5d') / 1000,
+    });
     return {
         sessionToken,
         expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d')),
     };
 }
 
-export async function validateSession(request: NextRequest) {
-    const sessionToken = request.cookies.get("auth.session.token")?.value;
+export async function validateSession(defaultSessionToken?: string) {
+    let sessionToken = ""
+    if (defaultSessionToken) {
+        sessionToken = defaultSessionToken
+    } else {
+        sessionToken = cookies().get("auth.session.token")?.value ?? ""
+    }
+
+    const cachedUser = await redis.get(`user:${sessionToken}`);
+    if (cachedUser) {
+        console.log("User found in cache {VALIDATE_SESSION}");
+        return {
+            user: JSON.parse(cachedUser) as User
+        }
+    }
+
     try {
         if (!sessionToken) {
             throw new Error("Unauthorized", { cause: "NO_SESSION_TOKEN" });
         }
-
         const session = await prisma?.$transaction(async (tx) => {
             const foundSession = await tx.session.findFirst({
                 where: {
@@ -184,8 +200,8 @@ export async function validateSession(request: NextRequest) {
         };
 
     } catch (error) {
-        console.error(error);
         const er = error as Error;
+        console.error(er.cause);
         customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
     }
 }
@@ -194,6 +210,11 @@ export async function authUser() {
     try {
         const sessionToken = cookies().get("auth.session.token")?.value;
         if (sessionToken) {
+            const cachedUser = await redis.get(`user:${sessionToken}`);
+            if (cachedUser) {
+                console.log("User found in cache {AUTH_USER}");
+                return JSON.parse(cachedUser) as User
+            }
             const user = await prisma?.session.findFirst({
                 where: {
                     sessionToken,
@@ -210,8 +231,8 @@ export async function authUser() {
         throw new Error("Unauthorized", { cause: "NO_SESSION_TOKEN" });
 
     } catch (error) {
-        console.error(error);
         const er = error as Error;
+        console.error(er.cause);
         customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
     }
 }

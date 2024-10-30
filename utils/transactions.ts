@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 async function hashPassword<T extends { password: string }>(data: T): Promise<T> {
     if (data.password) {
         data.password = await bcrypt.hash(data.password, parseInt(`${process.env.SALT_ROUNDS}`, 10));

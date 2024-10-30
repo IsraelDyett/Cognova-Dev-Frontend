@@ -11,7 +11,7 @@ CREATE TABLE "conversations" (
 
 CREATE TABLE "bots"(
     "id" BIGINT NOT NULL,
-    "organizationId" BIGINT NOT NULL,
+    "workspaceId" BIGINT NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "description" TEXT NOT NULL,
     "language" VARCHAR(255) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "vectors"(
 
 CREATE TABLE "users"(
     "id" UUID NOT NULL,
-    "organizationId" BIGINT NOT NULL,
+    "workspaceId" BIGINT NOT NULL,
     "name" VARCHAR(255) NULL,
     "email" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE "bot_customizations"(
     "createdAt" TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NOW() NOT NULL
 );
 
-CREATE TABLE "organizations"(
+CREATE TABLE "workspaces"(
     "id" BIGINT NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "planId" BIGINT NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE "roles"(
 );
 CREATE TABLE "sources"(
     "id" BIGINT NOT NULL,
-    "organizationId" BIGINT NOT NULL,
+    "workspaceId" BIGINT NOT NULL,
     "techniqueId" BIGINT NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "url" VARCHAR(255) NOT NULL,
@@ -194,7 +194,7 @@ CREATE TABLE "plans"(
 
 CREATE TABLE "subscriptions"(
     "id" BIGINT NOT NULL,
-    "organizationId" BIGINT NOT NULL,
+    "workspaceId" BIGINT NOT NULL,
     "planId" BIGINT NOT NULL,
     "status" VARCHAR(255) NOT NULL,
     "startDate" DATE NOT NULL,
@@ -205,7 +205,7 @@ CREATE TABLE "subscriptions"(
 
 CREATE TABLE "payments"(
     "id" BIGINT NOT NULL,
-    "organizationId" BIGINT NOT NULL,
+    "workspaceId" BIGINT NOT NULL,
     "subscriptionId" BIGINT NOT NULL,
     "amount" FLOAT(53) NOT NULL,
     "paymentMethodId" BIGINT NOT NULL,

@@ -1,7 +1,7 @@
 model Bot {
     id                 String            @id @default(uuid())
-    organizationId     String
-    organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    workspaceId        String
+    workspace          Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     name               String
     description        String?           @db.Text
     language           String?

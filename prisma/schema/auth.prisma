@@ -14,8 +14,8 @@ model User {
     createdAt          DateTime           @default(now())
     updatedAt          DateTime           @updatedAt
     sessions           Session[]
-    ownedOrganizations Organization[]
-    organizations      OrganizationUser[]
+    ownedWorkspaces Workspace[]
+    workspaces      WorkspaceUser[]
 
     @@map("users")
 }

@@ -1,7 +1,7 @@
 model Subscription {
     id             String       @id @default(uuid())
-    organizationId String       @unique
-    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    workspaceId String       @unique
+    workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     planId         String?
     pan            Plan?        @relation(fields: [planId], references: [id], onDelete: SetNull)
     status         String
@@ -25,7 +25,7 @@ model Plan {
     features      PlanFeature[]
     models        Model[]
     techniques    Technique[]
-    organizations Organization[]
+    workspaces Workspace[]
 
     @@map("plans")
 }
@@ -44,8 +44,8 @@ model PlanFeature {
 
 model Payment {
     id              String         @id @default(uuid())
-    organizationId  String
-    organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    workspaceId  String
+    workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     subscriptionId  String
     subscription    Subscription   @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
     amount          Float

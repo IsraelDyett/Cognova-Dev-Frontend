@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const botBaseSchema = z.object({
     name: z.string(),
-    organizationId: z.string(),
+    workspaceId: z.string(),
     description: z.string().nullable().optional(),
     language: z.string().nullable().optional(),
     systemMessage: z.string().nullable().optional(),

@@ -28,10 +28,10 @@ export const validateEmail = (email: string) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
-export const getOrgSlug = () => {
+export const getCurrentWorkspace = () => {
   if (typeof window !== "undefined") {
-    const orgSlug = window.location.href.split('/')[3];
-    return orgSlug;
+    const workspace = window.location.href.split('/')[3];
+    return workspace;
   }
   return "";
 }

@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 type Bot = {
     id: string
     name: string
-    organization: string
+    workspace: string
     chats: number
     sources: number
     model: string
@@ -31,7 +31,7 @@ export default function BotCard({ bot }: { bot: Bot }) {
                     </Avatar>
                     <div>
                         <CardTitle>{bot.name}</CardTitle>
-                        <CardDescription>{bot.organization}</CardDescription>
+                        <CardDescription>{bot.workspace}</CardDescription>
                     </div>
                 </div>
             </CardHeader>

@@ -29,14 +29,14 @@ import { toast } from "sonner";
 import { Plus } from "lucide-react"
 import { useForm } from 'react-hook-form'
 import { useAuth } from "../auth-context";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Model, Organization } from "@prisma/client";
+import { Model, Workspace } from "@prisma/client";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createBotSchema } from "@/lib/zod/schemas/bot";
-import { createBot, getModels, getOrganizations } from "../actions";
+import { createBot, getModels, getWorkspaces } from "../actions";
 
 
 const defaultStarterQuestions = ["Hello, how can I help you today?"];
@@ -45,12 +45,12 @@ export function CreateBot() {
     const { user } = useAuth()
     const router = useRouter()
     const [models, setModels] = useState<Model[]>([])
-    const [organizations, setOrganizations] = useState<Organization[]>([])
+    const [workspaces, setWorkspaces] = useState<Workspace[]>([])
     const form = useForm<z.infer<typeof createBotSchema>>({
         resolver: zodResolver(createBotSchema),
         defaultValues: {
             name: '',
-            organizationId: '',
+            workspaceId: '',
             modelId: '',
             starterQuestions: defaultStarterQuestions,
         },
@@ -63,12 +63,16 @@ export function CreateBot() {
             router.push(createdBot.redirect)
         }
     }
+    const alreadyMounted = useRef(false)
     useEffect(() => {
-        Promise.all([
-            getModels().then(models => setModels(models)),
-            getOrganizations(user?.id as string)
-                .then(organizations => setOrganizations(organizations.map(org => org.organization))),
-        ])
+        if (!alreadyMounted.current) {
+            Promise.all([
+                getModels().then(models => setModels(models)),
+                getWorkspaces(user?.id as string)
+                    .then(workspaces => setWorkspaces(workspaces.map(org => org.workspace))),
+            ])
+        }
+        alreadyMounted.current = true
     }, [])
     return (
         <Dialog>
@@ -102,24 +106,24 @@ export function CreateBot() {
                         />
                         <FormField
                             control={form.control}
-                            name="organizationId"
+                            name="workspaceId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Organization</FormLabel>
+                                    <FormLabel>Workspace</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select organization" />
+                                                <SelectValue placeholder="Select workspace" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {organizations.map((organization) => (
-                                                <SelectItem key={organization.id} value={organization.id}>{organization.name}</SelectItem>
+                                            {workspaces.map((workspace) => (
+                                                <SelectItem key={workspace.id} value={workspace.id}>{workspace.name}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                     <FormDescription>
-                                        Select the organization the bot will be associated with.
+                                        Select the workspace the bot will be associated with.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>

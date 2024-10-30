@@ -37,7 +37,7 @@ export default function SignUpForm() {
         const result = await signUpAction(data);
         if (result.success) {
             toast.success(getMessage(result.message));
-            router.push(searchParams.get('back') ?? '/')
+            router.push(searchParams.get('redirect') ?? '/')
         } else {
             console.error(result.message)
             form.setError('email', {
@@ -87,7 +87,7 @@ export default function SignUpForm() {
                 </div>
                 <p className="text-end text-sm mt-2">
                     Already have an account?{' '}
-                    <Link href={`/auth/sign-in?back=${searchParams.get('back') ?? '/'}`} className="font-semibold">
+                    <Link href={`/auth/sign-in?redirect=${searchParams.get('redirect') ?? '/'}`} className="font-semibold">
                         Sign in
                     </Link>
                 </p>

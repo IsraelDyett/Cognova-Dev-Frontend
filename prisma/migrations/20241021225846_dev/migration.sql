@@ -69,7 +69,7 @@ CREATE TABLE "permissions" (
 -- CreateTable
 CREATE TABLE "bots" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "language" TEXT,
@@ -151,7 +151,7 @@ CREATE TABLE "conversations" (
 -- CreateTable
 CREATE TABLE "subscriptions" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "planId" TEXT,
     "status" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
@@ -189,7 +189,7 @@ CREATE TABLE "plan_features" (
 -- CreateTable
 CREATE TABLE "payments" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "subscriptionId" TEXT NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "paymentMethodId" TEXT,
@@ -227,7 +227,7 @@ CREATE TABLE "invoices" (
 );
 
 -- CreateTable
-CREATE TABLE "organizations" (
+CREATE TABLE "workspaces" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "planId" TEXT NOT NULL,
@@ -235,16 +235,16 @@ CREATE TABLE "organizations" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "organizations_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "workspaces_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "organization_users" (
+CREATE TABLE "workspace_users" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
-    CONSTRAINT "organization_users_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "workspace_users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -263,7 +263,7 @@ CREATE TABLE "llm_models" (
 -- CreateTable
 CREATE TABLE "sources" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "techniqueId" TEXT,
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
@@ -308,7 +308,7 @@ CREATE TABLE "techniques" (
 -- CreateTable
 CREATE TABLE "vectors" (
     "id" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
     "embedding" vector(1024),
     "chunkContent" TEXT NOT NULL,
@@ -327,7 +327,7 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "bot_configuration_botId_key" ON "bot_configuration"("botId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "subscriptions_organizationId_key" ON "subscriptions"("organizationId");
+CREATE UNIQUE INDEX "subscriptions_workspaceId_key" ON "subscriptions"("workspaceId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "plans_slugName_key" ON "plans"("slugName");
@@ -354,7 +354,7 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "permissions" ADD CONSTRAINT "permissions_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bots" ADD CONSTRAINT "bots_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bots" ADD CONSTRAINT "bots_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "bots" ADD CONSTRAINT "bots_llmModelId_fkey" FOREIGN KEY ("llmModelId") REFERENCES "llm_models"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -375,7 +375,7 @@ ALTER TABLE "chats" ADD CONSTRAINT "chats_conversationId_fkey" FOREIGN KEY ("con
 ALTER TABLE "conversations" ADD CONSTRAINT "conversations_botId_fkey" FOREIGN KEY ("botId") REFERENCES "bots"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -384,7 +384,7 @@ ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_planId_fkey" FOREIGN K
 ALTER TABLE "plan_features" ADD CONSTRAINT "plan_features_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "payments" ADD CONSTRAINT "payments_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_subscriptionId_fkey" FOREIGN KEY ("subscriptionId") REFERENCES "subscriptions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -396,22 +396,22 @@ ALTER TABLE "payments" ADD CONSTRAINT "payments_paymentMethodId_fkey" FOREIGN KE
 ALTER TABLE "invoices" ADD CONSTRAINT "invoices_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "payments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations" ADD CONSTRAINT "organizations_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "workspaces" ADD CONSTRAINT "workspaces_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations" ADD CONSTRAINT "organizations_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "workspaces" ADD CONSTRAINT "workspaces_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organization_users" ADD CONSTRAINT "organization_users_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "workspace_users" ADD CONSTRAINT "workspace_users_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organization_users" ADD CONSTRAINT "organization_users_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "workspace_users" ADD CONSTRAINT "workspace_users_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "llm_models" ADD CONSTRAINT "llm_models_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sources" ADD CONSTRAINT "sources_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "sources" ADD CONSTRAINT "sources_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sources" ADD CONSTRAINT "sources_techniqueId_fkey" FOREIGN KEY ("techniqueId") REFERENCES "techniques"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -423,7 +423,7 @@ ALTER TABLE "syncs" ADD CONSTRAINT "syncs_sourceId_fkey" FOREIGN KEY ("sourceId"
 ALTER TABLE "techniques" ADD CONSTRAINT "techniques_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "vectors" ADD CONSTRAINT "vectors_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "vectors" ADD CONSTRAINT "vectors_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "vectors" ADD CONSTRAINT "vectors_sourceId_fkey" FOREIGN KEY ("sourceId") REFERENCES "sources"("id") ON DELETE CASCADE ON UPDATE CASCADE;
