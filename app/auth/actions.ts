@@ -124,9 +124,11 @@ async function createSession(user: User) {
             },
         });
     });
-    redis.set(`user:${sessionToken}`, JSON.stringify(user), {
-        EX: ms(process.env.SESSION_EXPIRATION ?? '5d') / 1000,
-    });
+    if (process.env.USE_REDIS == "1") {
+        redis.set(`user:${sessionToken}`, JSON.stringify(user), {
+            EX: ms(process.env.SESSION_EXPIRATION ?? '5d') / 1000,
+        });
+    }
     return {
         sessionToken,
         expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d')),
@@ -141,11 +143,13 @@ export async function validateSession(defaultSessionToken?: string) {
         sessionToken = cookies().get("auth.session.token")?.value ?? ""
     }
 
-    const cachedUser = await redis.get(`user:${sessionToken}`);
-    if (cachedUser) {
-        console.log("User found in cache {VALIDATE_SESSION}");
-        return {
-            user: JSON.parse(cachedUser) as User
+    if (process.env.USE_REDIS == "1") {
+        const cachedUser = await redis.get(`user:${sessionToken}`);
+        if (cachedUser) {
+            console.log("User found in cache {VALIDATE_SESSION}");
+            return {
+                user: JSON.parse(cachedUser) as User
+            }
         }
     }
 
@@ -210,10 +214,12 @@ export async function authUser() {
     try {
         const sessionToken = cookies().get("auth.session.token")?.value;
         if (sessionToken) {
-            const cachedUser = await redis.get(`user:${sessionToken}`);
-            if (cachedUser) {
-                console.log("User found in cache {AUTH_USER}");
-                return JSON.parse(cachedUser) as User
+            if (process.env.USE_REDIS == "1") {
+                const cachedUser = await redis.get(`user:${sessionToken}`);
+                if (cachedUser) {
+                    console.log("User found in cache {AUTH_USER}");
+                    return JSON.parse(cachedUser) as User
+                }
             }
             const user = await prisma?.session.findFirst({
                 where: {

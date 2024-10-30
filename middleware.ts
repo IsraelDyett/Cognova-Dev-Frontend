@@ -14,6 +14,9 @@ export async function middleware(request: NextRequest) {
         try {
             const workspaceResponse = await fetch(
                 `${request.nextUrl.origin}/api/workspace?slug=${workspaceSlug}&sessionToken=${sessionToken}`,
+                {
+                    cache: 'force-cache'
+                }
             );
             const workspaceData: { success: boolean, redirect: string } = await workspaceResponse.json();
             if (workspaceData.redirect !== `/${workspaceSlug}`) {
