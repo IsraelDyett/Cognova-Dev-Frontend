@@ -1,17 +1,28 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { authUser, validateSession } from './app/auth/actions';
+import { notFound } from 'next/navigation';
+import { isUserInOrganization } from './app/(organization)/actions';
 
-export function middleware(request: NextRequest) {
-    const token = request.cookies.get('token')?.value
+export async function middleware(request: NextRequest) {
+    const session = await validateSession(request)
     const { pathname } = request.nextUrl
+    if (session) {
+        const defaultWorkspace = await getDefaultWorkspace(session.user.id);
+        if (defaultWorkspace) {
+            try {
+                const organization = await isUserInOrganization(user?.id, orgSlug)
+                if (!organization.success) {
+                    notFound();
+                }
 
-    // I have not set the auth so don't remove the `#` in the pathname
-    if (pathname.startsWith('#/dashboard') && !token) {
-        const redirectUrl = new URL('/auth/sign-in', request.url);
-        redirectUrl.searchParams.set('back', pathname);
-        redirectUrl.searchParams.set('error', 'SESSION_EXPIRED');
-        redirectUrl.searchParams.set('message', 'Please sign in to continue to the dashboard');
-        return NextResponse.redirect(redirectUrl);
+            } catch (error) {
+                return NextResponse.redirect(new URL('/error', request.url));
+            }
+        }
+        else {
+            return NextResponse.redirect(new URL("/workspaces", req.url));
+        }
     }
 
     return NextResponse.next()
@@ -20,6 +31,6 @@ export function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         '/((?!api|_next/static|_next/image|.*\\.png$).*)',
-        '/dashboard/:path*'
+        '/:org_slug/:path*'
     ]
 }

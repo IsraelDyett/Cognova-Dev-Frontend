@@ -1,16 +1,15 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { CreateBot } from '../_components/create-bot';
 
 export const revalidate = 10;
-export default async function OrganizationOverviewPage({ params }: { params: { uuid: number } }) {
-    const organization = {}
-    if (!organization) {
+export default async function BotPreviewPage({ params }: { params: { bot_uuid: number } }) {
+    const bot = {}
+    if (!bot) {
         notFound();
     }
     return (
         <div className='flex-1 h-full justify-center flex items-center'>
-              <CreateBot/>
+              <h2>BOT: {params.bot_uuid}</h2>
         </div>
     );
 }

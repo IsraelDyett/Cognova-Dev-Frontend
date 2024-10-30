@@ -12,6 +12,7 @@ datasource db {
 model Organization {
   id           String             @id @default(uuid())
   name         String
+  slugName     String             @unique
   planId       String
   pan          Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
   ownerId      String
@@ -38,7 +39,7 @@ model OrganizationUser {
   @@map("organization_users")
 }
 
-model LLModel {
+model Model {
   id          String   @id @default(uuid())
   name        String
   slugName    String   @unique
@@ -49,7 +50,7 @@ model LLModel {
   updatedAt   DateTime @updatedAt
   Bot         Bot[]
 
-  @@map("llm_models")
+  @@map("models")
 }
 
 model Source {

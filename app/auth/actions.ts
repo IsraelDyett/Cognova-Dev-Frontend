@@ -131,19 +131,12 @@ async function createSession(user: User) {
 }
 
 export async function validateSession(request: NextRequest) {
-    const response = NextResponse.next();
     const sessionToken = request.cookies.get("auth.session.token")?.value;
-
-    if (!sessionToken) {
-        return {
-            data: response,
-            status: 401,
-            statusText: 'Unauthorized',
-            action: "REDIRECT_TO_LOGIN",
-        };
-    }
-
     try {
+        if (!sessionToken) {
+            throw new Error("Unauthorized", { cause: "NO_SESSION_TOKEN" });
+        }
+
         const session = await prisma?.$transaction(async (tx) => {
             const foundSession = await tx.session.findFirst({
                 where: {
@@ -159,9 +152,10 @@ export async function validateSession(request: NextRequest) {
                 }
             });
 
-            if (!foundSession) return null;
+            if (!foundSession) {
+                return null;
+            };
 
-            // Update session expiration if needed
             if (foundSession.expiresAt < new Date()) {
                 await tx.session.update({
                     where: { id: foundSession.id },
@@ -169,34 +163,30 @@ export async function validateSession(request: NextRequest) {
                         expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d'))
                     }
                 });
+                cookies().set("auth.session.token", sessionToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    path: '/',
+                    sameSite: 'lax',
+                    expires: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? '5d')),
+                });
             }
 
             return foundSession;
         });
 
         if (!session) {
-            return {
-                data: response,
-                status: 401,
-                statusText: 'Unauthorized',
-                action: "REDIRECT_TO_LOGIN",
-            };
+            throw new Error("Unauthorized", { cause: "SESSION_NOT_FOUND" });
         }
 
         return {
-            data: session.user,
-            status: 200,
-            statusText: 'OK',
-            action: "CONTINUE",
+            user: session.user,
         };
 
     } catch (error) {
-        return {
-            data: response,
-            status: 401,
-            statusText: 'Unauthorized',
-            action: "REDIRECT_TO_LOGIN",
-        };
+        console.error(error);
+        const er = error as Error;
+        customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
     }
 }
 
@@ -218,6 +208,7 @@ export async function authUser() {
             throw new Error("Unauthorized", { cause: "INVALID_SESSION" });
         }
         throw new Error("Unauthorized", { cause: "NO_SESSION_TOKEN" });
+
     } catch (error) {
         console.error(error);
         const er = error as Error;
@@ -233,7 +224,7 @@ export const hashToken = async (token: string) => {
 
     return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
-const customRedirect =(url: string) => {
+const customRedirect = (url: string) => {
     try { } catch (error) { }
     finally {
         redirect(url)

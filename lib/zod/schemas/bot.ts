@@ -9,7 +9,7 @@ const botBaseSchema = z.object({
     placeholderMessage: z.string().nullable().optional(),
     welcomeMessage: z.string().nullable().optional(),
     starterQuestions: z.array(z.string()),
-    llmModelId: z.string(),
+    modelId: z.string(),
 });
 
 export const createBotSchema = botBaseSchema;

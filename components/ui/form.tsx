@@ -146,7 +146,7 @@ const FormControl = React.forwardRef<
       id={formItemId}
       // @ts-ignore
       disabled={isSubmitting}
-      invalid={!!error}
+      invalid={error ? "true" : "false"}
       aria-describedby={
         !error
           ? `${formDescriptionId}`

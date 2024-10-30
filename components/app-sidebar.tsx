@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import {
-  Bot,
+  Bot as BotIcon,
   GalleryVerticalEnd,
   Settings2,
   SquareTerminal,
@@ -21,6 +21,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/app/(organization)/auth-context"
+import { getBots } from "@/app/(organization)/actions"
+import { Bot } from "@prisma/client"
+import { getOrgSlug } from "@/lib/utils"
 
 const data = {
   teams: [
@@ -33,7 +36,7 @@ const data = {
   navMain: [
     {
       title: "Overview",
-      url: "#",
+      url: `/${getOrgSlug()}/`,
       icon: Stars,
       isActive: true
     },
@@ -76,17 +79,23 @@ const data = {
       ],
     },
   ],
-  bots: [
-    {
-      name: "Troy's Bot",
-      url: "#",
-      icon: Bot,
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuth()
+  const [bots, setBots] = React.useState<{ name: string, url: string, icon: any }[]>([])
+  React.useEffect(() => {
+    const orgSlug = getOrgSlug()
+    getBots(orgSlug).then((bots) => {
+      setBots(bots.map((bot) => {
+        return {
+          name: bot.name,
+          url: `/${orgSlug}/bots/${bot.id}`,
+          icon: BotIcon,
+        }
+      }))
+    })
+  }, [])
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -94,7 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavBots bots={data.bots} />
+        <NavBots bots={bots} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

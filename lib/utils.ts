@@ -7,10 +7,16 @@ export function cn(...inputs: ClassValue[]) {
 
 export function exclude(data: any, ...keys: string[]): typeof data {
   for (const key of keys) {
-      delete data[key];
+    delete data[key];
   }
 
   return data;
+}
+export function includeOnly(data: any, keys: string[]): typeof data {
+  const result = {} as typeof data;
+  for (const key of keys) {
+    result[key] = data[key];
+  }
 }
 export async function delay(ms: number) {
   return await new Promise(resolve => setTimeout(resolve, ms));
@@ -22,3 +28,10 @@ export const validateEmail = (email: string) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
+export const getOrgSlug = () => {
+  if (typeof window !== "undefined") {
+    const orgSlug = window.location.href.split('/')[3];
+    return orgSlug;
+  }
+  return "";
+}

@@ -23,7 +23,7 @@ model Plan {
     updatedAt     DateTime       @updatedAt
     subscriptions Subscription[]
     features      PlanFeature[]
-    llm_models    LLModel[]
+    models        Model[]
     techniques    Technique[]
     organizations Organization[]
 

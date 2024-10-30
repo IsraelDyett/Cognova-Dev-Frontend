@@ -9,8 +9,8 @@ model Bot {
     placeholderMessage String?           @db.Text
     welcomeMessage     String?           @db.Text
     starterQuestions   String[]
-    llmModelId         String
-    llmModel           LLModel           @relation(fields: [llmModelId], references: [id], onDelete: Cascade)
+    modelId            String
+    model              Model             @relation(fields: [modelId], references: [id], onDelete: Cascade)
     createdAt          DateTime          @default(now())
     updatedAt          DateTime          @updatedAt
     sources            BotSources[]
