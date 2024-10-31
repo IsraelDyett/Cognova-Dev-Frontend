@@ -13,7 +13,7 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextThemesProvider {...themeProps}>
-      <Toaster richColors position="top-left" />
+      <Toaster position="bottom-right" />
       {children}
     </NextThemesProvider>
   );

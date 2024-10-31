@@ -3,7 +3,10 @@
 import * as React from "react"
 import {
   Bot as BotIcon,
+  Brain,
+  ChartArea,
   ChevronLeft,
+  Cog,
   GalleryVerticalEnd,
   Settings2,
   SquareTerminal,
@@ -80,8 +83,23 @@ const data = {
   botMain: [
     {
       title: "Sources",
-      url: "#",
+      url: "{after.uuid}/sources",
+      icon: Brain,
+    },
+    {
+      title: "Analytics",
+      url: "{after.uuid}/analytics",
+      icon: ChartArea,
+    },
+    {
+      title: "Playground",
+      url: "{after.uuid}/playground",
       icon: SquareTerminal,
+    },
+    {
+      title: "Customize",
+      url: "{after.uuid}/customize",
+      icon: Cog,
     }
   ]
 }
@@ -95,13 +113,13 @@ const slideVariants = {
     opacity: 1
   },
   exit: {
-    x: -50,
+    x: 100,
     opacity: 0
   }
 }
 const baseSlideVariants = {
   enter: {
-    x: -50,
+    x: -100,
     opacity: 0
   },
   center: {
@@ -109,7 +127,7 @@ const baseSlideVariants = {
     opacity: 1
   },
   exit: {
-    x: -50,
+    x: -100,
     opacity: 0
   }
 }
@@ -150,7 +168,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   React.useEffect(() => {
     const pathParts = pathname.split('/')
-    const isBotRoute = pathParts.includes('bots') && pathParts.length === 4
+    const isBotRoute = pathParts.includes('bots') && pathParts.length > 3
 
     if (isBotRoute) {
       setCurrentNavbar('bot')

@@ -35,3 +35,16 @@ export const getCurrentWorkspace = () => {
   }
   return "";
 }
+export const getBaseUUIDPath = () => {
+  const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+  if (typeof window !== "undefined") {
+    const url = window.location.href;
+    const uuidMatch = url.match(uuidRegex);
+    if (uuidMatch) {
+      return url.split(uuidMatch?.[0] || "/")?.[0] + (uuidMatch?.[0] || "");
+    } else {
+      return url;
+    }
+  }
+  return "/"
+}
