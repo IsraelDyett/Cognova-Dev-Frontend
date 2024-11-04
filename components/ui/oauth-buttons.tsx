@@ -12,7 +12,10 @@ export default function OauthButtons() {
                 <SiGithub className="mr-2 h-4 w-4 text-black" />
                 GitHub
             </Button>
-            <Button size={'sm'} className="text-muted-foreground text-sm" variant="outline" onClick={() => signIn('google')}>
+            <Button size={'sm'} className="text-muted-foreground text-sm" variant="outline" onClick={() => signIn('google', {
+                redirectTo: "/",
+                redirect: false
+            })}>
                 <FcGoogle className="mr-2 size-4" />
                 Google
             </Button>

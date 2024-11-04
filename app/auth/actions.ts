@@ -47,18 +47,21 @@ export async function signUpAction(data: z.infer<typeof SignUpSchema>) {
     return await authenticate("USER_SIGNED_UP", user);
 }
 
-export async function SignUpOrInAction(data: z.infer<typeof SignUpSchema> & { id?: string }) {
+export async function SignUpOrInAction(data: z.infer<typeof SignUpSchema> & { id?: string }, provider?: string) {
     const existingUser = await prisma?.user.findUnique({
         where: {
             email: data.email,
         },
     });
     if (existingUser) {
-        const { matched } = await comparePassword(data.password, existingUser.password)
-        if (!matched) {
-            return { success: false, message: 'INVALID_PASSWORD' };
+        if(provider != "google"){
+            const { matched } = await comparePassword(data.password, existingUser.password)
+            if (!matched) {
+                return { success: false, message: 'INVALID_PASSWORD' };
+            }
+            return await authenticate("USER_SIGNED_IN", existingUser);
         }
-        return await authenticate("USER_SIGNED_UP", existingUser);
+        return await authenticate("USER_SIGNED_IN", existingUser);
     } else {
         const cleanData = await hashPassword(data);
         const user = await prisma?.user.create({

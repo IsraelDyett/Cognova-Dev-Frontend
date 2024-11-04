@@ -63,7 +63,6 @@ model Source {
   title         String
   url           String
   status        String       @db.Text
-  summary       String       @db.Text
   contentType   String
   contentLength Int
   contentHash   String

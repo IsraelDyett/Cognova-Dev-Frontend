@@ -264,3 +264,9 @@ CREATE INDEX ON vectors USING ivfflat (embedding);
 
 -- ALTER TABLE vectors ALTER COLUMN content SET STORAGE EXTENDED;
 -- ALTER TABLE vectors ALTER COLUMN embedding SET STORAGE EXTENDED;
+
+CREATE INDEX vectors_embedding_idx ON vectors USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX vectors_content_idx ON vectors USING gin (to_tsvector('english', "chunkContent"));
+CREATE INDEX sources_workspace_idx ON sources ("workspaceId");
+CREATE INDEX sources_content_type_idx ON sources ("contentType");
+CREATE INDEX sources_created_at_idx ON sources ("createdAt");

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  <script async id="1234" open="true" openDelay="5000">
+    (function () {
+      const iframeId = "chat_iframe";
+      const buttonId = "chat_button";
+      const welcomeMessageId = "chat_welcome_message";
+      const welcomeMessageCloseButtonId = "chat_welcome_message_close_button";
+      const smallMode = document.currentScript.smallMode || null;
+      const parentId = document.currentScript.parentId || null;
+      const botId = document.currentScript.id;
+      const src = document.currentScript.src;
+      const open = document.currentScript.open || "false";
+      const openDelay = Number(document.currentScript.openDelay || 0);
+      const width = document.currentScript.style.width || "500px";
+      const BASE_URL = src.substring(0, src.indexOf("/embed.js"));
+      let openCount = 0;
+      const DEFAULT_DELAY = 500;
+      const CHARACTER_TYPE_DELAY = 20;
+      const DEFAULT_WELCOME_MESSAGE = "👋 Hey... ask questions here!";
+
+      console.log("parentId exists", parentId);
+
+      const fadeIn = (el, delay = 0) => {
+        el.style.display = "block";
+        setTimeout(() => {
+          el.animate(
+            [
+              { opacity: 0, transform: "translateY(10px)" },
+              { opacity: 1, transform: "translateY(0)" },
+            ],
+            {
+              duration: 100,
+              easing: "ease-in",
+              fill: "forwards",
+            },
+          );
+          el.style.opacity = "1";
+        }, delay);
+      };
+
+      const fadeOut = (el) => {
+        let animation = el.animate(
+          [
+            { opacity: 1, transform: "translateY(0)" },
+            { opacity: 0, transform: "translateY(10px)" },
+          ],
+          {
+            duration: 100,
+            easing: "ease-out",
+            fill: "forwards",
+          },
+        );
+        animation.finished.then(function () {
+          el.style.opacity = "0";
+          el.style.display = "none";
+        });
+      };
+
+      window.addEventListener(
+        "message",
+        function (event) {
+          if (event.data == "closeme") {
+            const iframe = document.getElementById(iframeId);
+            fadeOut(iframe);
+            const mq = window.matchMedia("(max-width: 475px)");
+            if (mq.matches) {
+              const button = document.getElementById(buttonId);
+              fadeIn(button);
+            }
+          }
+        },
+        false,
+      );
+
+      setTimeout(async function () {
+        // Make API request to get chat widget configuration
+        const response = await fetch('/config.json');
+        const data = await response.json();
+
+        console.log(data);
+        /* 
+          Create the chat widget iframe
+        */
+        const iframe = document.createElement("iframe");
+        iframe.id = iframeId;
+        iframe.src = `https://iranzi.vercel.app`;
+        iframe.style.display = "none";
+        iframe.style.opacity = "0";
+        iframe.style.position = parentId ? "absolute" : "fixed";
+        iframe.style.border = "none";
+        iframe.style.zIndex = "2147483647";
+        iframe.style.boxShadow =
+          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px rgba(150, 150, 150, 0.2)";
+
+        const mq = window.matchMedia("(max-width: 475px)"); // Adjust 600px based on your mobile breakpoint needs
+        if (mq.matches) {
+          // The viewport width is 600 pixels or less
+          iframe.style.width = "100dvw";
+          iframe.style.height = smallMode ? "60dvh" : "100dvh";
+          iframe.style.bottom = "0";
+          iframe.style.right = "0";
+          iframe.style.maxWidth = "100%";
+          iframe.style.borderRadius = "0";
+        } else {
+          iframe.style.bottom = smallMode
+            ? `${(data.bot.buttonSize || 1) * 3.6}rem`
+            : `${(data.bot.buttonSize || 1) * 6}rem`;
+
+          iframe.style.right = "40px";
+          iframe.style.width = smallMode ? `calc(${width} * 0.6)` : width;
+          iframe.style.maxWidth = smallMode ? "48vw" : "80vw";
+          iframe.style.height = smallMode ? "48vh" : "80vh";
+          iframe.style.maxHeight = smallMode ? "480px" : "800px";
+          iframe.style.borderRadius = smallMode ? "15px" : "25px";
+        }
+
+        parentId
+          ? document.getElementById(parentId).appendChild(iframe)
+          : document.body.appendChild(iframe);
+
+        const container = document.createElement("div");
+        container.id = welcomeMessageId;
+        container.style.position = parentId ? "absolute" : "fixed";
+        container.style.fontFamily = "sans-serif";
+        container.style.display = "none";
+        container.style.opacity = "0";
+        container.style.bottom = `${(data.bot.buttonSize || 1) * 4}rem`;
+        container.style.right = smallMode ? "60px" : "80px";
+        container.style.width = smallMode ? "225px" : "300px";
+        container.style.maxWidth = "fit-content";
+        container.style.borderRadius = smallMode ? "12px" : "15px";
+        container.style.boxShadow = smallMode
+          ? "0 8px 12px -2px rgba(0, 0, 0, 0.1), 0px 0px 0px 0.7px rgba(150, 150, 150, 0.2)"
+          : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px rgba(150, 150, 150, 0.2)";
+        container.style.padding = smallMode ? "0.7rem" : "1rem";
+        container.style.paddingRight = smallMode ? "1.5rem" : "2rem";
+        container.style.fontSize = smallMode ? "0.75rem" : "1rem";
+        container.style.lineHeight = smallMode ? "1.2" : "1.5";
+        container.style.backgroundColor = "#FFFFFF";
+        container.style.color = "#000000";
+        container.style.overflowY = "hidden";
+        container.style.zIndex = "2147483647";
+
+        container.style.transitionDuration = "150ms";
+        container.onclick = (e) => {
+          fadeOut(container);
+          if (mq.matches) fadeOut(button);
+          fadeIn(iframe);
+        };
+        /*
+          Create the welcome message
+        */
+        const welcomeMessage = document.createElement("div");
+        welcomeMessage.innerHTML = "";
+        welcomeMessage.style.marginRight = "3px";
+
+        const text = data.bot.welcomeMessage || DEFAULT_WELCOME_MESSAGE;
+
+        let index = 0;
+        const typeCharacter = () => {
+          if (index < text.length) {
+            welcomeMessage.innerHTML += text[index];
+            index++;
+            setTimeout(typeCharacter, CHARACTER_TYPE_DELAY);
+          }
+        };
+
+        setTimeout(() => {
+          typeCharacter();
+        }, DEFAULT_DELAY + 500);
+
+        if (data.bot.welcomeGifLink) {
+          welcomeMessage.style.marginTop = "0.5rem";
+          welcomeMessage.style.marginBottom = "0.5rem";
+          welcomeMessage.style.textAlign = "center";
+          welcomeMessage.style.justifyContent = "center";
+
+          const gif = document.createElement("img");
+          const gifContainer = document.createElement("div");
+          gifContainer.style.width = "100%";
+          gifContainer.style.height = "auto";
+          gifContainer.style.display = "flex";
+          gifContainer.style.justifyContent = "center";
+          gifContainer.style.alignItems = "center";
+          gif.src = data.bot.welcomeGifLink;
+          gif.style.width = "100%";
+          gif.style.maxWidth = "10vw";
+          gif.style.height = "auto";
+          gifContainer.appendChild(gif);
+          container.appendChild(gifContainer);
+        }
+
+        container.appendChild(welcomeMessage);
+
+        parentId
+          ? document.getElementById(parentId).appendChild(container)
+          : document.body.appendChild(container);
+
+        /*
+          Create the close icon for the welcome message
+        */
+
+        const closeButton = document.createElement("button");
+        closeButton.id = welcomeMessageCloseButtonId;
+        closeButton.style.zIndex = "2147483647";
+        closeButton.style.position = parentId ? "absolute" : "fixed";
+        closeButton.style.top = smallMode ? "0.15rem" : "0.25rem";
+        closeButton.style.right = smallMode ? "0.15rem" : "0.25rem";
+        closeButton.style.borderRadius = "9998px";
+        closeButton.style.backgroundColor = "transparent";
+        closeButton.style.padding = smallMode ? "0.15rem" : "0.25rem";
+        closeButton.style.border = "none";
+        closeButton.style.transition = "color 0.2s, background-color 0.2s";
+        closeButton.style.cursor = "pointer";
+        closeButton.style.color = "#6B7280";
+
+        closeButton.onclick = (e) => {
+          e.stopPropagation();
+          fadeOut(container);
+        };
+        closeButton.addEventListener("mouseenter", function () {
+          closeButton.style.backgroundColor = "#F3F4F6"; // hover:bg-gray-100
+        });
+        closeButton.addEventListener("mouseleave", function () {
+          closeButton.style.backgroundColor = "#FFFFFF";
+        });
+        closeButton.innerHTML = `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="${smallMode ? 16 : 24}"
+      height="${smallMode ? 16 : 24}"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="${smallMode ? 1.5 : 2}"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-x"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  `;
+        container.appendChild(closeButton);
+
+        /* 
+          Create the chat widget button
+        */
+        let img = document.createElement("img");
+        img.src = "https://pub-ccb175376fc94e64b1b2376fadf6c341.r2.dev/logo.png";
+        img.style.width = "100%";
+        img.style.height = "100%";
+
+        const button = document.createElement("button");
+        button.id = buttonId;
+        button.style.display = "none";
+        button.style.opacity = "0";
+        // button.textContent = "💬";
+        // button.style.fontSize = "3vh";
+        button.style.fontSize = "0";
+        button.textContent = "";
+        button.style.zIndex = "2147483647";
+        button.style.position = parentId ? "absolute" : "fixed";
+        button.style.bottom = "20px";
+        button.style.right = "20px";
+        button.style.border = "none";
+        button.style.cursor = "pointer";
+        button.style.padding = smallMode ? "0.2rem" : "0.25rem";
+        button.style.height = smallMode ? "3.2rem" : "4rem";
+        button.style.width = smallMode ? "3.2rem" : "4rem";
+        button.style.transformOrigin = "bottom right";
+        button.style.scale = data.bot.buttonSize || 1;
+        button.style.alignItems = "center";
+        button.style.boxSizing = "border-box";
+        button.style.justifyContent = "center";
+        button.style.borderRadius = "9999px";
+        // button.style.backgroundColor = data.bot.buttonColor || "#4f48e5";
+        button.style.color = "#FFFFFF";
+        button.style.textShadow = "0 1px 3px rgba(0, 0, 0, 0.3)";
+        button.style.transitionDuration = "150ms";
+        button.appendChild(img);
+        button.onclick = function () {
+          if (iframe.style.opacity === "1") {
+            fadeOut(iframe);
+            // fadeIn(button);
+          } else {
+            fadeIn(iframe);
+            fadeOut(container);
+            if (mq.matches) fadeOut(button);
+          }
+        };
+        parentId
+          ? document.getElementById(parentId).appendChild(button)
+          : document.body.appendChild(button);
+
+        // Embed an image within the button if it is returned as base64 from the server
+        if (data.bot.buttonIcon) {
+          img = document.createElement("img");
+          img.src = data.bot.buttonIcon;
+          img.style.width = "100%"; // Adjust the image size as needed
+          img.style.height = "100%";
+          img.style.borderRadius = "50%";
+          button.style.fontSize = "0";
+          button.textContent = "";
+          button.appendChild(img);
+        }
+
+        button.addEventListener("mouseenter", () => {
+          img.style.transform = "rotate(45deg)";
+          img.style.transition = "transform 150ms ease-in";
+        });
+        button.addEventListener("mouseleave", () => {
+          img.style.transform = "rotate(0deg)";
+          img.style.transition = "transform 150ms ease-out";
+        });
+
+        // Fade In button
+        fadeIn(button, DEFAULT_DELAY);
+
+        // Fade In welcome message
+        if (data.bot.showWelcomeMessage) {
+          fadeIn(container, DEFAULT_DELAY + 500);
+        }
+
+        // Fade In iframe if open is true
+        if (open === "true") {
+          fadeIn(iframe, openCount++ === 0 ? openDelay : 0);
+        }
+      }, DEFAULT_DELAY);
+    })();
+  </script>
+</body>
+
+</html>
