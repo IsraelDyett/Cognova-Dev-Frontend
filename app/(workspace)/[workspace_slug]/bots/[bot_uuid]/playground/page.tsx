@@ -133,7 +133,7 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
                         </div>
                     </ScrollArea>
 
-                    <form onSubmit={handleSubmit} className="flex gap-2">
+                    <form onSubmit={handleSubmit} className="flex gap-2 border-t">
                         <Input
                             ref={inputRef}
                             disabled={isLoading}

@@ -16,24 +16,27 @@ export const createBotSchema = botBaseSchema;
 export const updateBotSchema = botBaseSchema.partial();
 
 
-const botConfigurationBaseSchema = z.object({
-    botId: z.string(),
-    avatarURL: z.string().nullable().optional(),
-    uAvatarURL: z.string().nullable().optional(),
-    aAvatarURL: z.string().nullable().optional(),
-    uMessageColor: z.string().nullable().optional(),
-    aMessageColor: z.string().nullable().optional(),
-    fontId: z.string(),
+export const botConfigurationBaseSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    description: z.string().optional(),
+    systemMessage: z.string().optional(),
+    placeholderMessage: z.string().optional(),
+    welcomeMessage: z.string().optional(),
+    starterQuestions: z.array(z.string()).optional(),
+    avatarURL: z.string().url().optional().nullable(),
+    botChatAvatarURL: z.string().url().optional().nullable(),
+    uMessageColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional(),
+    aMessageColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional(),
     showSources: z.boolean(),
-    sendButtonText: z.string().nullable().optional(),
-    customCSS: z.string().nullable().optional(),
-    embedAngle: z.string().nullable().optional(),
-    embedWidgetSize: z.string().nullable().optional(),
-    embedWidgetIconURL: z.string().nullable().optional(),
-    embedAutoOpen: z.boolean().nullable().optional(),
-    embedPingMessage: z.string().nullable().optional(),
+    sendButtonText: z.string().optional(),
+    customCSS: z.string().optional(),
+    embedAngle: z.enum(["left", "right"]).optional(),
+    embedWidgetSize: z.enum(["small", "medium", "large"]).optional(),
+    embedWidgetIconURL: z.string().url().optional().nullable(),
+    embedAutoOpen: z.boolean().optional(),
+    embedPingMessage: z.string().optional(),
 });
-
+export type BotConfig = z.infer<typeof botConfigurationBaseSchema>;
 export const createBotConfigurationSchema = botConfigurationBaseSchema;
 export const updateBotConfigurationSchema = botConfigurationBaseSchema.partial();
 

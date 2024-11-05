@@ -25,8 +25,7 @@ model BotConfiguration {
     botId              String   @unique
     bot                Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
     avatarURL          String?  @db.Text
-    uAvatarURL         String?  @db.Text
-    aAvatarURL         String?
+    botChatAvatarURL   String?
     uMessageColor      String?
     aMessageColor      String?
     fontId             String

@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { authUser } from "../auth/actions";
 import { prisma } from "@/lib/services/prisma";
-import { createBotSchema } from "@/lib/zod/schemas/bot";
+import { BotConfig, createBotSchema } from "@/lib/zod/schemas/bot";
 
 export const getWorkspaces = async (userId: string) => {
     const workspaces = await prisma.workspaceUser.findMany({
@@ -29,8 +29,18 @@ export const getBots = async (workspaceSlug: string) => {
     })
     return bots;
 }
+export const getBot = async (botId: string) => {
+    const bots = await prisma.bot.findUnique({
+        where: {
+            id: botId
+        },
+        include: {
+            configurations: true
+        }
+    })
+    return bots;
+}
 export const createBot = async (data: z.infer<typeof createBotSchema>) => {
-    const user = await authUser();
     const bot = await prisma.bot.create({
         data: {
             name: data.name,
@@ -44,6 +54,15 @@ export const createBot = async (data: z.infer<typeof createBotSchema>) => {
         redirect: `/${data.workspaceId}/bots/${bot.id}`
     }
 }
+export const updateBot=  async (botId: string, data: Pick<BotConfig, "name" | "description" | "systemMessage" | "welcomeMessage" | "starterQuestions">) => {
+    const bot = await prisma.bot.update({
+        where: { id: botId },
+        data,
+    });
+
+    return bot;
+}
+
 export const isUserInWorkspace = async (userId: string, workspaceSlug: string) => {
     const workspaceUser = await prisma.workspaceUser.findFirst({
         where: {

@@ -1,12 +1,5 @@
 "use client";
-import React from 'react'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog'
+import React, { useState } from 'react'
 import {
     Alert,
     AlertDescription,
@@ -14,12 +7,12 @@ import {
 } from '@/components/ui/alert'
 import { useSourcesStore } from './store'
 import { WorkspacePageProps } from '@/types';
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/lib/hooks/use-toast'
 import DataTable from '@/components/ui/data-table'
+import SourcesPageHeader from './_components/header';
 import { sourcesColumns } from './_components/columns'
-import { AddSourceForm } from './_components/add-source-form'
-import { FileText, Globe, Plus, AlertCircle } from 'lucide-react'
+import { FileText, Globe, AlertCircle, RefreshCcw } from 'lucide-react'
 import SourcesPageSkeleton from '@/components/skeletons/sources-page';
 
 export const sourceTypes = [
@@ -28,33 +21,40 @@ export const sourceTypes = [
 ]
 
 export default function SourcesPage(props: WorkspacePageProps) {
+    const [quietLoading, setQuietLoading] = useState(false)
     const { toast } = useToast()
-    const { 
+    const {
         sources,
         isLoading,
         error,
-        isAddDialogOpen,
         fetchSources,
-        setIsAddDialogOpen
     } = useSourcesStore()
 
-    React.useEffect(() => {
+    const fetchSourcesCliently = async (quiet = false) => {
         const botId = props.params.bot_uuid
-        fetchSources(botId).catch(() => {
+        setQuietLoading(true)
+        await fetchSources(botId, quiet).catch(() => {
             toast({
                 variant: "destructive",
                 title: "Error loading sources",
                 description: "Please try again or contact support if the problem persists."
             })
         })
+        setQuietLoading(false)
+        if (quiet) {
+            toast({
+                variant: "default",
+                title: "Sources refreshed successfully",
+            })
+
+        }
+    }
+    React.useEffect(() => {
+        fetchSourcesCliently()
     }, [])
 
-    const handleAddSource = () => {
-        // Implement source addition logic
-    }
-
     if (isLoading) {
-        return <SourcesPageSkeleton/>
+        return <SourcesPageSkeleton />
     }
 
     if (error) {
@@ -69,27 +69,16 @@ export default function SourcesPage(props: WorkspacePageProps) {
 
     return (
         <div className="space-y-8">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold">Sources</h2>
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" /> Add Source
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Add New Source</DialogTitle>
-                        </DialogHeader>
-                        <AddSourceForm onSubmit={handleAddSource} />
-                    </DialogContent>
-                </Dialog>
-            </div>
-
+            <SourcesPageHeader/>
             <DataTable
                 columns={sourcesColumns}
                 data={sources}
                 searchField="url"
+                toolBarChildren={
+                    <Button onClick={() => fetchSourcesCliently(true)} className='px-4' size={'sm'} variant={'outline'}>
+                        <RefreshCcw className={`size-5 ${quietLoading && 'animate-spin'}`} />
+                    </Button>
+                }
             />
         </div>
     )
