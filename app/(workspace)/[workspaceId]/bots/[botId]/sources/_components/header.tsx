@@ -9,14 +9,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import {
-    WebContent,
-    PDFUpload,
-    TxtUpload,
-    TextInput,
-    FAQInput,
-    ProAlert
-} from './add-sources';
 
 interface SourceIcon {
     className?: string;
@@ -33,7 +25,7 @@ interface Source {
     icon: React.ComponentType<SourceIcon>;
     isAvailable: boolean;
     requiresPlan: boolean;
-    dialogContent: React.FC<DialogProps>;
+    dialogContent: () => Promise<React.ComponentType<DialogProps>>;
 }
 
 const sourceTypes: Source[] = [
@@ -43,7 +35,7 @@ const sourceTypes: Source[] = [
         icon: Globe,
         isAvailable: true,
         requiresPlan: false,
-        dialogContent: WebContent
+        dialogContent: () => import('./add-sources').then(mod => mod.WebContent)
     },
     {
         key: 'pdf',
@@ -51,7 +43,7 @@ const sourceTypes: Source[] = [
         icon: FileText,
         isAvailable: true,
         requiresPlan: false,
-        dialogContent: PDFUpload
+        dialogContent: () => import('./add-sources').then(mod => mod.PDFUpload)
     },
     {
         key: 'txt',
@@ -59,7 +51,7 @@ const sourceTypes: Source[] = [
         icon: FileText,
         isAvailable: true,
         requiresPlan: false,
-        dialogContent: TxtUpload
+        dialogContent: () => import('./add-sources').then(mod => mod.TxtUpload)
     },
     {
         key: 'text',
@@ -67,7 +59,15 @@ const sourceTypes: Source[] = [
         icon: AlignLeft,
         isAvailable: true,
         requiresPlan: false,
-        dialogContent: TextInput
+        dialogContent: () => import('./add-sources').then(mod => mod.TextInput)
+    },
+    {
+        key: 'faq',
+        label: 'FAQ',
+        icon: FileQuestion,
+        isAvailable: true,
+        requiresPlan: false,
+        dialogContent: () => import('./add-sources').then(mod => mod.FAQInput)
     },
     {
         key: 'sitemap',
@@ -81,12 +81,7 @@ const sourceTypes: Source[] = [
         ),
         isAvailable: true,
         requiresPlan: true,
-        dialogContent: () => (
-            <ProAlert
-                title="Pro Plan Required"
-                description="Sitemap import is available on our Pro plan. Upgrade to access this feature."
-            />
-        )
+        dialogContent: () => import('./add-sources').then(mod => mod.AddSitemap)
     },
     {
         key: 'sheets',
@@ -99,12 +94,7 @@ const sourceTypes: Source[] = [
         ),
         isAvailable: true,
         requiresPlan: true,
-        dialogContent: () => (
-            <ProAlert
-                title="Pro Plan Required"
-                description="Microsoft Excel Sheets integration is available on our Pro plan. Upgrade to access this feature."
-            />
-        )
+        dialogContent: () => import('./add-sources').then(mod => mod.AddSheets)
     },
     {
         key: 'docs',
@@ -117,43 +107,44 @@ const sourceTypes: Source[] = [
         ),
         isAvailable: true,
         requiresPlan: true,
-        dialogContent: () => (
-            <ProAlert
-                title="Pro Plan Required"
-                description="Google Docs integration is available on our Pro plan. Upgrade to access this feature."
-            />
-        )
+        dialogContent: () => import('./add-sources').then(mod => mod.GoogleDocs)
     },
-    {
-        key: 'faq',
-        label: 'FAQ',
-        icon: FileQuestion,
-        isAvailable: true,
-        requiresPlan: false,
-        dialogContent: FAQInput
-    }
 ];
 
 const SourcesPageHeader: React.FC = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const [selectedSource, setSelectedSource] = React.useState<Source | null>(null);
+    const [LoadedComponent, setLoadedComponent] = React.useState<React.ComponentType<DialogProps> | null>(null);
 
-    const handleSourceClick = (source: Source) => {
+    const handleSourceClick = async (source: Source) => {
         if (!isLoading) {
-            setSelectedSource(source);
-            setIsOpen(true);
+            setIsLoading(true);
+            try {
+                const Component = await source.dialogContent();
+                setLoadedComponent(() => Component);
+                setSelectedSource(source);
+                setIsOpen(true);
+            } catch (error) {
+                console.error('Failed to load component:', error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
     const handleOpenChange = (open: boolean) => {
         if (!isLoading) {
             setIsOpen(open);
-            setTimeout(() => {
-                if (!open) {
-                    setSelectedSource(null);
-                }
-            }, 100);
+            if (!open) {
+                // Delay to hide dialog first then content next
+                setTimeout(() => {
+                    if (!open) {
+                        setSelectedSource(null);
+                        setLoadedComponent(null);
+                    }
+                }, 100);
+            }
         }
     };
 
@@ -175,7 +166,7 @@ const SourcesPageHeader: React.FC = () => {
                             variant="outline"
                             className="h-auto p-4 flex flex-col items-center justify-center gap-2"
                             onClick={() => handleSourceClick(source)}
-                            disabled={!source.isAvailable}
+                            disabled={!source.isAvailable || isLoading}
                         >
                             <Icon className="h-8 w-8" />
                             <span className="text-sm">
@@ -186,22 +177,19 @@ const SourcesPageHeader: React.FC = () => {
                 })}
             </div>
 
-            <Dialog
-                open={isOpen}
-                onOpenChange={handleOpenChange}
-            >
+            <Dialog open={isOpen} onOpenChange={handleOpenChange}>
                 <DialogContent className="sm:max-w-xl">
                     <DialogHeader className="text-start">
                         <DialogTitle>
                             {selectedSource?.label}
                         </DialogTitle>
                     </DialogHeader>
-                    {selectedSource &&
-                        <selectedSource.dialogContent
+                    {LoadedComponent && (
+                        <LoadedComponent
                             setIsLoading={setIsLoading}
                             isLoading={isLoading}
                         />
-                    }
+                    )}
                 </DialogContent>
             </Dialog>
         </div>

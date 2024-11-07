@@ -32,7 +32,7 @@ export const sourcesColumns: ColumnDef<SourceWithExtra>[] = [
         accessorKey: "type",
         header: "Type",
         cell: ({ row }) => {
-            const type = sourceTypes.find((t) => t.contentType === row.original.contentType)
+            const type = sourceTypes.find((t) => t.type === row.original.technique?.slugName)
             return (
                 <Badge variant={'secondary'}>
                     {type?.icon && (
@@ -64,14 +64,30 @@ export const sourcesColumns: ColumnDef<SourceWithExtra>[] = [
         cell: ({ row }) => {
             const source = row.original
             const progress = getSourceProgress(source)
+            const getVariant = (progress: number) => {
+                if (progress <= 25) return "default"
+                if (progress <= 75) return "default"
+                return "success"
+            }
             return (
                 <div className="w-full">
                     <div className="flex items-center justify-between mb-1 space-x-2">
-                        <Progress value={progress} className="w-full h-4" />
-                        <span className="text-sm text-muted-foreground">{progress}%</span>
+                        <Progress
+                            variant={getVariant(progress)}
+                            value={progress}
+                            className="w-full h-4"
+                        />
                     </div>
                 </div>
             )
+        }
+    },
+
+    {
+        accessorKey: "syncTime",
+        header: "Sync Time",
+        cell: ({ row }) => {
+            return (<span className="text-sm text-end text-muted-foreground">{row.original.syncTime}s</span>)
         },
     },
     {

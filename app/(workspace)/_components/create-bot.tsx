@@ -68,8 +68,7 @@ export function CreateBot() {
         if (!alreadyMounted.current) {
             Promise.all([
                 getModels().then(models => setModels(models)),
-                getWorkspaces(user?.id as string)
-                    .then(workspaces => setWorkspaces(workspaces.map(org => org.workspace))),
+                getWorkspaces(user?.id as string).then(setWorkspaces),
             ])
         }
         alreadyMounted.current = true

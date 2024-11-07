@@ -29,15 +29,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { User } from "@prisma/client"
+import { useAuth } from "@/app/(workspace)/auth-context"
 
-export function NavUser({
-  user,
-}: {
-  user: User
-}) {
+export function NavUser() {
+  const { user } = useAuth()
   const { isMobile } = useSidebar()
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>

@@ -16,7 +16,7 @@ import { WorkspacePageProps } from '@/types';
 const CONVERSATION_ID = 'a3c554b0-3ed1-4a31-8154-6082df342da1' // Mock conversation ID
 
 export default function PlaygroundPage(props: WorkspacePageProps) {
-    const botId = props.params.bot_uuid
+    const botId = props.params.botId
     const inputRef = useRef<HTMLInputElement>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 

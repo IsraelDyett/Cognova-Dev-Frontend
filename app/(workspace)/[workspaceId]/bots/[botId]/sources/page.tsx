@@ -16,8 +16,8 @@ import { FileText, Globe, AlertCircle, RefreshCcw } from 'lucide-react'
 import SourcesPageSkeleton from '@/components/skeletons/sources-page';
 
 export const sourceTypes = [
-    { type: 'pdf', icon: FileText, label: 'PDF', contentType: 'application/pdf' },
-    { type: 'website', icon: Globe, label: 'Website', contentType: 'text/html' },
+    { type: 'pdf', icon: FileText, label: 'PDF' },
+    { type: 'website-content', icon: Globe, label: 'Website' },
 ]
 
 export default function SourcesPage(props: WorkspacePageProps) {
@@ -31,7 +31,7 @@ export default function SourcesPage(props: WorkspacePageProps) {
     } = useSourcesStore()
 
     const fetchSourcesCliently = async (quiet = false) => {
-        const botId = props.params.bot_uuid
+        const botId = props.params.botId
         setQuietLoading(true)
         await fetchSources(botId, quiet).catch(() => {
             toast({
@@ -49,8 +49,12 @@ export default function SourcesPage(props: WorkspacePageProps) {
 
         }
     }
+    const alreadyMounted = React.useRef(false)
     React.useEffect(() => {
-        fetchSourcesCliently()
+        if (!alreadyMounted.current) {
+            fetchSourcesCliently()
+            alreadyMounted.current = true
+        }
     }, [])
 
     if (isLoading) {
@@ -69,7 +73,7 @@ export default function SourcesPage(props: WorkspacePageProps) {
 
     return (
         <div className="space-y-8">
-            <SourcesPageHeader/>
+            <SourcesPageHeader />
             <DataTable
                 columns={sourcesColumns}
                 data={sources}

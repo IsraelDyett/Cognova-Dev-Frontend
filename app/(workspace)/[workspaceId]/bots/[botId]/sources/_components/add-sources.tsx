@@ -65,3 +65,22 @@ export const WebContent: React.FC<DialogProps> = ({ setIsLoading, isLoading }) =
         <AddWebSource setIsLoading={setIsLoading} isLoading={isLoading} />
     </div>
 );
+
+export const AddSitemap: React.FC<DialogProps> = ({ setIsLoading, isLoading }) => (
+    <ProAlert
+        title="Pro Plan Required"
+        description="Sitemap import is available on our Pro plan. Upgrade to access this feature."
+    />
+);
+export const AddSheets: React.FC<DialogProps> = ({ setIsLoading, isLoading }) => (
+    <ProAlert
+        title="Pro Plan Required"
+        description="Microsoft Excel Sheets integration is available on our Pro plan. Upgrade to access this feature."
+    />
+);
+export const GoogleDocs: React.FC<DialogProps> = ({ setIsLoading, isLoading }) => (
+    <ProAlert
+        title="Pro Plan Required"
+        description="Google Docs integration is available on our Pro plan. Upgrade to access this feature."
+    />
+);

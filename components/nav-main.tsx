@@ -18,7 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import { getBaseUUIDPath } from "@/lib/utils"
+import { useParams } from "next/navigation"
 
 export function NavMain({
   items,
@@ -34,7 +34,7 @@ export function NavMain({
     }[]
   }[]
 }) {
-  const basePath = getBaseUUIDPath()
+  const { botId, workspaceId } = useParams();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -58,7 +58,7 @@ export function NavMain({
               ) : (
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <Link href={item.url.replace("{after.uuid}", basePath)}>
+                  <Link href={item.url.replace("{after.botId}", `/${workspaceId}/bots/${botId}`)}>
                     <span>{item.title}</span>
                   </Link>
                   {item.items && (
@@ -71,7 +71,7 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={subItem.url.replace("{after.uuid}", basePath)}>
+                        <Link href={subItem.url.replace("{after.botId}", `/${workspaceId}/bots/${botId}`)}>
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

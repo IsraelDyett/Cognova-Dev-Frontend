@@ -1,3 +1,5 @@
+import { debug } from "@/lib/utils"
+
 export const streamMessage = async ({
     reader,
     updateMessage,
@@ -7,6 +9,7 @@ export const streamMessage = async ({
     updateMessage: (id: string, content: string) => void
     botMessageId: string
 }) => {
+    debug("STREAM MESSAGE")
     let fullContent = ''
     const decoder = new TextDecoder()
     while (true) {
@@ -38,6 +41,7 @@ export const handlePrompt = async ({
     message: string
     conversationId: string,
 }) => {
+    debug("HANDLE PROMPT")
     const backendAPI = process.env.NEXT_PUBLIC_BACKEND_API || "http://127.0.0.1:8000/api/v1"
     const response = await fetch(`${backendAPI}/bots/${botId}/chat/${conversationId}`, {
         method: 'POST',

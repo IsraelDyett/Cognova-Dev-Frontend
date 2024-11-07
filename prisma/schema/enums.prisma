@@ -16,3 +16,8 @@ enum PaymentMethodStatus {
     ACTIVE
     FUTURE
 }
+enum ChatFeedback {
+    DOWNVOTED
+    UPVOTED
+    NONE
+}

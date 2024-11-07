@@ -1,3 +1,4 @@
+import { debug } from '@/lib/utils'
 import { create } from 'zustand'
 
 interface Message {
@@ -23,6 +24,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     isLoading: false,
     error: null,
     addMessage: (message) => {
+        debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE")
         const id = crypto.randomUUID()
         set((state) => ({
             messages: [...state.messages, {

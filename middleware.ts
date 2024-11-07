@@ -63,6 +63,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         '/((?!api|favicon.ico|_next/static|_next/image|.*\\.png$).*)',
-        '/:workspace_slug/:path*'
+        '/:workspaceId/:path*'
     ],
 };

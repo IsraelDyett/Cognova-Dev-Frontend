@@ -1,8 +1,10 @@
 import { auth } from '@/auth'
+import { debug } from '@/lib/utils'
 import { cookies } from 'next/headers'
 import { type NextRequest } from 'next/server'
 
 export async function POST(request: NextRequest) {
+    debug("[API] AUTH/AUTHENTICATE")
     try {
         const body = await request.json().catch(() => null)
 

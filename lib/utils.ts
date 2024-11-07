@@ -48,3 +48,24 @@ export const getBaseUUIDPath = () => {
   }
   return "/"
 }
+
+
+export const toKebabCase = (string: string) =>
+  string.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+
+export const toCamelCase = <T extends string>(string: T) =>
+  string.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2) =>
+    p2 ? p2.toUpperCase() : p1.toLowerCase(),
+  );
+
+export const toPascalCase = <T extends string>(string: T): string => {
+  const camelCase = toCamelCase(string);
+
+  return (camelCase.charAt(0).toUpperCase() + camelCase.slice(1));
+};
+
+export const debug = (verbose: string ) => {
+  if (process.env.NODE_ENV === "development") {
+    console.count(`===========>> ${verbose}: ${new Date().getDate()}`);
+  }
+};

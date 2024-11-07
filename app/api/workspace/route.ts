@@ -1,8 +1,10 @@
 import { validateSession } from '@/app/auth/actions';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDefaultWorkspace, isUserInWorkspace } from '@/app/(workspace)/actions';
+import { debug } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
+    debug("[API] WORKSPACE")
     const url = new URL(request.url);
     const workspaceSlug = url.searchParams.get('slug');
     const sessionToken = url.searchParams.get('sessionToken');

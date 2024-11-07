@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -19,19 +18,23 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useSidebarStore } from "./sidebar-store"
+import { useAuth } from "@/app/(workspace)/auth-context"
+import { useWorkspace } from "@/app/(workspace)/workspace-context"
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string
-    logo: string
-    plan: string
-  }[]
-}) {
+export function WorkspaceSwitcher() {
+  const router = useRouter()
+  const { user } = useAuth()
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const { workspace } = useWorkspace()
+  const { workspaces, fetchWorkspaces } = useSidebarStore()
 
+  React.useEffect(() => {
+    if (workspaces.length === 0) {
+      fetchWorkspaces(user.id)
+    }
+  }, [])
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -41,14 +44,14 @@ export function TeamSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square overflow-hidden size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Image alt="Team Logo" src={activeTeam.logo} width={32} height={32} className="size-8" />
+              <div className="flex aspect-square overflow-hidden size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
+                <Image alt="Workspace Logo" src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(workspace?.name || 'loading')}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`} width={32} height={32} className="size-8" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {activeTeam.name}
+                  {workspace?.name}
                 </span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate text-xs">{workspace?.plan?.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -60,19 +63,18 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              Workspaces
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {workspaces.map((ws, index) => (
               <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
+                key={ws.name}
+                onClick={() => router.push(`/${ws.id}`)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
-                <Image alt="Team Logo" src={activeTeam.logo} width={24} height={24} className="size-6" />
+                  <Image alt="Workspace Logo" src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(ws?.name || 'loading')}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`} width={24} height={24} className="size-6" />
                 </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                {ws.name}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

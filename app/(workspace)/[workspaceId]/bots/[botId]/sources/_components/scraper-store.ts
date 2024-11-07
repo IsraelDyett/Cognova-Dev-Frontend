@@ -1,4 +1,5 @@
 import fastApi from '@/lib/fastapi';
+import { debug } from '@/lib/utils';
 import { create } from 'zustand';
 
 export type ScrapeType = 'single' | 'nested' | '';
@@ -50,6 +51,7 @@ class ScraperError extends Error {
 
 export const scraperApi = {
     async fetchUrls(url: string): Promise<string[]> {
+        debug("[API-STORE] {SCRAPER-API} FETCH URLS")
         try {
             const data = await fastApi.sources.scrapeUrls(url)
             if (data.status !== "success") {
@@ -68,6 +70,7 @@ export const scraperApi = {
     },
 
     async scrapeURLs(urls: string[]): Promise<any> {
+        debug("[API-STORE] {SCRAPER-API} SCRAPE URL")
         try {
             const scrapeResults = await fastApi.sources.addSource("website", urls)
             return scrapeResults

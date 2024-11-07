@@ -25,7 +25,7 @@ model Plan {
     features      PlanFeature[]
     models        Model[]
     techniques    Technique[]
-    workspaces Workspace[]
+    workspaces    Workspace[]
 
     @@map("plans")
 }

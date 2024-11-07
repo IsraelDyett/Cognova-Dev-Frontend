@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Bot, BotConfiguration } from "@prisma/client"
 import { getBot } from '@/app/(workspace)/actions'
+import { debug } from '@/lib/utils'
 
 export interface cBot extends Bot {
     configurations?: BotConfiguration
@@ -15,6 +16,7 @@ export const useCustomizeStore = create<CustomizeStore>((set) => ({
     bot: null,
     isLoading: true,
     fetchBot: async (botId) => {
+        debug("[STORE] {USE-CUSTOMIZE-STORE} FETCH-BOT")
         set({ isLoading: true})
         try {
             const bot = await getBot(botId)

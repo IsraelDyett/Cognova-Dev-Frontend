@@ -10,8 +10,8 @@ export interface WorkspacePageProps {
 }
 
 export interface Params {
-  workspace_slug: string;
-  bot_uuid:       string;
+  workspaceId: string;
+  botId:       string;
 }
 
 export interface SearchParams {

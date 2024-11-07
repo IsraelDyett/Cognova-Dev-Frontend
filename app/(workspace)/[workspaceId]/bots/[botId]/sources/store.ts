@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Source, Sync, Technique } from '@prisma/client'
 import { getSourcesByBot } from '../actions'
+import { debug } from '@/lib/utils'
 
 type SourceWithExtra = Source & {
     syncs?: Sync[]
@@ -19,6 +20,7 @@ export const useSourcesStore = create<SourcesStore>((set) => ({
     isLoading: true,
     error: null,
     fetchSources: async (botId, quiet) => {
+        debug("[STORE] {USE-SOURCES-STORE} FETCH-SOURCES")
         let state: any = {
             isLoading: true,
             error: null

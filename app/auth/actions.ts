@@ -2,16 +2,17 @@
 import ms from 'ms';
 import { z } from "zod";
 import { User } from "@prisma/client";
-import { exclude } from "@/lib/utils";
+import { debug, exclude } from "@/lib/utils";
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/services/prisma";
 import { cookies, headers } from "next/headers";
-import { NextRequest, userAgent } from "next/server";
+import { userAgent } from "next/server";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { comparePassword, hashPassword } from "@/utils/transactions";
 import { redis } from '@/lib/services/redis';
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
+    debug("SIGN IN")
     const user = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -30,6 +31,7 @@ export async function signInAction(data: z.infer<typeof SignInSchema>) {
 
 
 export async function signUpAction(data: z.infer<typeof SignUpSchema>) {
+    debug("SIGN UP")
     const existingUser = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -48,6 +50,7 @@ export async function signUpAction(data: z.infer<typeof SignUpSchema>) {
 }
 
 export async function SignUpOrInAction(data: z.infer<typeof SignUpSchema> & { id?: string }, provider?: string) {
+    debug("SIGN UP OR IN")
     const existingUser = await prisma?.user.findUnique({
         where: {
             email: data.email,
@@ -72,6 +75,7 @@ export async function SignUpOrInAction(data: z.infer<typeof SignUpSchema> & { id
 }
 
 const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: User) => {
+    debug("AUTHENTICATE")
     try {
         const sessionToken = await createSession(user);
         cookies().set("auth.session.token", sessionToken.sessionToken, {
@@ -88,6 +92,7 @@ const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: U
 }
 
 async function createSession(user: User) {
+    debug("CREATE_SESSION")
     const headersList = headers();
     const agent = userAgent({ headers: headersList });
     const sessionToken = await hashToken(crypto.randomUUID());
@@ -139,6 +144,7 @@ async function createSession(user: User) {
 }
 
 export async function validateSession(defaultSessionToken?: string) {
+    debug("VALIDATE_SESSION")
     let sessionToken = ""
     if (defaultSessionToken) {
         sessionToken = defaultSessionToken
@@ -214,6 +220,7 @@ export async function validateSession(defaultSessionToken?: string) {
 }
 
 export async function authUser() {
+    debug("AUTH_USER")
     try {
         const sessionToken = cookies().get("auth.session.token")?.value;
         if (sessionToken) {

@@ -27,6 +27,6 @@
       "@/services/*": ["./lib/services/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(workspace)/[workspaceId]/bots/[botId]/analytics/_charts/browser-charts"],
   "exclude": ["node_modules"]
 }

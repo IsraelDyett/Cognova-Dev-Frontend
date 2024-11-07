@@ -55,9 +55,9 @@ const CustomizePage = (props: WorkspacePageProps) => {
         defaultValues: setInitialFormValues(bot)
     })
     React.useEffect(() => {
-        const botId = props.params.bot_uuid;
+        const botId = props.params.botId;
         fetchBot(botId);
-    }, [props.params.bot_uuid, fetchBot]);
+    }, [props.params.botId, fetchBot]);
     React.useEffect(() => {
         if (bot) {
             const botValues = setInitialFormValues(bot)

@@ -15,7 +15,7 @@ model Workspace {
   name         String
   slugName     String          @unique
   planId       String
-  pan          Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan         Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
   ownerId      String
   owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   createdAt    DateTime        @default(now())

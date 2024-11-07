@@ -5,7 +5,7 @@ import { CreateBot } from '../_components/create-bot';
 // import { authUser } from '@/app/auth/actions';
 
 export const revalidate = 10;
-export default async function WorkspaceOverviewPage({ params }: { params: { org_slug: string } }) {
+export default async function WorkspaceOverviewPage(props: { params: { workspaceId: string }, searchParams: {} }) {
     // const user = await authUser()
     // if (!user) {
     //     notFound();

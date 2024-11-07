@@ -5,9 +5,8 @@ import {
   Forward,
   MoreHorizontal,
   Trash2,
-  type LucideIcon,
+  Bot as BotIcon,
 } from "lucide-react"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,28 +24,30 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import React from "react"
+import { useSidebarStore } from "./sidebar-store"
 
-export function NavBots({
-  bots,
-}: {
-  bots: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-}) {
+export function NavBots({ workspaceId }: { workspaceId: string }) {
   const { isMobile } = useSidebar()
-
+  const alreadyMounted = React.useRef(false)
+  const { bots, fetchBots } = useSidebarStore()
+  
+  React.useEffect(() => {
+    if (!alreadyMounted.current && bots.length === 0) {
+      fetchBots(workspaceId)
+      alreadyMounted.current = true
+    }
+  }, [])
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Bots</SidebarGroupLabel>
       <SidebarMenu>
-        {bots.slice(0, 3).map((item) => (
-          <SidebarMenuItem key={item.name}>
+        {bots.slice(0, 3).map((bot) => (
+          <SidebarMenuItem key={bot.name}>
             <SidebarMenuButton asChild>
-              <Link href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
+              <Link href={`/${workspaceId}/bots/${bot.id}`}>
+                <BotIcon />
+                <span>{bot.name}</span>
               </Link>
             </SidebarMenuButton>
             <DropdownMenu>
