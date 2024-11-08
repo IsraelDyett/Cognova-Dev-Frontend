@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Body_chat = {
-    prompt: string;
-    metadata?: string;
+  prompt: string;
+  metadata?: string;
 };
-

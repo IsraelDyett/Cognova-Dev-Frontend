@@ -14,14 +14,7 @@ import { sourceTypes } from "../../constants";
 import { ColumnDef } from "@tanstack/react-table";
 import { Source, Sync, Technique } from "@prisma/client";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
-import {
-  AlertCircle,
-  BadgeCheck,
-  MoreHorizontal,
-  Pencil,
-  RefreshCcw,
-  Trash2,
-} from "lucide-react";
+import { AlertCircle, BadgeCheck, MoreHorizontal, Pencil, RefreshCcw, Trash2 } from "lucide-react";
 
 type SourceWithExtra = Source & {
   syncs?: Sync[];

@@ -42,9 +42,9 @@ async function main() {
           {
             name: "manage_users",
             displayName: "Manage Users",
-          }
-        ]
-      }
+          },
+        ],
+      },
     },
   });
   console.log("Admin Role created or updated");
@@ -82,7 +82,7 @@ async function main() {
         displayName: "Enterprise",
         billingCycle: BillingCycle.YEARLY,
         description: "Enterprise plan",
-      }
+      },
     ],
   });
   console.log("Plans created");
@@ -92,32 +92,31 @@ async function main() {
       name: "cognova",
       displayName: "Cognova",
       ownerId: rootUser.id,
-      planId: "59bf2524-ce48-4b3b-a990-5ac9c7a7b5fe"
-    }
-  })
+      planId: "59bf2524-ce48-4b3b-a990-5ac9c7a7b5fe",
+    },
+  });
   console.log("Workspace created");
 
   await prisma.workspaceUser.create({
     data: {
       userId: rootUser.id,
       workspaceId: workspace.id,
-    }
-  })
+    },
+  });
   const model = await prisma.model.create({
     data: {
       name: "@cf/meta/llama-3-8b-instruct",
       displayName: "LLAMA-3-8b",
-      planId: "59bf2524-ce48-4b3b-a990-5ac9c7a7b5fe"
-    }
-  })
+      planId: "59bf2524-ce48-4b3b-a990-5ac9c7a7b5fe",
+    },
+  });
   const bot = await prisma.bot.create({
     data: {
       name: "cognovas-assistant",
       workspaceId: workspace.id,
       modelId: model.id,
-
-    }
-  })
+    },
+  });
   for (let i = 0; i < 4; i++) {
     const conversation = await prisma.conversation.create({
       data: {
@@ -126,8 +125,10 @@ async function main() {
         os: ["Windows", "MacOS", "Linux", "iOS"][Math.floor(Math.random() * 4)],
         device: ["Desktop", "Mobile", "Tablet"][Math.floor(Math.random() * 3)],
         countryCode: ["US", "CA", "UK", "RW"][Math.floor(Math.random() * 5)],
-        generatedCategory: ["Support", "General", "Technical", "Inquiry"][Math.floor(Math.random() * 4)],
-      }
+        generatedCategory: ["Support", "General", "Technical", "Inquiry"][
+          Math.floor(Math.random() * 4)
+        ],
+      },
     });
 
     for (let j = 0; j < 2; j++) {
@@ -138,12 +139,18 @@ async function main() {
           role: isHuman ? "user" : "assistant",
           content: generateChatContent(isHuman),
           tokens: Math.floor(Math.random() * 100) + 50,
-          feedback: isHuman ? ChatFeedback.NONE :
-            [ChatFeedback.NONE, ChatFeedback.UPVOTED, ChatFeedback.DOWNVOTED][Math.floor(Math.random() * 3)],
-          sourceURLs: isHuman ? [] :
-            Math.random() > 0.7 ? ["https://docs.example.com", "https://help.example.com"] : [],
+          feedback: isHuman
+            ? ChatFeedback.NONE
+            : [ChatFeedback.NONE, ChatFeedback.UPVOTED, ChatFeedback.DOWNVOTED][
+                Math.floor(Math.random() * 3)
+              ],
+          sourceURLs: isHuman
+            ? []
+            : Math.random() > 0.7
+              ? ["https://docs.example.com", "https://help.example.com"]
+              : [],
           createdAt: new Date(Date.now() - (24 - j) * 3600000),
-        }
+        },
       });
     }
     console.log(`Created conversation ${i + 1} with 25 chats`);
