@@ -1,16 +1,10 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SignUpForm from "./form";
 import { Metadata } from "next";
 import OauthButtons from "@/components/ui/oauth-buttons";
 
 export const metadata: Metadata = {
-  title: 'Sign Up',
+  title: "Sign Up",
 };
 
 export default function SignUpPage() {
@@ -18,9 +12,7 @@ export default function SignUpPage() {
     <Card>
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-xl">Create an account</CardTitle>
-        <CardDescription>
-          Enter your email below to create your account
-        </CardDescription>
+        <CardDescription>Enter your email below to create your account</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <OauthButtons />
@@ -29,13 +21,11 @@ export default function SignUpPage() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or continue with
-            </span>
+            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
           </div>
         </div>
         <SignUpForm />
       </CardContent>
     </Card>
-  )
+  );
 }

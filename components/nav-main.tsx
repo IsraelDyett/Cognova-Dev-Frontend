@@ -1,12 +1,8 @@
-"use client"
+"use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,23 +12,23 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import { useParams } from "next/navigation"
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+    }[];
+  }[];
 }) {
   const { botId, workspaceId } = useParams();
   return (
@@ -58,9 +54,11 @@ export function NavMain({
               ) : (
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <Link href={item.url.
-                    replace("{after.botId}", `/${workspaceId}/bots/${botId}`).
-                    replace("{after.workspaceId}", `/${workspaceId}`)}>
+                  <Link
+                    href={item.url
+                      .replace("{after.botId}", `/${workspaceId}/bots/${botId}`)
+                      .replace("{after.workspaceId}", `/${workspaceId}`)}
+                  >
                     <span>{item.title}</span>
                   </Link>
                   {item.items && (
@@ -73,7 +71,12 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={subItem.url.replace("{after.botId}", `/${workspaceId}/bots/${botId}`)}>
+                        <Link
+                          href={subItem.url.replace(
+                            "{after.botId}",
+                            `/${workspaceId}/bots/${botId}`,
+                          )}
+                        >
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>
@@ -86,5 +89,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

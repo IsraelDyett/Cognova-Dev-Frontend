@@ -1,19 +1,13 @@
-"use client"
+"use client";
 
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  Bot as BotIcon,
-} from "lucide-react"
+import { Folder, Forward, MoreHorizontal, Trash2, Bot as BotIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,22 +16,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import React from "react"
-import { useSidebarStore } from "./sidebar-store"
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import React from "react";
+import { useSidebarStore } from "./sidebar-store";
 
 export function NavBots({ workspaceId }: { workspaceId: string }) {
-  const { isMobile } = useSidebar()
-  const alreadyMounted = React.useRef(false)
-  const { bots, fetchBots } = useSidebarStore()
-  
+  const { isMobile } = useSidebar();
+  const alreadyMounted = React.useRef(false);
+  const { bots, fetchBots } = useSidebarStore();
+
   React.useEffect(() => {
     if (!alreadyMounted.current && bots.length === 0) {
-      fetchBots(workspaceId)
-      alreadyMounted.current = true
+      fetchBots(workspaceId);
+      alreadyMounted.current = true;
     }
-  }, [])
+  }, []);
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Bots</SidebarGroupLabel>
@@ -89,5 +83,5 @@ export function NavBots({ workspaceId }: { workspaceId: string }) {
         )}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

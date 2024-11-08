@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Workspaces() {
-  return (
-    <div>WORKSPACES</div>
-  )
+  return <div>WORKSPACES</div>;
 }
