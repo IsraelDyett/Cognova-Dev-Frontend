@@ -43,21 +43,9 @@ log "Building application..."
 npm run build
 check_status "npm build"
 
-if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null ; then
-    log "Port $PORT is already in use. Stopping existing process..."
-    kill $(lsof -t -i:$PORT) || true
-    sleep 2
-fi
-
-log "Starting application on port $PORT..."
-npx next start --port $PORT >> "$LOG_FILE" 2>&1 &
-
-sleep 5
-if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null ; then
-    log "Application successfully started on port $PORT"
-else
-    log "Failed to start application"
-    exit 1
-fi
+log "Deleting current pm2 instance"
+pm2 delete app
+log "Starting new pm2 instance"
+pm2 start ecosystem.config.js
 
 log "Deployment completed successfully"
