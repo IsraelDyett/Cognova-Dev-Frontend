@@ -11,7 +11,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table"
-import { Progress } from '@/components/ui/progress'
 import { Source, Sync, Technique } from "@prisma/client";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import { AlertCircle, BadgeCheck, MoreHorizontal, Pencil, RefreshCcw, Trash, Trash2 } from 'lucide-react'
@@ -23,16 +22,12 @@ type SourceWithExtra = Source & {
     technique?: Technique
 }
 
-const getSourceProgress = (source: SourceWithExtra): number => {
-    return 67
-}
-
 export const sourcesColumns: ColumnDef<SourceWithExtra>[] = [
     {
         accessorKey: "type",
         header: "Type",
         cell: ({ row }) => {
-            const type = sourceTypes.find((t) => t.type === row.original.technique?.slugName)
+            const type = sourceTypes.find((t) => t.type === row.original.technique?.name)
             return (
                 <Badge variant={'secondary'}>
                     {type?.icon && (
@@ -58,31 +53,6 @@ export const sourcesColumns: ColumnDef<SourceWithExtra>[] = [
             )
         },
     },
-    {
-        accessorKey: "progress",
-        header: "Progress",
-        cell: ({ row }) => {
-            const source = row.original
-            const progress = getSourceProgress(source)
-            const getVariant = (progress: number) => {
-                if (progress <= 25) return "default"
-                if (progress <= 75) return "default"
-                return "success"
-            }
-            return (
-                <div className="w-full">
-                    <div className="flex items-center justify-between mb-1 space-x-2">
-                        <Progress
-                            variant={getVariant(progress)}
-                            value={progress}
-                            className="w-full h-4"
-                        />
-                    </div>
-                </div>
-            )
-        }
-    },
-
     {
         accessorKey: "syncTime",
         header: "Sync Time",

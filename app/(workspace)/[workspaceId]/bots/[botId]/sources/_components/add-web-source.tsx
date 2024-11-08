@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { scraperApi, useScraperStore, type ScrapeType } from './scraper-store';
+import { useWorkspace } from '@/app/(workspace)/workspace-context';
+import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ParentDialogProps  {
     isLoading?: boolean;
@@ -25,6 +28,9 @@ const AddWebSource = ({ isLoading, setIsLoading}: ParentDialogProps)  => {
         setError,
     } = useScraperStore();
 
+    const {botId} = useParams()
+    const router = useRouter()
+    const { workspace } = useWorkspace()
     const [directUrl, setDirectUrl] = React.useState('');
 
     const validateUrl = (url: string): boolean => {
@@ -67,8 +73,11 @@ const AddWebSource = ({ isLoading, setIsLoading}: ParentDialogProps)  => {
         setIsLoading?.(true);
 
         try {
-            const response = await scraperApi.scrapeURLs(selectedUrls);
-            console.log('Scraped content:', response);
+            const response = await scraperApi.scrapeURLs(selectedUrls, workspace?.id, `${botId}`);
+            if(response.status == "success") {
+                toast.success("Website content added successfully");
+                router.refresh();
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {

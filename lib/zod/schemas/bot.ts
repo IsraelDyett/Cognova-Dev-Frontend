@@ -2,14 +2,14 @@ import { z } from "zod";
 
 const botBaseSchema = z.object({
     name: z.string(),
-    workspaceId: z.string(),
+    workspaceId: z.string().uuid("Invalid workspace id"),
     description: z.string().nullable().optional(),
     language: z.string().nullable().optional(),
     systemMessage: z.string().nullable().optional(),
     placeholderMessage: z.string().nullable().optional(),
     welcomeMessage: z.string().nullable().optional(),
     starterQuestions: z.array(z.string()),
-    modelId: z.string(),
+    modelId: z.string().uuid("Invalid model id"),
 });
 
 export const createBotSchema = botBaseSchema;
@@ -43,8 +43,8 @@ export const updateBotConfigurationSchema = botConfigurationBaseSchema.partial()
 
 // Base Bot Sources Schema
 const botSourcesBaseSchema = z.object({
-    botId: z.string(),
-    sourceId: z.string(),
+    botId: z.string().uuid("Invalid bot id"),
+    sourceId: z.string().uuid("invalid source id"),
 });
 
 export const createBotSourcesSchema = botSourcesBaseSchema;

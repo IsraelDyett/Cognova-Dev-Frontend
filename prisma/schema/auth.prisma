@@ -1,61 +1,61 @@
 model User {
-    id                 String             @id @default(uuid())
-    name               String?
-    email              String             @unique
-    password           String
-    image              String?
-    roleId             String?
-    roles              Role?              @relation(fields: [roleId], references: [id], onDelete: SetNull)
-    emailVerified      Boolean            @default(false)
-    uplineId           String?
-    upline             User?              @relation("UserUpline", fields: [uplineId], references: [id], onDelete: SetNull)
-    downlines          User[]             @relation("UserUpline")
-    lastLoggedAt       DateTime?
-    createdAt          DateTime           @default(now())
-    updatedAt          DateTime           @updatedAt
-    sessions           Session[]
-    ownedWorkspaces Workspace[]
-    workspaces      WorkspaceUser[]
+  id              String          @id @default(uuid())
+  name            String?
+  email           String          @unique
+  password        String
+  image           String?
+  roleId          String?
+  emailVerified   Boolean         @default(false)
+  uplineId        String?
+  lastLoggedAt    DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  sessions        Session[]
+  roles           Role?           @relation(fields: [roleId], references: [id])
+  upline          User?           @relation("UserUpline", fields: [uplineId], references: [id])
+  downlines       User[]          @relation("UserUpline")
+  workspaces      WorkspaceUser[]
+  ownedWorkspaces Workspace[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model Session {
-    id           String   @id @default(uuid())
-    userId       String
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    sessionToken  String
-    ipAddress    String?
-    device       String?
-    os           String?
-    browser      String?
-    status       String
-    createdAt    DateTime @default(now())
-    expiresAt    DateTime
+  id           String   @id @default(uuid())
+  userId       String
+  sessionToken String
+  ipAddress    String?
+  device       String?
+  os           String?
+  browser      String?
+  status       String
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("sessions")
+  @@map("sessions")
 }
 
 model Role {
-    id          String       @id @default(uuid())
-    name        String
-    displayName String
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    Users       User[]
-    permissions  Permission[]
+  id          String       @id @default(uuid())
+  name        String       @unique
+  displayName String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  permissions Permission[]
+  Users       User[]
 
-    @@map("roles")
+  @@map("roles")
 }
 
 model Permission {
-    id          String   @id @default(uuid())
-    name        String
-    displayName String
-    role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-    roleId      String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(uuid())
+  name        String   @unique
+  displayName String
+  roleId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
-    @@map("permissions")
+  @@map("permissions")
 }

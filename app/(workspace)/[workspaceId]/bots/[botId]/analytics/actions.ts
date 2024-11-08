@@ -8,7 +8,6 @@ import {
     PrismaBrowserDistribution,
     PrismaOsDistribution
 } from './types';
-import { ChatFeedback } from "@prisma/client";
 
 
 const bigIntToNumber = (value: bigint): number => {
@@ -52,10 +51,9 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
             });
 
             const uniqueUsers = await tx.conversation.groupBy({
-                by: ['device'],
+                by: ['sessionId'],
                 where: {
-                    botId,
-                    device: { not: null }
+                    botId
                 }
             });
 

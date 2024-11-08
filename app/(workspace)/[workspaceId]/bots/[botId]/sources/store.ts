@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { Source, Sync, Technique } from '@prisma/client'
-import { getSourcesByBot } from '../actions'
+import { getBotSources } from '../actions'
 import { debug } from '@/lib/utils'
 
 type SourceWithExtra = Source & {
@@ -32,9 +32,11 @@ export const useSourcesStore = create<SourcesStore>((set) => ({
         }
         set(state)
         try {
-            const sources = await getSourcesByBot(botId)
+            const sources = await getBotSources(botId)
             // @ts-ignore
-            set({ sources, isLoading: false })
+            const data = sources.data.map((source) => source.source)
+            // @ts-ignore
+            set({ sources: data, isLoading: false })
         } catch (error) {
             set({
                 error: 'Failed to load sources. Please try again.',

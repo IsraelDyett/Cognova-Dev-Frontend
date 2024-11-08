@@ -10,7 +10,7 @@ import { Metadata } from "next";
 import OauthButtons from "@/components/ui/oauth-buttons";
 
 export const metadata: Metadata = {
-  title: 'Sign Up',
+  title: 'Sign In',
 };
 
 export default function SignInPage() {

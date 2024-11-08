@@ -13,13 +13,12 @@ export async function middleware(request: NextRequest) {
     const sessionToken = request.cookies.get('auth.session.token')?.value;
     
     if (match && request.method == "GET" && sessionToken) {
-        const workspaceSlug = match[1];
-        const cachedWorkspace = request.cookies.get(`workspace.${workspaceSlug}`)?.value;
-
+        const workspaceName = match[1];
+        const cachedWorkspace = request.cookies.get(`workspace.${workspaceName}`)?.value;
         if (cachedWorkspace) {
             const [cachedToken, cachedRedirect] = cachedWorkspace.split('|');
             if (cachedToken === sessionToken) {
-                if (cachedRedirect !== `/${workspaceSlug}`) {
+                if (cachedRedirect !== `/${workspaceName}`) {
                     return NextResponse.redirect(new URL(cachedRedirect, request.url));
                 }
                 return NextResponse.next();
@@ -28,29 +27,29 @@ export async function middleware(request: NextRequest) {
 
         try {
             const workspaceResponse = await fetch(
-                `${request.nextUrl.origin}/api/workspace?slug=${workspaceSlug}&sessionToken=${sessionToken}`,
+                `${request.nextUrl.origin}/api/workspace?name=${workspaceName}&sessionToken=${sessionToken}`,
                 {
                     cache: 'force-cache'
                 }
             );
-            const workspaceData: { success: boolean, redirect: string } = await workspaceResponse.json();
+            const workspaceData: { success: boolean, cache: boolean,  redirect: string } = await workspaceResponse.json();
             
-            const response = workspaceData.redirect !== `/${workspaceSlug}`
+            const response = workspaceData.redirect !== `/${workspaceName}`
                 ? NextResponse.redirect(new URL(workspaceData.redirect, request.url))
                 : NextResponse.next();
 
-            // Set cookie with workspace validation result
-            response.cookies.set(
-                `workspace.${workspaceSlug}`,
-                `${sessionToken}|${workspaceData.redirect}`,
-                {
-                    maxAge: 900, // 15 minutes
-                    path: '/',
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production'
-                }
-            );
-
+            if(workspaceData.cache) {
+                response.cookies.set(
+                    `workspace.${workspaceName}`,
+                    `${sessionToken}|${workspaceData.redirect}`,
+                    {
+                        maxAge: 900, // 15 minutes
+                        path: '/',
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production'
+                    }
+                );
+            }
             return response;
         } catch (error) {
             console.log(error);

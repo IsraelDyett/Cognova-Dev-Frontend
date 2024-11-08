@@ -26,26 +26,27 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { toast } from "sonner";
+import { debug } from "@/lib/utils";
 import { Plus } from "lucide-react"
+import { Model } from "@prisma/client";
 import { useForm } from 'react-hook-form'
 import { useAuth } from "../auth-context";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Model, Workspace } from "@prisma/client";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createBotSchema } from "@/lib/zod/schemas/bot";
-import { createBot, getModels, getWorkspaces } from "../actions";
+import { createBot, getModels } from "../actions";
+import { useSidebarStore } from "@/components/sidebar-store";
 
 
 const defaultStarterQuestions = ["Hello, how can I help you today?"];
 
 export function CreateBot() {
-    const { user } = useAuth()
     const router = useRouter()
+    const { workspaces }= useSidebarStore()
     const [models, setModels] = useState<Model[]>([])
-    const [workspaces, setWorkspaces] = useState<Workspace[]>([])
     const form = useForm<z.infer<typeof createBotSchema>>({
         resolver: zodResolver(createBotSchema),
         defaultValues: {
@@ -67,8 +68,8 @@ export function CreateBot() {
     useEffect(() => {
         if (!alreadyMounted.current) {
             Promise.all([
+                debug("[USE-EFFECT] {CREATE-BOT] {GET-MODELS}"),
                 getModels().then(models => setModels(models)),
-                getWorkspaces(user?.id as string).then(setWorkspaces),
             ])
         }
         alreadyMounted.current = true
@@ -117,7 +118,7 @@ export function CreateBot() {
                                         </FormControl>
                                         <SelectContent>
                                             {workspaces.map((workspace) => (
-                                                <SelectItem key={workspace.id} value={workspace.id}>{workspace.name}</SelectItem>
+                                                <SelectItem key={workspace.id} value={workspace.id}>{workspace.displayName}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -142,7 +143,7 @@ export function CreateBot() {
                                         </FormControl>
                                         <SelectContent>
                                             {models.map((model) => (
-                                                <SelectItem key={model.id} value={model.id}>{model.name}</SelectItem>
+                                                <SelectItem key={model.id} value={model.id}>{model.displayName}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>

@@ -3,11 +3,13 @@ import {
     Brain,
     ChartArea,
     Cog,
+    MessageSquareText,
     Settings2,
+    SquareMousePointer,
     SquareTerminal,
 } from "lucide-react"
 import { Bot, Workspace } from '@prisma/client'
-import { getBots, getWorkspaces } from "@/app/(workspace)/actions"
+import { getWorkspaceBots, getWorkspaces } from "@/app/(workspace)/actions"
 import { debug } from '@/lib/utils';
 
 type LoadingState = "idle" | "loading" | "error" | "success";
@@ -103,8 +105,8 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
         setLoading("bots");
 
         try {
-            const bots = await getBots(workspaceId);
-            set({ bots });
+            const bots = await getWorkspaceBots(workspaceId);
+            set({ bots: bots.data });
             setSuccess("bots");
         } catch (error) {
             setError("bots", 'Failed to load bots. Please try again.');
@@ -136,6 +138,11 @@ export const sidebarData = {
                 },
             ],
         },
+        {
+            title: "Sources",
+            url: "{after.workspaceId}/sources",
+            icon: Brain,
+        },
     ],
     botNavigationMenus: [
         {
@@ -157,6 +164,16 @@ export const sidebarData = {
             title: "Customize",
             url: "{after.botId}/customize",
             icon: Cog,
+        },
+        {
+            title: "Chats",
+            url: "{after.botId}/customize",
+            icon: MessageSquareText,
+        },
+        {
+            title: "Embed",
+            url: "{after.botId}/customize",
+            icon: SquareMousePointer,
         }
     ],
     slideVariants: {

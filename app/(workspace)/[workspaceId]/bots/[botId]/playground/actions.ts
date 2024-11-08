@@ -1,16 +1,19 @@
 import { debug } from "@/lib/utils"
 
-export const streamMessage = async ({
+export const streamChat = async ({
     reader,
-    updateMessage,
-    botMessageId,
+    updateChat,
+    botChatId,
 }: {
     reader: ReadableStreamDefaultReader<Uint8Array>,
-    updateMessage: (id: string, content: string) => void
-    botMessageId: string
+    updateChat: (id: string, content: string, sourceUrls?: string[], questionSuggestions?: string[]) => void
+    botChatId: string
 }) => {
-    debug("STREAM MESSAGE")
+    debug("STREAM CHAT")
     let fullContent = ''
+    let sourceUrls: string[] | undefined
+    let questionSuggestions: string[] | undefined
+
     const decoder = new TextDecoder()
     while (true) {
         const { done, value } = await reader.read()
@@ -20,12 +23,21 @@ export const streamMessage = async ({
         const lines = chunk.split('\n')
         for (const line of lines) {
             if (line.startsWith('data: ')) {
-                try {
-                    const data = JSON.parse(line.slice(5))
+                const data = JSON.parse(line.slice(5))
+                if ('token' in data) {
                     fullContent += data.token
-                    updateMessage(botMessageId, fullContent)
-                } catch (e) {
-                    console.error('Error parsing streaming data:', e)
+                    updateChat(botChatId, fullContent, sourceUrls, questionSuggestions)
+                }
+                if ('error' in data) {
+                    throw new Error(data.error)
+                }
+                if ("source_urls" in data) {
+                    sourceUrls = data.source_urls
+                    updateChat(botChatId, fullContent, sourceUrls, questionSuggestions)
+                }
+                if ("question_suggestions" in data) {
+                    questionSuggestions = data.question_suggestions
+                    updateChat(botChatId, fullContent, sourceUrls, questionSuggestions)
                 }
             }
         }
@@ -34,11 +46,11 @@ export const streamMessage = async ({
 
 export const handlePrompt = async ({
     botId,
-    message,
+    chat,
     conversationId,
 }: {
     botId: string,
-    message: string
+    chat: string
     conversationId: string,
 }) => {
     debug("HANDLE PROMPT")
@@ -49,7 +61,7 @@ export const handlePrompt = async ({
             'Content-Type': 'application/json',
             'Accept': 'text/event-stream',
         },
-        body: JSON.stringify({ prompt: message }),
+        body: JSON.stringify({ prompt: chat }),
     })
 
     if (!response.ok) {

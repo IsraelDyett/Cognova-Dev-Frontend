@@ -58,7 +58,9 @@ export function NavMain({
               ) : (
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <Link href={item.url.replace("{after.botId}", `/${workspaceId}/bots/${botId}`)}>
+                  <Link href={item.url.
+                    replace("{after.botId}", `/${workspaceId}/bots/${botId}`).
+                    replace("{after.workspaceId}", `/${workspaceId}`)}>
                     <span>{item.title}</span>
                   </Link>
                   {item.items && (

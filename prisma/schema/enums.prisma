@@ -1,23 +1,24 @@
 enum BillingCycle {
-    MONTHLY
-    YEARLY
-    ONCE
-    UNLIMITED
+  MONTHLY
+  YEARLY
+  ONCE
+  UNLIMITED
 }
 
 enum PaymentStatus {
-    SUCCESS
-    FAILED
-    PENDING
+  SUCCESS
+  FAILED
+  PENDING
 }
 
 enum PaymentMethodStatus {
-    UNACTIVE
-    ACTIVE
-    FUTURE
+  UNACTIVE
+  ACTIVE
+  FUTURE
 }
+
 enum ChatFeedback {
-    DOWNVOTED
-    UPVOTED
-    NONE
+  DOWNVOTED
+  UPVOTED
+  NONE
 }

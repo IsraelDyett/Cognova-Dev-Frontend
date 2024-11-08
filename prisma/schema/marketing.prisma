@@ -1,86 +1,87 @@
 model Subscription {
-    id             String       @id @default(uuid())
-    workspaceId String       @unique
-    workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    planId         String?
-    pan            Plan?        @relation(fields: [planId], references: [id], onDelete: SetNull)
-    status         String
-    startDate      DateTime
-    endDate        DateTime
-    createdAt      DateTime     @default(now())
-    updatedAt      DateTime     @updatedAt
-    payments       Payment[]
+  id          String    @id @default(uuid())
+  workspaceId String    @unique
+  planId      String?
+  status      String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  payments    Payment[]
+  plan         Plan?     @relation(fields: [planId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
-    @@map("subscriptions")
+  @@map("subscriptions")
 }
 
 model Plan {
-    id            String         @id @default(uuid())
-    name          String
-    slugName      String         @unique
-    billingCycle  BillingCycle   @default(MONTHLY)
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @updatedAt
-    subscriptions Subscription[]
-    features      PlanFeature[]
-    models        Model[]
-    techniques    Technique[]
-    workspaces    Workspace[]
+  id            String         @id @default(uuid())
+  displayName   String
+  name          String         @unique
+  description   String?        @db.Text
+  billingCycle  BillingCycle   @default(MONTHLY)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  models        Model[]
+  features      PlanFeature[]
+  subscriptions Subscription[]
+  techniques    Technique[]
+  workspaces    Workspace[]
 
-    @@map("plans")
+  @@map("plans")
 }
 
 model PlanFeature {
-    id          String   @id @default(uuid())
-    planId      String
-    pan         Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
-    name        String
-    description String?
-    allowed     Boolean  @default(true)
-    createdAt   DateTime @default(now())
+  id          String   @id @default(uuid())
+  planId      String
+  name        String
+  description String?
+  allowed     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  plan         Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
 
-    @@map("plan_features")
+  @@map("plan_features")
 }
 
 model Payment {
-    id              String         @id @default(uuid())
-    workspaceId  String
-    workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    subscriptionId  String
-    subscription    Subscription   @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-    amount          Float
-    paymentMethodId String?
-    paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: SetNull)
-    status          PaymentStatus  @default(PENDING)
-    paidAt          DateTime
-    createdAt       DateTime       @default(now())
-    updatedAt       DateTime       @updatedAt
-    invoices        Invoice[]
+  id              String         @id @default(uuid())
+  workspaceId     String
+  subscriptionId  String?
+  amount          Float
+  paymentMethodId String?
+  status          PaymentStatus  @default(PENDING)
+  paidAt          DateTime
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  invoices        Invoice[]
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  subscription    Subscription?   @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  workspace       Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
-    @@map("payments")
+  @@map("payments")
 }
 
 model PaymentMethod {
-    id        String              @id @default(uuid())
-    name      String
-    slugName  String              @unique
-    status    PaymentMethodStatus @default(ACTIVE)
-    createdAt DateTime            @default(now())
-    updatedAt DateTime            @updatedAt
-    payments  Payment[]
+  id          String              @id @default(uuid())
+  name        String              @unique
+  displayName String
+  status      PaymentMethodStatus @default(ACTIVE)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  payments    Payment[]
 
-    @@map("payment_methods")
+  @@map("payment_methods")
 }
 
 model Invoice {
-    id          String   @id @default(uuid())
-    paymentId   String?
-    payment     Payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-    invoiceCode String
-    issuedAt    DateTime
-    dueDate     DateTime
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(uuid())
+  paymentId   String?
+  invoiceCode String
+  issuedAt    DateTime
+  dueDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  payment     Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
 
-    @@map("invoices")
+  @@map("invoices")
 }

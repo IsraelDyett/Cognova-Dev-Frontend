@@ -1,49 +1,63 @@
+import { getChats } from '@/app/(workspace)/actions'
 import { debug } from '@/lib/utils'
+import { ChatFeedback } from '@prisma/client'
 import { create } from 'zustand'
 
-interface Message {
+interface Chat {
     id: string
+    conversationId?: string
+    role: "user" | "assistant"
     content: string
-    role: 'user' | 'bot'
-    timestamp: Date
+    tokens?: number
+    feedback?: ChatFeedback
+    sourceURLs?: string[]
+    questionSuggestions?: string[]
+    createdAt?: Date
+    updatedAt?: Date
 }
-
 interface ChatStore {
-    messages: Message[]
+    chats: Chat[]
     isLoading: boolean
     error: string | null
-    addMessage: (message: Omit<Message, 'id' | 'timestamp'>) => string // returns id
-    updateMessage: (id: string, content: string) => void
+    addChat: (chat: Omit<Chat, 'id' | 'timestamp'>) => string // returns id
+    fetchInitialChats: (conversationId: string) => Promise<void>
+    updateChat: (id: string, content: string, sourceUrls?: string[], questionSuggestions?: string[]) => void
     setError: (error: string | null) => void
     setIsLoading: (isLoading: boolean) => void
-    removeMessage: (id: string) => void
+    removeChat: (id: string) => void
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
-    messages: [],
+    chats: [],
     isLoading: false,
     error: null,
-    addMessage: (message) => {
+    addChat: (chat) => {
         debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE")
         const id = crypto.randomUUID()
         set((state) => ({
-            messages: [...state.messages, {
-                ...message,
+            chats: [...state.chats, {
+                ...chat,
                 id,
                 timestamp: new Date()
             }]
         }))
         return id
     },
-    updateMessage: (id, content) =>
+    fetchInitialChats:  async (conversationId: string) => {
+        debug("[STORE] {USE-CHAT-STORE} FETCH-INITIAL-MESSAGE")
+        const dbChats = await getChats(conversationId)
+        // @ts-ignore
+        set({ chats: dbChats })
+    },
+    updateChat: (id, content, sourceURLs, questionSuggestions) =>
         set((state) => ({
-            messages: state.messages.map(message =>
-                message.id === id ? { ...message, content } : message
+            chats: state.chats.map(chat =>
+                chat.id === id ? { ...chat, content, sourceURLs, questionSuggestions } : chat
             )
         })),
-    removeMessage: (id) =>
+    removeChat: (id) =>
         set((state) => ({
-            messages: state.messages.filter(message => message.id !== id)
+            chats: state.chats.filter(chat => chat.id !== id)
         })),
     setError: (error) => set({ error }),
     setIsLoading: (isLoading) => set({ isLoading }),

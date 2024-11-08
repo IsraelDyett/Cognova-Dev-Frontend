@@ -8,21 +8,20 @@ import {
 import { useSourcesStore } from './store'
 import { WorkspacePageProps } from '@/types';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/lib/hooks/use-toast'
 import DataTable from '@/components/ui/data-table'
 import SourcesPageHeader from './_components/header';
 import { sourcesColumns } from './_components/columns'
 import { FileText, Globe, AlertCircle, RefreshCcw } from 'lucide-react'
 import SourcesPageSkeleton from '@/components/skeletons/sources-page';
+import { toast } from 'sonner';
 
 export const sourceTypes = [
     { type: 'pdf', icon: FileText, label: 'PDF' },
-    { type: 'website-content', icon: Globe, label: 'Website' },
+    { type: 'website', icon: Globe, label: 'Website' },
 ]
 
 export default function SourcesPage(props: WorkspacePageProps) {
     const [quietLoading, setQuietLoading] = useState(false)
-    const { toast } = useToast()
     const {
         sources,
         isLoading,
@@ -34,18 +33,11 @@ export default function SourcesPage(props: WorkspacePageProps) {
         const botId = props.params.botId
         setQuietLoading(true)
         await fetchSources(botId, quiet).catch(() => {
-            toast({
-                variant: "destructive",
-                title: "Error loading sources",
-                description: "Please try again or contact support if the problem persists."
-            })
+            toast.error("Error loading sources", { description: "Please try again or contact support if the problem persists."})
         })
         setQuietLoading(false)
         if (quiet) {
-            toast({
-                variant: "default",
-                title: "Sources refreshed successfully",
-            })
+            toast.info("Sources refreshed successfully")
 
         }
     }
@@ -70,7 +62,6 @@ export default function SourcesPage(props: WorkspacePageProps) {
             </Alert>
         )
     }
-
     return (
         <div className="space-y-8">
             <SourcesPageHeader />

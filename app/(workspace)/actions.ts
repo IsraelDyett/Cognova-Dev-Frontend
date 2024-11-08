@@ -26,7 +26,7 @@ export const getWorkspacePlan = async (workspaceId: string) => {
     const workspace = await prisma.workspace.findFirst({
         where: {
             OR: [
-                { slugName: workspaceId },
+                { name: workspaceId },
                 { id: workspaceId }
             ]
         },
@@ -43,18 +43,50 @@ export const getModels = async () => {
     return models;
 }
 
-export const getBots = async (workspaceSlug: string) => {
+export const getWorkspaceBots = async (workspaceId: string) => {
     debug("GET BOTS")
-    const bots = await prisma.bot.findMany({
-        where: {
-            workspace: {
-                slugName: workspaceSlug
-            },
-        }
-    })
-    return bots;
+    try {
+        const bots = await prisma.bot.findMany({
+            where: {
+                workspace: {
+                    OR: [
+                        { name: workspaceId },
+                        { id: workspaceId }
+                    ]
+                },
+            }
+        })
+        return { success: true, data: bots }
+    } catch (error) {
+        return { success: false, error: "Failed to fetch bots" }
+    }
 }
 
+export async function getWorkspaceSources(workspaceId: string, withBots = false) {
+    debug("GET WORKSPACE SOURCES")
+    try {
+        const sources = await prisma.source.findMany({
+            where: {
+                workspace: {
+                    OR: [
+                        { name: workspaceId },
+                        { id: workspaceId }
+                    ]
+                },
+            },
+            include: {
+                bots: {
+                    include: {
+                        bot: withBots
+                    }
+                }
+            }
+        })
+        return { success: true, data: sources }
+    } catch (error) {
+        return { success: false, error: "Failed to fetch workspace sources" }
+    }
+}
 export const getBot = async (botId: string) => {
     debug("GET BOT")
     const bots = await prisma.bot.findUnique({
@@ -75,12 +107,16 @@ export const createBot = async (data: z.infer<typeof createBotSchema>) => {
             name: data.name,
             modelId: data.modelId,
             workspaceId: data.workspaceId,
+        },
+        select: {
+            workspace: true,
+            id: true,
         }
     })
     return {
         bot: bot,
         message: "Bot created successfully",
-        redirect: `/${data.workspaceId}/bots/${bot.id}`
+        redirect: `/${bot.workspace.name}/bots/${bot.id}`
     }
 }
 
@@ -100,7 +136,7 @@ export const isUserInWorkspace = async (userId: string, workspaceSlug: string) =
         where: {
             userId: userId,
             workspace: {
-                slugName: workspaceSlug
+                name: workspaceSlug
             }
         },
         select: {
@@ -130,7 +166,7 @@ export const getWorkspace = async (workspaceId: string, withPlan = false) => {
     const workspace = await prisma.workspace.findFirst({
         where: {
             OR: [
-                { slugName: workspaceId },
+                { name: workspaceId },
                 { id: workspaceId }
             ]
         },
@@ -139,4 +175,13 @@ export const getWorkspace = async (workspaceId: string, withPlan = false) => {
         }
     })
     return workspace;
+}
+export const getChats = async (conversationId: string) => {
+    debug("GET CHATS")
+    const chats = await prisma.chat.findMany({
+        where: {
+            conversationId: conversationId
+        }
+    })
+    return chats
 }

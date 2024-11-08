@@ -95,7 +95,7 @@ const CustomizePage = (props: WorkspacePageProps) => {
                                             </Avatar>
                                         )}
                                         <div
-                                        style={{ backgroundColor : message.role === "bot" ? form.watch("aMessageColor"): form.watch("uMessageColor")}}
+                                            style={{ backgroundColor: message.role === "bot" ? form.watch("aMessageColor") : form.watch("uMessageColor") }}
                                             className={cn(
                                                 "rounded-lg px-4 py-2 text-sm",
                                                 message.role === 'bot'
@@ -109,7 +109,7 @@ const CustomizePage = (props: WorkspacePageProps) => {
                                 ))}
                             </div>
                         </ScrollArea>
-                        <div className="p-4 border-t">
+                        <div className="pb-2 pt-3 px-3 border-t">
                             <form className="flex gap-2">
                                 <Input
                                     className="flex-grow"

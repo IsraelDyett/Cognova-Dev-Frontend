@@ -49,9 +49,9 @@ export function WorkspaceSwitcher() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {workspace?.name}
+                  {workspace?.displayName}
                 </span>
-                <span className="truncate text-xs">{workspace?.plan?.name}</span>
+                <span className="truncate text-xs">{workspace?.plan?.displayName}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -74,7 +74,7 @@ export function WorkspaceSwitcher() {
                 <div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
                   <Image alt="Workspace Logo" src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(ws?.name || 'loading')}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`} width={24} height={24} className="size-6" />
                 </div>
-                {ws.name}
+                {ws.displayName}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

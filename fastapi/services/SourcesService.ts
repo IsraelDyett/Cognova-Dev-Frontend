@@ -28,20 +28,28 @@ export class SourcesService {
     }
     /**
      * Add Source
-     * @param sourceType
+     * @param workspaceId
+     * @param techniqueType
      * @param requestBody
+     * @param botId
      * @returns any Successful Response
      * @throws ApiError
      */
     public addSource(
-        sourceType: 'website',
+        workspaceId: string,
+        techniqueType: 'website',
         requestBody: Array<string>,
-    ): CancelablePromise<any> {
+        botId?: (string | null),
+    ): CancelablePromise<AddedSourceResponse> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/v1/sources/add',
+            url: '/api/v1/sources/{workspace_id}/add',
+            path: {
+                'workspace_id': workspaceId,
+            },
             query: {
-                'source_type': sourceType,
+                'technique_type': techniqueType,
+                'bot_id': botId,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -84,4 +92,8 @@ export interface ScrappedURLS {
     status:  string;
     message: string;
     data:    string[];
+}
+export interface AddedSourceResponse {
+    status:  "success" | "error";
+    message: string;
 }

@@ -1,55 +1,56 @@
 generator client {
-  engineType      = "library"
   provider        = "prisma-client-js"
-  previewFeatures = ["prismaSchemaFolder", "postgresqlExtensions"]
+  previewFeatures = ["postgresqlExtensions", "prismaSchemaFolder"]
+  engineType      = "library"
 }
 
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  extensions = [pgvector(map: "vector")]
+  extensions = [vector]
 }
 
 model Workspace {
   id           String          @id @default(uuid())
-  name         String
-  slugName     String          @unique
-  planId       String
-  plan         Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
+  displayName  String
+  name         String          @unique
+  planId       String?
   ownerId      String
-  owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
+  bots         Bot[]
+  payments     Payment[]
   sources      Source[]
+  subscription Subscription?
   vectors      Vector[]
   users        WorkspaceUser[]
-  subscription Subscription?
-  payments     Payment[]
-  bots         Bot[]
+  owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  plan         Plan?            @relation(fields: [planId], references: [id], onDelete: SetNull)
 
+  @@index([id, planId])
   @@map("workspaces")
 }
 
 model WorkspaceUser {
   id          String    @id @default(uuid())
   workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@map("workspace_users")
 }
 
 model Model {
   id          String   @id @default(uuid())
-  name        String
-  slugName    String   @unique
-  planId      String
-  pan         Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  displayName String
+  name        String   @unique
+  planId      String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   Bot         Bot[]
+  plan         Plan?     @relation(fields: [planId], references: [id], onDelete: SetNull)
 
   @@map("models")
 }
@@ -57,21 +58,21 @@ model Model {
 model Source {
   id            String       @id @default(uuid())
   workspaceId   String
-  workspace     Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   techniqueId   String?
-  technique     Technique?   @relation(fields: [techniqueId], references: [id], onDelete: SetNull)
   title         String
   url           String
-  status        String       @db.Text
+  status        String
   contentType   String
   contentLength Int
   contentHash   String
   syncTime      Int
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+  bots          BotSources[]
+  technique     Technique?   @relation(fields: [techniqueId], references: [id])
+  workspace     Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   syncs         Sync[]
   vectors       Vector[]
-  bots          BotSources[]
 
   @@map("sources")
 }
@@ -79,48 +80,42 @@ model Source {
 model Sync {
   id          String    @id @default(uuid())
   sourceId    String
-  source      Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   message     String?
   status      String
   startedAt   DateTime?
   succeedAt   DateTime?
   errorAt     DateTime?
   cancelledAt DateTime?
+  source      Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
 
   @@map("syncs")
 }
 
 model Technique {
-  id        String   @id @default(uuid())
-  name      String
-  slugName  String   @unique
-  planId    String?
-  pan       Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sources   Source[]
+  id          String   @id @default(uuid())
+  name        String   @unique
+  displayName String
+  planId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sources     Source[]
+  plan         Plan?    @relation(fields: [planId], references: [id])
 
   @@map("techniques")
 }
 
 model Vector {
-  id           String                       @id @default(uuid())
+  id           String                 @id @default(uuid())
   workspaceId  String
-  workspace    Workspace                    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   sourceId     String
-  source       Source                       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  embedding    Unsupported("vector(1024)")?
-  chunkContent String                       @db.Text
+  embedding    Unsupported("vector")?
+  chunkContent String
   metadata     Json
   chunkLength  Int
-  createdAt    DateTime                     @default(now())
-  updatedAt    DateTime                     @updatedAt
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  source       Source                 @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  workspace    Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@map("vectors")
 }
-
-// EXAMPLE METADTA
-// {
-//   "category": "finance",
-//   "summary": "This document discusses market trends.",
-// }
