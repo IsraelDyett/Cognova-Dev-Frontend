@@ -17,7 +17,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import SourcesDropdown from "./_components/sources-dropdown";
 
-const CONVERSATION_ID = "fcfb0933-d21e-422b-b698-62f48ec75346"; // Mock conversation ID
+const CONVERSATION_ID = "4645b148-af9a-4518-9a1b-20b9aa2db4ab"; // Mock conversation ID
 
 export default function PlaygroundPage(props: WorkspacePageProps) {
   const botId = props.params.botId;
