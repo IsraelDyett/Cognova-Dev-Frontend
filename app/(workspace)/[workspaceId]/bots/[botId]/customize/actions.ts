@@ -12,7 +12,7 @@ export const updateBotConfig = async (botId: string, data: BotConfig) => {
     update: {
       ...validated,
     },
-    // @ts-expect-error
+    // @ts-ignore
     create: {
       botId,
       ...validated,

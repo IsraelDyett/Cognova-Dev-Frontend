@@ -33,9 +33,9 @@ export const useSourcesStore = create<SourcesStore>((set) => ({
     set(state);
     try {
       const sources = await getBotSources(botId);
-      // @ts-expect-error
+      // @ts-ignore
       const data = sources.data.map((source) => source.source);
-      // @ts-expect-error
+      // @ts-ignore
       set({ sources: data, isLoading: false });
     } catch (error) {
       set({

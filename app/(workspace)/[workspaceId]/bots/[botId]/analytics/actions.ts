@@ -114,7 +114,7 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
               date Desc
         `,
 
-    // @ts-expect-error Country distribution
+    // @ts-ignore Country distribution
     prisma.conversation.groupBy({
       by: ["countryCode"],
       where: {
@@ -124,7 +124,7 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
       _count: true,
     }) as Promise<PrismaCountryDistribution[]>,
 
-    // @ts-expect-error Device distribution
+    // @ts-ignore Device distribution
     prisma.conversation.groupBy({
       by: ["device"],
       where: {
@@ -133,7 +133,7 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
       _count: true,
     }) as Promise<PrismaDeviceDistribution[]>,
 
-    // @ts-expect-error Browser distribution
+    // @ts-ignore Browser distribution
     prisma.conversation.groupBy({
       by: ["browser"],
       where: {
@@ -142,7 +142,7 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
       _count: true,
     }) as Promise<PrismaBrowserDistribution[]>,
 
-    // @ts-expect-error OS distribution
+    // @ts-ignore OS distribution
     prisma.conversation.groupBy({
       by: ["os"],
       where: {

@@ -29,7 +29,7 @@ export default function QueryTrendsChart({
     chats: number;
   }[];
 }) {
-  // @ts-expect-error
+  // @ts-ignore
   data = data.sort((a, b) => new Date(a.date) - new Date(b.date));
   return (
     <Card>

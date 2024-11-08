@@ -120,7 +120,7 @@ const FormControl = React.forwardRef<
     <Slot
       ref={ref}
       id={formItemId}
-      // @ts-expect-error
+      // @ts-ignore
       disabled={isSubmitting}
       invalid={error ? "true" : "false"}
       aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}

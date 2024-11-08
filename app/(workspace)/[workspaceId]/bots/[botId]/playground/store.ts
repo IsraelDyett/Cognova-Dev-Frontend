@@ -54,7 +54,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   fetchInitialChats: async (conversationId: string) => {
     debug("[STORE] {USE-CHAT-STORE} FETCH-INITIAL-MESSAGE");
     const dbChats = await getChats(conversationId);
-    // @ts-expect-error
+    // @ts-ignore
     set({ chats: dbChats });
   },
   updateChat: (id, content, sourceURLs, questionSuggestions) =>

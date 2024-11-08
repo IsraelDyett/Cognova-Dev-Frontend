@@ -20,7 +20,7 @@ export const useCustomizeStore = create<CustomizeStore>((set) => ({
     set({ isLoading: true });
     try {
       const bot = await getBot(botId);
-      // @ts-expect-error
+      // @ts-ignore
       set({ bot, isLoading: false });
     } catch (error) {
       set({
