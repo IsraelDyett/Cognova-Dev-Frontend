@@ -15,7 +15,6 @@ export async function middleware(request: NextRequest) {
   if (match && request.method == "GET" && sessionToken) {
     const workspaceName = match[1];
     const cachedWorkspace = request.cookies.get(`workspace.${workspaceName}`)?.value;
-    console.log("Checking workspace for user");
     if (cachedWorkspace) {
       const [cachedToken, cachedRedirect] = cachedWorkspace.split("|");
       if (cachedToken === sessionToken) {
@@ -53,8 +52,10 @@ export async function middleware(request: NextRequest) {
           },
         );
       }
+      console.log("Success API", request.nextUrl.origin);
       return response;
     } catch (error) {
+      console.log("Error API", request.nextUrl.origin);
       console.log("MIDDLEWARE ERROR", error);
     }
   }
