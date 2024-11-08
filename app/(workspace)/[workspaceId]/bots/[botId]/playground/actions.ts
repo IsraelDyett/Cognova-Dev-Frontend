@@ -59,7 +59,7 @@ export const handlePrompt = async ({
   conversationId: string;
 }) => {
   debug("HANDLE PROMPT");
-  const backendAPI = process.env.NEXT_PUBLIC_BACKEND_API || "http://127.0.0.1:8000/api/v1";
+  const backendAPI = process.env.NEXT_PUBLIC_BACKEND_API || "https://api.cognova.io/api/v1";
   const response = await fetch(`${backendAPI}/bots/${botId}/chat/${conversationId}`, {
     method: "POST",
     headers: {
