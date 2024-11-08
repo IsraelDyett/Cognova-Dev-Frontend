@@ -1,13 +1,12 @@
 module.exports = {
     apps: [
         {
-            name: 'cognova-app',
+            name: 'app',
             script: 'npx',
             args: 'next start --port 3020',
             env: {
                 PORT: 3020,
                 NODE_ENV: 'production',
-                // NEXT_TELEMETRY_DISABLED: 1
             },
             watch: false,
             max_memory_restart: '1G',
