@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
     try {
       const workspaceResponse = await fetch(
-        `${request.nextUrl.origin}/api/workspace?name=${workspaceName}&sessionToken=${sessionToken}`,
+        `${process.env.AUTH_TRUST_HOST}/api/workspace?name=${workspaceName}&sessionToken=${sessionToken}`,
         {
           cache: "force-cache",
         },
@@ -52,10 +52,8 @@ export async function middleware(request: NextRequest) {
           },
         );
       }
-      console.log("Success API", request.nextUrl.origin);
       return response;
     } catch (error) {
-      console.log("Error API", request.nextUrl.origin);
       console.log("MIDDLEWARE ERROR", error);
     }
   }
