@@ -6,7 +6,8 @@ module.exports = {
             args: 'next start --port 3020',
             env: {
                 PORT: 3020,
-                NODE_ENV: 'production'
+                NODE_ENV: 'production',
+                NEXT_TELEMETRY_DISABLED: 1
             },
             instances: 'max',
             exec_mode: 'cluster',
@@ -19,6 +20,9 @@ module.exports = {
             out_file: 'logs/output.log',
             merge_logs: true,
             kill_timeout: 5000,
+            no_daemon: false,
+            silent: true,
+            time: true,
             metrics: {
                 port: 9615
             }
