@@ -190,7 +190,7 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
                   </div>
                 </div>
               ))}
-              <div ref={chatsEndRef} />
+              {/*<div ref={chatsEndRef} />*/}
             </div>
           </ScrollArea>
           <div className="pb-2 pt-3 px-3 border-t mt-auto">
