@@ -1,11 +1,14 @@
+"use client";
+
 export default function Home() {
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.cognova.io"
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       Hello World!
       <script
         async
-        src="http://localhost:3000/embed.js"
-        id="068b3533-e029-41a2-a338-be7e2b9c053a"
+        src={`${origin}/embed.js`}
+        id="d9c3a43b-78ae-4d48-a5e4-44baa8e8253b"
         // // @ts-ignore
         // open={true}
         // openDelay="5000"
