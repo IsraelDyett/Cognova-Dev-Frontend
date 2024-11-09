@@ -38,9 +38,9 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
     initializeConversation,
   } = useChatStore();
 
-  useEffect(() => {
-    chatsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats]);
+  // useEffect(() => {
+  //   chatsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [chats]);
 
   const initialChatRetrieved = React.useRef(false);
   useEffect(() => {
@@ -130,9 +130,9 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
   };
   return (
     <div
-      className={`flex-1 flex ${props.searchParams["embed"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
+      className={`flex-1 flex ${props.searchParams["embed"] || props.searchParams["chat"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
     >
-      <Card className={`max-w-2xl w-full overflow-hidden mx-auto max-[480px]:rounded-none`}>
+      <Card className={`max-w-2xl w-full overflow-hidden mx-auto`}>
         <CardContent className="flex flex-col h-full md:h-[80dvh] p-0 w-full">
           <ScrollArea className="px-3 sm:px-2 pb-4">
             {error && (
