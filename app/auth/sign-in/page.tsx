@@ -12,7 +12,7 @@ export default function SignInPage() {
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-xl">Sign in to {siteConfig.title.default}</CardTitle>
+        <CardTitle className="text-xl">Sign in to {siteConfig.applicationName}</CardTitle>
         <CardDescription>Welcome back! Please sign in to continue</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

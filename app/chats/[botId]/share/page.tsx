@@ -12,7 +12,7 @@ export async function generateMetadata({
   const bot = await getBot(params.botId);
 
   return {
-    title: bot ? `Try ${bot.name} - ${siteConfig.title.default}` : `${siteConfig.title.default}`,
+    title: bot ? `Try ${bot.name} - ${siteConfig.applicationName}` : `${siteConfig.applicationName}`,
     description: bot?.description ? `${bot?.description}` : siteConfig.description,
   };
 }

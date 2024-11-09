@@ -1,7 +1,7 @@
 "use client";
 
 export default function Home() {
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.cognova.io"
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.cognova.io";
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       Hello World!

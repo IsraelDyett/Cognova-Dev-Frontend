@@ -115,8 +115,8 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
       const orgin = window.location.origin;
       const shareData = {
         title: bot
-          ? `Try ${bot.name} - ${siteConfig.title.default}`
-          : `${siteConfig.title.default}`,
+          ? `Try ${bot.name} - ${siteConfig.applicationName}`
+          : `${siteConfig.applicationName}`,
         url: `${orgin}/chats/${bot?.id}/share`,
       };
       try {
