@@ -55,7 +55,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </Breadcrumb>
               </div>
             </header>
-            <main className="flex-1 overflow-y-auto">
+            <main style={{ WebkitOverflowScrolling: "touch" }} className="flex-1 overflow-y-auto">
               <div className="container p-4">{children}</div>
             </main>
           </SidebarInset>

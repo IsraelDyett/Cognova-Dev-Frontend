@@ -4,7 +4,7 @@ import React from "react";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center px-6 w-full ">
+    <section className="flex h-[100dvh] flex-col items-center justify-center w-full px-6">
       <div className="mx-auto w-full max-w-[25rem] z-10 overflow-hidden">{children}</div>
       <DotPattern
         className={cn(
