@@ -1,7 +1,5 @@
-import { Metadata } from "next";
-
 const appDescription = "AI-Driven Chat For Smarter Decisions";
-export const siteConfig: Metadata = {
+export const siteConfig = {
   title: {
     default: "AI-Driven Chat For Smarter Decisions",
     template: `%s | Cognova`,
