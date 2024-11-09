@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/", "/favicon.ico"];
+const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/", "/favicon.ico", "/embed"];
+const publicStartWith = ["/embed"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (pathname.startsWith("/_next") || publicPaths.includes(pathname)) {
+  if (
+    pathname.startsWith("/_next") ||
+    publicPaths.includes(pathname) ||
+    publicStartWith.some((path) => pathname.startsWith(path))
+  ) {
     return NextResponse.next();
   }
 

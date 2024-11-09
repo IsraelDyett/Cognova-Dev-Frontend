@@ -1,6 +1,7 @@
 import { getChats, getOrCreateConversation } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
-import { ChatFeedback } from "@prisma/client";
+import { Bot, ChatFeedback } from "@prisma/client";
+import { toast } from "sonner";
 import { create } from "zustand";
 
 interface Chat {
@@ -19,6 +20,7 @@ interface ChatStore {
   chats: Chat[];
   isLoading: boolean;
   error: string | null;
+  bot: Bot | null;
   currentConversationId: string | null;
   initializeConversation: (botId: string) => Promise<void>;
   addChat: (chat: Omit<Chat, "id" | "timestamp">) => string; // returns id
@@ -38,13 +40,18 @@ export const useChatStore = create<ChatStore>((set) => ({
   isLoading: false,
   error: null,
   currentConversationId: null,
+  bot: null,
   initializeConversation: async (botId: string) => {
     debug("[STORE] {USE-CHAT-STORE} INITIALIZE CONVERSATION");
     const conversation = await getOrCreateConversation(botId);
+    if (!conversation) {
+      toast.error("You're accessing the invalid");
+      return;
+    }
     set({ currentConversationId: conversation.id });
     const dbChats = await getChats(conversation.id);
     // @ts-ignore
-    set({ chats: dbChats });
+    set({ chats: dbChats, bot: conversation.bot });
   },
   addChat: (chat) => {
     debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE");

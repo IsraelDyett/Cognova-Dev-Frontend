@@ -17,12 +17,13 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import SourcesDropdown from "./_components/sources-dropdown";
 
-export default function PlaygroundPage(props: WorkspacePageProps) {
+export default function PlaygroundPage(props: WorkspacePageProps & { fullScreen: boolean }) {
   const botId = props.params.botId;
   const inputRef = useRef<HTMLInputElement>(null);
   const chatsEndRef = useRef<HTMLDivElement>(null);
 
   const {
+    bot,
     chats,
     isLoading,
     error,
@@ -92,8 +93,22 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    if (bot?.welcomeMessage) {
+      // const id = crypto.randomUUID();
+      // chats.unshift({
+      //   id,
+      //   role: "assistant",
+      //   content: bot.welcomeMessage,
+      // });
+      addChat({
+        role: "assistant",
+        content: bot.welcomeMessage,
+      });
+    }
+  }, [bot]);
   return (
-    <Card className="flex flex-col h-[calc(100vh-100px)]">
+    <Card className={`${props.fullScreen ? "h-[100vh]" : "h-[calc(100vh-100px)]"} flex flex-col`}>
       <CardContent className="flex flex-col h-full p-0">
         <ScrollArea className="px-3 sm:px-2 pb-4">
           {error && (
@@ -158,11 +173,11 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
           <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
               ref={inputRef}
-              disabled={isLoading}
+              disabled={isLoading || !currentConversationId}
               className="flex-grow"
               placeholder="Type your message..."
             />
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading || !currentConversationId}>
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

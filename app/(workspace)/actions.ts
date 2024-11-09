@@ -5,6 +5,7 @@ import { BotConfig, createBotSchema } from "@/lib/zod/schemas/bot";
 import { debug } from "@/lib/utils";
 import { getBrowserMetadata, getOrCreateSessionId } from "@/utils/session";
 import { headers } from "next/headers";
+import { Bot, Conversation } from "@prisma/client";
 
 export const getWorkspaces = async (userId: string, withPlan = true) => {
   debug("GET WORKSPACES");
@@ -185,7 +186,14 @@ export const getChats = async (conversationId: string) => {
 export const createConversation = async (botId: string) => {
   const sessionId = await getOrCreateSessionId();
   const metadata = await getBrowserMetadata();
-  console.log("Metadata", metadata);
+  const bot = await prisma.bot.findUnique({
+    where: {
+      id: botId,
+    },
+  });
+  if (!bot) {
+    return null;
+  }
   const conversation = await prisma.conversation.create({
     data: {
       botId,
@@ -193,11 +201,16 @@ export const createConversation = async (botId: string) => {
       ...metadata,
       countryCode: headers().get("CF-IPCountry") || null,
     },
+    include: {
+      bot: true,
+    },
   });
 
   return conversation;
 };
-export const getOrCreateConversation = async (botId: string) => {
+export const getOrCreateConversation = async (
+  botId: string,
+): Promise<((Conversation & { bot: Bot }) | null) | null> => {
   const sessionId = await getOrCreateSessionId();
   const existingConversation = await prisma.conversation.findFirst({
     where: {
@@ -206,6 +219,9 @@ export const getOrCreateConversation = async (botId: string) => {
     },
     orderBy: {
       createdAt: "desc",
+    },
+    include: {
+      bot: true,
     },
   });
 

@@ -8,20 +8,35 @@
 </head>
 
 <body>
-  <script async id="1234" open="true" openDelay="5000">
+  <!-- <script async src="https://automatic.chat/embed.js" id="cm2uwlhyd005ajkjybkktoxqn" open="true" openDelay="5000"></script> -->
+  <script async id="068b3533-e029-41a2-a338-be7e2b9c053a" open="true" openDelay="5000">
     (function () {
-      const iframeId = "chat_iframe";
-      const buttonId = "chat_button";
-      const welcomeMessageId = "chat_welcome_message";
-      const welcomeMessageCloseButtonId = "chat_welcome_message_close_button";
+      const iframeId = "automatic_chat_iframe";
+      const buttonId = "automatic_chat_button";
+      const welcomeMessageId = "automatic_chat_welcome_message";
+      const welcomeMessageCloseButtonId =
+        "automatic_chat_welcome_message_close_button";
       const smallMode = document.currentScript.smallMode || null;
+      const embedPage = document.currentScript.embedPage || null;
       const parentId = document.currentScript.parentId || null;
+
+      // Added variables
+      const startMessage = document.currentScript.startMessage || "";
+      const language = document.currentScript.language || "";
+      const placeholder = document.currentScript.placeholder || "";
+      const welcomeMessageString = document.currentScript.welcomeMessage || "";
+      const starterQuestions = document.currentScript.starterQuestions || undefined;
+      const rightOffset = document.currentScript.rightOffset || 0;
+      const leftOffset = document.currentScript.leftOffset || 0;
+      const bottomOffset = document.currentScript.bottomOffset || 0;
+      const position = document.currentScript.position || "bottom-right";
+
       const botId = document.currentScript.id;
       const src = document.currentScript.src;
       const open = document.currentScript.open || "false";
       const openDelay = Number(document.currentScript.openDelay || 0);
       const width = document.currentScript.style.width || "500px";
-      const BASE_URL = src.substring(0, src.indexOf("/embed.js"));
+      const BASE_URL =  "http://localhost:3000";
       let openCount = 0;
       const DEFAULT_DELAY = 500;
       const CHARACTER_TYPE_DELAY = 20;
@@ -92,35 +107,59 @@
         */
         const iframe = document.createElement("iframe");
         iframe.id = iframeId;
-        iframe.src = `https://iranzi.vercel.app`;
+
+        // Build the iframe src with query parameters
+        let iframeSrc = `${BASE_URL}/embed/${botId}/chats`;
+        if (smallMode) iframeSrc += "&smallMode=true";
+        if (language) iframeSrc += "&language=" + encodeURIComponent(language);
+        if (placeholder)
+          iframeSrc += "&placeholder=" + encodeURIComponent(placeholder);
+        if (starterQuestions && starterQuestions.length > 0)
+          iframeSrc +=
+            "&starterQuestions=" +
+            encodeURIComponent(JSON.stringify(starterQuestions));
+        if (startMessage)
+          iframeSrc += "&startMessage=" + encodeURIComponent(startMessage);
+        iframe.src = iframeSrc;
+
         iframe.style.display = "none";
         iframe.style.opacity = "0";
         iframe.style.position = parentId ? "absolute" : "fixed";
         iframe.style.border = "none";
-        iframe.style.zIndex = "2147483647";
+        iframe.style.zIndex = embedPage ? "1" : "2147483647";
         iframe.style.boxShadow =
           "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px rgba(150, 150, 150, 0.2)";
 
-        const mq = window.matchMedia("(max-width: 475px)"); // Adjust 600px based on your mobile breakpoint needs
+        const mq = window.matchMedia("(max-width: 475px)"); // Adjust 475px based on your mobile breakpoint needs
         if (mq.matches) {
-          // The viewport width is 600 pixels or less
+          // The viewport width is 475 pixels or less
           iframe.style.width = "100dvw";
           iframe.style.height = smallMode ? "60dvh" : "100dvh";
           iframe.style.bottom = "0";
           iframe.style.right = "0";
+          iframe.style.left = "0";
           iframe.style.maxWidth = "100%";
           iframe.style.borderRadius = "0";
         } else {
-          iframe.style.bottom = smallMode
-            ? `${(data.bot.buttonSize || 1) * 3.6}rem`
-            : `${(data.bot.buttonSize || 1) * 6}rem`;
-
-          iframe.style.right = "40px";
+          // Desktop positioning
           iframe.style.width = smallMode ? `calc(${width} * 0.6)` : width;
           iframe.style.maxWidth = smallMode ? "48vw" : "80vw";
           iframe.style.height = smallMode ? "48vh" : "80vh";
           iframe.style.maxHeight = smallMode ? "480px" : "800px";
-          iframe.style.borderRadius = smallMode ? "15px" : "25px";
+          iframe.style.borderRadius = smallMode ? "12px" : "25px";
+
+          // Positioning based on 'position' and offsets
+          iframe.style.left = "auto";
+          iframe.style.right = "auto";
+          iframe.style.bottom = smallMode
+            ? `${(data.bot.buttonSize || 1) * 3.6}rem`
+            : `${(data.bot.buttonSize || 1) * (bottomOffset || 6)}rem`;
+
+          if (position === "bottom-right") {
+            iframe.style.right = `${rightOffset + 2.5 || 2.5}rem`;
+          } else if (position === "bottom-left") {
+            iframe.style.left = `${leftOffset + 2.5 || 2.5}rem`;
+          }
         }
 
         parentId
@@ -133,8 +172,6 @@
         container.style.fontFamily = "sans-serif";
         container.style.display = "none";
         container.style.opacity = "0";
-        container.style.bottom = `${(data.bot.buttonSize || 1) * 4}rem`;
-        container.style.right = smallMode ? "60px" : "80px";
         container.style.width = smallMode ? "225px" : "300px";
         container.style.maxWidth = "fit-content";
         container.style.borderRadius = smallMode ? "12px" : "15px";
@@ -148,14 +185,36 @@
         container.style.backgroundColor = "#FFFFFF";
         container.style.color = "#000000";
         container.style.overflowY = "hidden";
-        container.style.zIndex = "2147483647";
-
+        container.style.zIndex = embedPage ? "1" : "2147483647";
         container.style.transitionDuration = "150ms";
         container.onclick = (e) => {
           fadeOut(container);
           if (mq.matches) fadeOut(button);
           fadeIn(iframe);
         };
+
+        // Positioning for the welcome message container
+        container.style.left = "auto";
+        container.style.right = "auto";
+        container.style.bottom = `${(data.bot.buttonSize || 1) * (bottomOffset || 4)}rem`;
+        // container.style.bottom = smallMode
+        //   ? `${(data.bot.buttonSize || 1) * 3.6}rem`
+        //   : `${(data.bot.buttonSize || 1) * (bottomOffset || 6)}rem`;
+
+        if (position === "bottom-right") {
+          container.style.right = smallMode
+            ? `${rightOffset + 3.75 || 3.75}rem`
+            : `${rightOffset + 5 || 5}rem`;
+        } else if (position === "bottom-left") {
+          container.style.left = smallMode
+            ? `${rightOffset + 3.75 || 3.75}rem`
+            : `${rightOffset + 5 || 5}rem`;
+        }
+
+        parentId
+          ? document.getElementById(parentId).appendChild(container)
+          : document.body.appendChild(container);
+
         /*
           Create the welcome message
         */
@@ -163,7 +222,10 @@
         welcomeMessage.innerHTML = "";
         welcomeMessage.style.marginRight = "3px";
 
-        const text = data.bot.welcomeMessage || DEFAULT_WELCOME_MESSAGE;
+        const text =
+          welcomeMessageString ||
+          data.bot.welcomeMessage ||
+          DEFAULT_WELCOME_MESSAGE;
 
         let index = 0;
         const typeCharacter = () => {
@@ -201,17 +263,13 @@
 
         container.appendChild(welcomeMessage);
 
-        parentId
-          ? document.getElementById(parentId).appendChild(container)
-          : document.body.appendChild(container);
-
         /*
           Create the close icon for the welcome message
         */
 
         const closeButton = document.createElement("button");
         closeButton.id = welcomeMessageCloseButtonId;
-        closeButton.style.zIndex = "2147483647";
+        closeButton.style.zIndex = embedPage ? "1" : "2147483647";
         closeButton.style.position = parentId ? "absolute" : "fixed";
         closeButton.style.top = smallMode ? "0.15rem" : "0.25rem";
         closeButton.style.right = smallMode ? "0.15rem" : "0.25rem";
@@ -234,22 +292,22 @@
           closeButton.style.backgroundColor = "#FFFFFF";
         });
         closeButton.innerHTML = `
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="${smallMode ? 16 : 24}"
-      height="${smallMode ? 16 : 24}"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="${smallMode ? 1.5 : 2}"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="lucide lucide-x"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  `;
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="${smallMode ? 16 : 24}"
+        height="${smallMode ? 16 : 24}"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="${smallMode ? 1.5 : 2}"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    `;
         container.appendChild(closeButton);
 
         /* 
@@ -268,12 +326,9 @@
         // button.style.fontSize = "3vh";
         button.style.fontSize = "0";
         button.textContent = "";
-        button.style.zIndex = "2147483647";
+        button.style.zIndex = embedPage ? "1" : "2147483647";
         button.style.position = parentId ? "absolute" : "fixed";
-        button.style.bottom = "20px";
-        button.style.right = "20px";
         button.style.border = "none";
-        button.style.cursor = "pointer";
         button.style.padding = smallMode ? "0.2rem" : "0.25rem";
         button.style.height = smallMode ? "3.2rem" : "4rem";
         button.style.width = smallMode ? "3.2rem" : "4rem";
@@ -283,7 +338,7 @@
         button.style.boxSizing = "border-box";
         button.style.justifyContent = "center";
         button.style.borderRadius = "9999px";
-        // button.style.backgroundColor = data.bot.buttonColor || "#4f48e5";
+        button.style.backgroundColor = data.bot.buttonColor || "#4f48e5";
         button.style.color = "#FFFFFF";
         button.style.textShadow = "0 1px 3px rgba(0, 0, 0, 0.3)";
         button.style.transitionDuration = "150ms";
@@ -298,6 +353,18 @@
             if (mq.matches) fadeOut(button);
           }
         };
+
+        // Positioning for the chat widget button
+        button.style.left = "auto";
+        button.style.right = "auto";
+        button.style.bottom = `${(data.bot.buttonSize || 1) * (bottomOffset || 1.25)}rem`;
+
+        if (position === "bottom-right") {
+          button.style.right = `${rightOffset + 1.25 || 1.25}rem`;
+        } else if (position === "bottom-left") {
+          button.style.left = `${leftOffset + 1.25 || 1.25}rem`;
+        }
+
         parentId
           ? document.getElementById(parentId).appendChild(button)
           : document.body.appendChild(button);
