@@ -22,7 +22,7 @@ import { siteConfig } from "@/lib/site";
 export default function PlaygroundPage(props: WorkspacePageProps & { share?: boolean }) {
   const botId = props.params.botId;
   const inputRef = useRef<HTMLInputElement>(null);
-  const chatsEndRef = useRef<HTMLDivElement>(null);
+  // const chatsEndRef = useRef<HTMLDivElement>(null);
 
   const {
     bot,
