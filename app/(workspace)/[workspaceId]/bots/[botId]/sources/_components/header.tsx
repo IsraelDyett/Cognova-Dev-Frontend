@@ -26,7 +26,7 @@ interface Source {
 const sourceTypes: Source[] = [
   {
     key: "website",
-    label: "Website Content",
+    label: "Website",
     icon: Globe,
     isAvailable: true,
     requiresPlan: false,
@@ -157,7 +157,7 @@ const SourcesPageHeader: React.FC = () => {
       </h1>
       <p className="text-muted-foreground mb-8">Choose a source of data to add to your bot:</p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-4">
         {sourceTypes.map((source) => {
           const Icon = source.icon;
           return (

@@ -53,7 +53,7 @@ export default function Page(props: WorkspacePageProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
       <SourcesPageHeader />
       <DataTable
         columns={sourcesColumns}

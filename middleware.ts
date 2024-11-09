@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
     try {
       const workspaceResponse = await fetch(
-        `${process.env.AUTH_TRUST_HOST}/api/workspace?name=${workspaceName}&sessionToken=${sessionToken}`,
+        `${process.env.AUTH_TRUST_HOST || "http://localhost:3000"}/api/workspace?name=${workspaceName}&sessionToken=${sessionToken}`,
         {
           cache: "force-cache",
         },

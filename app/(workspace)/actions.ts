@@ -3,6 +3,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/services/prisma";
 import { BotConfig, createBotSchema } from "@/lib/zod/schemas/bot";
 import { debug } from "@/lib/utils";
+import { getBrowserMetadata, getOrCreateSessionId } from "@/utils/session";
+import { headers } from "next/headers";
 
 export const getWorkspaces = async (userId: string, withPlan = true) => {
   debug("GET WORKSPACES");
@@ -178,4 +180,38 @@ export const getChats = async (conversationId: string) => {
     },
   });
   return chats;
+};
+
+export const createConversation = async (botId: string) => {
+  const sessionId = await getOrCreateSessionId();
+  const metadata = await getBrowserMetadata();
+  console.log("Metadata", metadata);
+  const conversation = await prisma.conversation.create({
+    data: {
+      botId,
+      sessionId,
+      ...metadata,
+      countryCode: headers().get("CF-IPCountry") || null,
+    },
+  });
+
+  return conversation;
+};
+export const getOrCreateConversation = async (botId: string) => {
+  const sessionId = await getOrCreateSessionId();
+  const existingConversation = await prisma.conversation.findFirst({
+    where: {
+      botId,
+      sessionId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  if (existingConversation) {
+    return existingConversation;
+  }
+
+  return createConversation(botId);
 };

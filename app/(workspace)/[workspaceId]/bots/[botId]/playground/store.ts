@@ -1,4 +1,4 @@
-import { getChats } from "@/app/(workspace)/actions";
+import { getChats, getOrCreateConversation } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
 import { ChatFeedback } from "@prisma/client";
 import { create } from "zustand";
@@ -19,8 +19,9 @@ interface ChatStore {
   chats: Chat[];
   isLoading: boolean;
   error: string | null;
+  currentConversationId: string | null;
+  initializeConversation: (botId: string) => Promise<void>;
   addChat: (chat: Omit<Chat, "id" | "timestamp">) => string; // returns id
-  fetchInitialChats: (conversationId: string) => Promise<void>;
   updateChat: (
     id: string,
     content: string,
@@ -36,6 +37,15 @@ export const useChatStore = create<ChatStore>((set) => ({
   chats: [],
   isLoading: false,
   error: null,
+  currentConversationId: null,
+  initializeConversation: async (botId: string) => {
+    debug("[STORE] {USE-CHAT-STORE} INITIALIZE CONVERSATION");
+    const conversation = await getOrCreateConversation(botId);
+    set({ currentConversationId: conversation.id });
+    const dbChats = await getChats(conversation.id);
+    // @ts-ignore
+    set({ chats: dbChats });
+  },
   addChat: (chat) => {
     debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE");
     const id = crypto.randomUUID();
@@ -50,12 +60,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       ],
     }));
     return id;
-  },
-  fetchInitialChats: async (conversationId: string) => {
-    debug("[STORE] {USE-CHAT-STORE} FETCH-INITIAL-MESSAGE");
-    const dbChats = await getChats(conversationId);
-    // @ts-ignore
-    set({ chats: dbChats });
   },
   updateChat: (id, content, sourceURLs, questionSuggestions) =>
     set((state) => ({

@@ -217,7 +217,7 @@ export async function validateSession(defaultSessionToken?: string) {
     };
   } catch (error) {
     const er = error as Error;
-    console.error(er.cause);
+    console.error(er);
     customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
   }
 }

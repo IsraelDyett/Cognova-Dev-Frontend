@@ -17,8 +17,6 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import SourcesDropdown from "./_components/sources-dropdown";
 
-const CONVERSATION_ID = "4645b148-af9a-4518-9a1b-20b9aa2db4ab"; // Mock conversation ID
-
 export default function PlaygroundPage(props: WorkspacePageProps) {
   const botId = props.params.botId;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +31,8 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
     removeChat,
     setError,
     setIsLoading,
-    fetchInitialChats,
+    currentConversationId,
+    initializeConversation,
   } = useChatStore();
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
   const initialChatRetrieved = React.useRef(false);
   useEffect(() => {
     if (!initialChatRetrieved.current) {
-      fetchInitialChats(CONVERSATION_ID);
+      initializeConversation(botId);
       initialChatRetrieved.current = true;
     }
   }, []);
@@ -69,21 +68,23 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
     setError(null);
 
     try {
-      const response = await handlePrompt({
-        botId,
-        chat: userChat,
-        conversationId: CONVERSATION_ID,
-      });
-      const reader = response.body?.getReader();
+      if (currentConversationId) {
+        const response = await handlePrompt({
+          botId,
+          chat: userChat,
+          conversationId: currentConversationId,
+        });
+        const reader = response.body?.getReader();
 
-      if (!reader) {
-        throw new Error("No response body");
+        if (!reader) {
+          throw new Error("No response body");
+        }
+        await streamChat({
+          reader: reader,
+          botChatId: botChatId,
+          updateChat: updateChat,
+        });
       }
-      await streamChat({
-        reader: reader,
-        botChatId: botChatId,
-        updateChat: updateChat,
-      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to get response");
       removeChat(botChatId);
@@ -92,87 +93,85 @@ export default function PlaygroundPage(props: WorkspacePageProps) {
     }
   };
   return (
-    <div className="flex flex-col max-w-4xl mx-auto">
-      <Card className="flex-grow flex flex-col">
-        <CardContent className="flex-grow flex flex-col p-0">
-          <ScrollArea className="px-3 sm:px-2 pb-4">
-            {error && (
-              <Alert variant="destructive" className="my-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+    <Card className="flex flex-col h-[calc(100vh-100px)]">
+      <CardContent className="flex flex-col h-full p-0">
+        <ScrollArea className="px-3 sm:px-2 pb-4">
+          {error && (
+            <Alert variant="destructive" className="my-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-            <div className="space-y-4 py-2 h-[55vh]">
-              {chats.map((chat) => (
-                <div
-                  key={chat.id}
-                  className={cn(
-                    "flex gap-3",
-                    chat.role === "assistant"
-                      ? "justify-start max-w-[80%]"
-                      : "justify-end ml-auto max-w-[80%]",
-                  )}
-                >
-                  {chat.role === "assistant" && (
-                    <Avatar>
-                      <AvatarFallback>
-                        <Bot className="h-5 w-5" />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-
-                  <div className="flex flex-col">
-                    <div
-                      className={cn(
-                        "rounded-lg px-4 py-2 text-sm h-fit",
-                        chat.role === "assistant"
-                          ? "bg-secondary"
-                          : "bg-primary text-primary-foreground",
-                      )}
-                    >
-                      {(chat.content && (
-                        <MemoizedReactMarkdown
-                          className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
-                          remarkPlugins={[remarkGfm, remarkMath]}
-                          components={{
-                            p({ children }) {
-                              return <p className="mb-2 last:mb-0">{children}</p>;
-                            },
-                          }}
-                        >
-                          {chat.content}
-                        </MemoizedReactMarkdown>
-                      )) ||
-                        (chat.role === "assistant" && isLoading && <LoadingDots />)}
-                    </div>
-                    <SourcesDropdown chat={chat} />
-                  </div>
-                </div>
-              ))}
-              <div ref={chatsEndRef} />
-            </div>
-          </ScrollArea>
-          <div className="pb-2 pt-3 px-3 border-t">
-            <form onSubmit={handleSubmit} className="flex gap-2">
-              <Input
-                ref={inputRef}
-                disabled={isLoading}
-                className="flex-grow"
-                placeholder="Type your message..."
-              />
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
+          <div className="space-y-4 py-2">
+            {chats.map((chat) => (
+              <div
+                key={chat.id}
+                className={cn(
+                  "flex gap-3",
+                  chat.role === "assistant"
+                    ? "justify-start max-w-[80%]"
+                    : "justify-end ml-auto max-w-[80%]",
                 )}
-              </Button>
-            </form>
+              >
+                {chat.role === "assistant" && (
+                  <Avatar>
+                    <AvatarFallback>
+                      <Bot className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+
+                <div className="flex flex-col">
+                  <div
+                    className={cn(
+                      "rounded-lg px-4 py-2 text-sm h-fit",
+                      chat.role === "assistant"
+                        ? "bg-secondary"
+                        : "bg-primary text-primary-foreground",
+                    )}
+                  >
+                    {(chat.content && (
+                      <MemoizedReactMarkdown
+                        className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        components={{
+                          p({ children }) {
+                            return <p className="mb-2 last:mb-0">{children}</p>;
+                          },
+                        }}
+                      >
+                        {chat.content}
+                      </MemoizedReactMarkdown>
+                    )) ||
+                      (chat.role === "assistant" && isLoading && <LoadingDots />)}
+                  </div>
+                  <SourcesDropdown chat={chat} />
+                </div>
+              </div>
+            ))}
+            <div ref={chatsEndRef} />
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </ScrollArea>
+        <div className="pb-2 pt-3 px-3 border-t mt-auto">
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Input
+              ref={inputRef}
+              disabled={isLoading}
+              className="flex-grow"
+              placeholder="Type your message..."
+            />
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+            </Button>
+          </form>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
