@@ -44,8 +44,9 @@ export const useChatStore = create<ChatStore>((set) => ({
   initializeConversation: async (botId: string) => {
     debug("[STORE] {USE-CHAT-STORE} INITIALIZE CONVERSATION");
     const conversation = await getOrCreateConversation(botId);
+    console.log("Conv", conversation);
     if (!conversation) {
-      toast.error("You're accessing the invalid");
+      toast.error("You're accessing the invalid chatbot");
       return;
     }
     set({ currentConversationId: conversation.id });

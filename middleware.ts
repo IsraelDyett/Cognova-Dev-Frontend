@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/", "/favicon.ico", "/embed"];
-const publicStartWith = ["/embed"];
+const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/", "/favicon.ico"];
+const publicStartWith = ["/chats", "/embed.js", "/config.json", "/api"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -67,5 +67,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|favicon.ico|_next/static|_next/image|.*\\.png$).*)", "/:workspaceId/:path*"],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

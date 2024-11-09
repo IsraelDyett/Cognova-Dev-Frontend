@@ -70,7 +70,7 @@ export const ChatPreview = () => {
   );
 
   return (
-    <Card className="h-[78vh] flex flex-col">
+    <Card className="h-[78dvh] flex flex-col">
       <CardHeader>
         <CardTitle>Chat Preview</CardTitle>
       </CardHeader>

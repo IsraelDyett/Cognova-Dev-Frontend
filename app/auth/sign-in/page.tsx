@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import SignUpForm from "./form";
 import { Metadata } from "next";
 import OauthButtons from "@/components/ui/oauth-buttons";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -11,7 +12,7 @@ export default function SignInPage() {
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-xl">Sign in to Cognova AI</CardTitle>
+        <CardTitle className="text-xl">Sign in to {siteConfig.title.default}</CardTitle>
         <CardDescription>Welcome back! Please sign in to continue</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

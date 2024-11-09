@@ -6,12 +6,10 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 
 export interface WorkspacePageProps {
   params: Params;
-  searchParams: SearchParams;
+  searchParams: any;
 }
 
 export interface Params {
   workspaceId: string;
   botId: string;
 }
-
-export interface SearchParams {}

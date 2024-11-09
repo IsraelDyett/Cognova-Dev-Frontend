@@ -13,6 +13,7 @@ import { AuthProvider } from "./auth-context";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { WorkspaceProvider } from "./workspace-context";
+import { siteConfig } from "@/lib/site";
 
 const cachedUser = cache(async () => {
   const user = await authUser();
@@ -44,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Breadcrumb>
                   <BreadcrumbList>
                     <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">Cognova AI</BreadcrumbLink>
+                      <BreadcrumbLink href="#">{siteConfig.title.default}</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>

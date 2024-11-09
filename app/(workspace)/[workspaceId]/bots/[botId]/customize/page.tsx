@@ -73,9 +73,9 @@ const CustomizePage = ({ params }: WorkspacePageProps) => {
       <FormProvider {...methods}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <ChatPreview />
-          <Card className="h-[78vh] !p-2">
+          <Card className="h-[78dvh] !p-2">
             <ScrollArea className="pr-4">
-              <div className="max-h-[76vh]">
+              <div className="max-h-[76dvh]">
                 <CustomizeForm form={methods} />
               </div>
             </ScrollArea>
