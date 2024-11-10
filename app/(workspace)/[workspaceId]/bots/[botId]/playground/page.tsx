@@ -106,8 +106,8 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
     <div
       className={`flex-1 flex ${props.searchParams["embed"] || props.searchParams["chat"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
     >
-      <Card className={`max-w-2xl w-full overflow-hidden mx-auto`}>
-        <CardContent className="flex flex-col h-full #md:h-[80dvh] p-0 w-full">
+      <Card className={`max-w-2xl w-full overflow-hidden mx-auto h-full`}>
+        <CardContent className="flex flex-col h-full p-0 w-full">
           <ScrollArea className="px-3 pb-4 sm:px-2">
             {error && (
               <Alert variant="destructive" className="my-4">
