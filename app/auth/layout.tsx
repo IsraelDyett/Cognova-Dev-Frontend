@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="mx-auto w-full max-w-[25rem] z-10 overflow-hidden">{children}</div>
       <DotPattern
         className={cn(
-          "[mask-image:radial-gradient(circle_at_center,white,transparent)] bg-gradient-to-r from-indigo-500 via-primary to-pink-500",
+          "[mask-image:radial-gradient(circle_at_center,white,transparent)]  bg-gradient-to-r from-yellow-50 to-pink-50",
         )}
       />
     </section>

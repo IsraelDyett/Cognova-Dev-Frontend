@@ -21,7 +21,7 @@ import ShareButton from "@/components/share-button";
 export default function PlaygroundPage(props: WorkspacePageProps & { share?: boolean }) {
   const botId = props.params.botId;
   const inputRef = useRef<HTMLInputElement>(null);
-  // const chatsEndRef = useRef<HTMLDivElement>(null);
+  const chatsEndRef = useRef<HTMLDivElement>(null);
 
   const {
     bot,
@@ -37,9 +37,9 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
     initializeConversation,
   } = useChatStore();
 
-  // useEffect(() => {
-  //   chatsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [chats]);
+  useEffect(() => {
+    chatsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chats]);
 
   const initialChatRetrieved = React.useRef(false);
   useEffect(() => {
@@ -95,19 +95,13 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
     }
   };
   useEffect(() => {
-    if (bot?.welcomeMessage) {
-      // const id = crypto.randomUUID();
-      // chats.unshift({
-      //   id,
-      //   role: "assistant",
-      //   content: bot.welcomeMessage,
-      // });
+    if (bot?.welcomeMessage && chats.length < 1) {
       addChat({
         role: "assistant",
         content: bot.welcomeMessage,
       });
     }
-  }, [bot]);
+  }, [bot, chats]);
   return (
     <div
       className={`flex-1 flex ${props.searchParams["embed"] || props.searchParams["chat"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
@@ -170,7 +164,7 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
                   </div>
                 </div>
               ))}
-              {/*<div ref={chatsEndRef} />*/}
+              <div ref={chatsEndRef} />
             </div>
           </ScrollArea>
           <div className="px-3 pt-3 pb-2 mt-auto border-t">

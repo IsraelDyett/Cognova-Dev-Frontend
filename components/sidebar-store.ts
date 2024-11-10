@@ -164,7 +164,7 @@ export const sidebarData = {
     },
     {
       title: "Chats",
-      url: "{after.botId}/customize",
+      url: "{after.botId}/chats",
       icon: MessageSquareText,
     },
     {
