@@ -120,7 +120,7 @@ export default function ChatsPage() {
 
   return (
     <div className="flex h-[calc(100dvh-100px)]">
-      <div className="w-[27%] border-r">
+      <div className="w-full md:w-[27%] border-r">
         <ScrollArea className="h-full pr-3">
           {conversations.map((conversation) => (
             <Card
@@ -149,7 +149,7 @@ export default function ChatsPage() {
           ))}
         </ScrollArea>
       </div>
-      <div className="w-[73%]">
+      <div className="w-full md:w-[73%]">
         <ScrollArea className="h-full pl-2 pr-4">
           {chats.map((chat) => (
             <Card

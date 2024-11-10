@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -10,12 +11,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { scraperApi, useScraperStore } from "./scraper-store";
 import { useWorkspace } from "@/app/(workspace)/workspace-context";
 import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 interface ParentDialogProps {
   isLoading?: boolean;
   setIsLoading?: (open: boolean) => void;
 }
+
 const AddWebSource = ({ isLoading, setIsLoading }: ParentDialogProps) => {
   const { step, urls, selectedUrls, error, setStep, setUrls, setSelectedUrls, setError } =
     useScraperStore();

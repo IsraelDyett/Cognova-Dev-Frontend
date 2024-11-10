@@ -13,9 +13,11 @@ model Bot {
   updatedAt          DateTime          @updatedAt
   configurations     BotConfiguration?
   sources            BotSources[]
-  model              Model?             @relation(fields: [modelId], references: [id], onDelete: SetNull)
+  model              Model?            @relation(fields: [modelId], references: [id], onDelete: SetNull)
   workspace          Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   conversations      Conversation[]
+  business           Business?         @relation(fields: [businessId], references: [id])
+  businessId         String?
 
   @@map("bots")
 }

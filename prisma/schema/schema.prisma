@@ -19,13 +19,14 @@ model Workspace {
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   bots         Bot[]
+  businesses   Business[]
   payments     Payment[]
   sources      Source[]
   subscription Subscription?
   vectors      Vector[]
   users        WorkspaceUser[]
   owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  plan         Plan?            @relation(fields: [planId], references: [id], onDelete: SetNull)
+  plan         Plan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
 
   @@index([id, planId])
   @@map("workspaces")
@@ -50,7 +51,7 @@ model Model {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   Bot         Bot[]
-  plan         Plan?     @relation(fields: [planId], references: [id], onDelete: SetNull)
+  plan        Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
 
   @@map("models")
 }
@@ -99,7 +100,7 @@ model Technique {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   sources     Source[]
-  plan         Plan?    @relation(fields: [planId], references: [id])
+  plan        Plan?    @relation(fields: [planId], references: [id])
 
   @@map("techniques")
 }

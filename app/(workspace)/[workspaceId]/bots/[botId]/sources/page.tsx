@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { useSourcesStore } from "./store";
 import { WorkspacePageProps } from "@/types";
@@ -11,6 +10,7 @@ import SourcesPageHeader from "./_components/header";
 import { sourcesColumns } from "./_components/columns";
 import { AlertCircle, RefreshCcw } from "lucide-react";
 import SourcesPageSkeleton from "@/components/skeletons/sources-page";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function Page(props: WorkspacePageProps) {
   const [quietLoading, setQuietLoading] = useState(false);

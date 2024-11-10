@@ -12,7 +12,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: [".eslintrc.js", "embed.js"],
+  ignorePatterns: [".eslintrc.js", "embed.js", "prisma/*"],
   rules: {
     complexity: ["error", 30],
     "@typescript-eslint/ban-ts-ignore": "off",

@@ -1,6 +1,6 @@
 "use server";
-import { prisma } from "@/lib/services/prisma";
 import { debug } from "@/lib/utils";
+import { prisma } from "@/lib/services/prisma";
 
 export async function getBotSources(botId: string) {
   debug("GET BOT SOURCES");
@@ -25,6 +25,7 @@ export async function getBotSources(botId: string) {
 }
 
 export async function associateSourceWithBot(sourceId: string, botId: string) {
+  debug("ASSOCIATE SOURCE WITH BOT");
   try {
     const botSource = await prisma.botSources.create({
       data: {
@@ -39,6 +40,7 @@ export async function associateSourceWithBot(sourceId: string, botId: string) {
 }
 
 export async function deassociateSourceFromBot(sourceId: string, botId: string) {
+  debug("DEASSOCIATE SOURCE WITH BOT");
   try {
     await prisma.botSources.deleteMany({
       where: {

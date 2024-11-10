@@ -5,14 +5,7 @@ export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       Hello World!
-      <script
-        async
-        src={`${origin}/embed.js`}
-        id="d9c3a43b-78ae-4d48-a5e4-44baa8e8253b"
-        // // @ts-ignore
-        // open={true}
-        // openDelay="5000"
-      ></script>
+      <script async src={`${origin}/embed.js`} id="d9c3a43b-78ae-4d48-a5e4-44baa8e8253b"></script>
     </section>
   );
 }

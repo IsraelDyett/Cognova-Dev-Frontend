@@ -1,0 +1,106 @@
+model Business {
+    id          String   @id @default(uuid())
+    workspaceId String
+    name        String
+    type        String
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    products       Product[]
+    locations      Location[]
+    categories     Category[]
+    operatingHours OperatingHours[]
+
+    hasDelivery    Boolean @default(false)
+    hasPickup      Boolean @default(false)
+    acceptsReturns Boolean @default(false)
+    hasWarranty    Boolean @default(false)
+
+    workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    configurations BusinessConfig?
+
+    @@map("businesses")
+    bot Bot[]
+}
+
+model BusinessConfig {
+    id                 String @id @default(uuid())
+    businessId         String @unique
+    deliveryFee        Float?
+    minOrderAmount     Float?
+    taxRate            Float?
+    returnPeriodDays   Int?
+    warrantyPeriodDays Int?
+    currency           String @default("USD")
+
+    business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+    @@map("business_configs")
+}
+
+model Category {
+    id          String  @id @default(uuid())
+    businessId  String
+    name        String
+    description String?
+
+    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    products Product[]
+
+    @@map("categories")
+}
+
+model Product {
+    id          String   @id @default(uuid())
+    businessId  String
+    categoryId  String?
+    name        String
+    description String?
+    price       Float
+    stock       Int      @default(0)
+    sku         String?
+    images      String[]
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    category Category? @relation(fields: [categoryId], references: [id])
+
+    @@map("products")
+}
+
+model Location {
+    id         String  @id @default(uuid())
+    businessId String
+    name       String
+    address    String
+    city       String
+    state      String?
+    country    String
+    postalCode String?
+    phone      String?
+    email      String?
+    isMain     Boolean @default(false)
+
+    business Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    hours    OperatingHours[]
+
+    @@map("locations")
+}
+
+model OperatingHours {
+    id         String  @id @default(uuid())
+    businessId String
+    locationId String?
+    dayOfWeek  Int
+    openTime   String
+    closeTime  String
+    isClosed   Boolean @default(false)
+
+    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    location Location? @relation(fields: [locationId], references: [id])
+
+    @@map("operating_hours")
+}
