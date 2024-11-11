@@ -51,7 +51,7 @@ export default function HeroSection() {
             Transform Your Customer Support with AI Chat
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Our innovative SaaS application leverages AI to provide seamless chat support, allowing
+            Our innovative application leverages AI to provide seamless chat support, allowing
             businesses to respond instantly to customer inquiries. Upload your data, connect your
             WhatsApp Business, and watch as our AI learns and engages with your customers like never
             before.
