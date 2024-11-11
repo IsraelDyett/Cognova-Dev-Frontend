@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/", "/favicon.ico"];
-const publicStartWith = ["/chats", "/embed.js", "/config.json", "/api"];
+const publicStartWith = ["/chats", "/embed.js", "/config.json", "/api", "/articles"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
