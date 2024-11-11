@@ -363,7 +363,7 @@ class ChatWidget {
     closeButton.id = CONFIG.WELCOME_MESSAGE.closeButtonId;
 
     const closeButtonStyles = {
-      position: "absolute",
+      position: "fixed",
       right: this.options.smallMode ? "0.1rem" : "0.25rem",
       padding: this.options.smallMode ? "0.15rem" : "0.25rem",
       backgroundColor: "transparent",
