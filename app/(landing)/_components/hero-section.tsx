@@ -60,7 +60,7 @@ export default function HeroSection() {
             <Button>Sign Up Now</Button>
           </div>
         </div>
-        <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+        {/* <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
           <svg
             viewBox="0 0 366 729"
             role="img"
@@ -92,7 +92,7 @@ export default function HeroSection() {
               />
             </foreignObject>
           </svg>
-        </div>
+        </div> */}
       </div>
     </div>
   );

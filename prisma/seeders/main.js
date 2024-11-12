@@ -90,6 +90,13 @@ async function mainSeeder() {
       modelId: model.id,
     },
   });
+  const technique = await prisma.technique.create({
+    data: {
+      name: "website",
+      displayName: "Website",
+      planId: "59bf2524-ce48-4b3b-a990-5ac9c7a7b5fe",
+    },
+  });
   prisma.$disconnect();
 }
 
