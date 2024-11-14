@@ -28,7 +28,7 @@ async function mainSeeder() {
   console.log("Admin Role created or updated");
 
   await prisma.user.upsert({
-    where: { email: "admin@cognova.io" },
+    where: { email: "troy@cognova.io" },
     update: {},
     create: {
       id: ROOT_USER_ID,
@@ -36,7 +36,7 @@ async function mainSeeder() {
       email: "troy@cognova.io",
       password: await bcrypt.hash("123456", parseInt(process.env.SALT_ROUNDS)),
       emailVerified: true,
-      roleId: "cm3fqaet8000308jo9e4qbmrs",
+      roleId: ADMIN_ROLE_ID,
     },
   });
   console.log("Root User created or updated");
