@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.js --fix",
     "env": "dotenv -e .env.local",
-    "postinstall": "prisma generate && prisma db push",
+    "postinstall": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.local prisma migrate dev",
     "prisma:db:seed": "dotenv -e .env.local prisma db seed",
     "prisma:db:push": "dotenv -e .env.local prisma db push",
