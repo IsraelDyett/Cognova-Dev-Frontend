@@ -6,8 +6,8 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b backdrop-blur px-6 lg:px-8">
-      <div className="container mx-auto flex flex-col sm:flex-row h-fit py-2 items-start sm:items-center justify-between max-w-7xl px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b backdrop-blur">
+      <div className="container mx-auto flex flex-col sm:flex-row h-fit py-2 items-start sm:items-center justify-between max-w-7xl lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
           <Image alt="Logo" src={"/images/logo.png"} width={926} height={922} className="h-8 w-8" />
           <span className="font-bold text-2xl font-sans">{siteConfig.applicationName}</span>

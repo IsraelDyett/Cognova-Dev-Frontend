@@ -1,21 +1,21 @@
 import { z } from "zod";
 
 export const UserSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().cuid(),
   name: z.string().nullable(),
   email: z.string().email(),
   password: z.string(),
-  roleId: z.string().uuid().nullable(),
+  roleId: z.string().cuid().nullable(),
   emailVerified: z.boolean().default(false),
-  uplineId: z.string().uuid().nullable(),
+  uplineId: z.string().cuid().nullable(),
   lastLoggedAt: z.date().nullable(),
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date(),
 });
 
 export const SessionSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
+  id: z.string().cuid(),
+  userId: z.string().cuid(),
   accessToken: z.string(),
   refreshToken: z.string(),
   ipAddress: z.string().nullable(),
@@ -28,7 +28,7 @@ export const SessionSchema = z.object({
 });
 
 export const RoleSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().cuid(),
   name: z.string(),
   displayName: z.string(),
   createdAt: z.date().default(() => new Date()),
@@ -36,10 +36,10 @@ export const RoleSchema = z.object({
 });
 
 export const PermissionSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().cuid(),
   name: z.string(),
   displayName: z.string(),
-  roleId: z.string().uuid(),
+  roleId: z.string().cuid(),
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date(),
 });
@@ -51,7 +51,7 @@ export const SignUpSchema = z.object({
     .min(6, "Password must be at least 6 characters long")
     .max(32, "Password must be a maximun 32 characters"),
   name: z.string().min(2).nullable().optional(),
-  uplineId: z.string().uuid().nullable().optional(),
+  uplineId: z.string().cuid().nullable().optional(),
 });
 
 export const SignInSchema = z.object({

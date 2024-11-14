@@ -1,5 +1,6 @@
 import { getChats, getOrCreateConversation } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
+import { createCuid } from "@/utils/session";
 import { Bot, ChatFeedback } from "@prisma/client";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -56,7 +57,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   },
   addChat: (chat) => {
     debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE");
-    const id = crypto.randomUUID();
+    const id = createCuid();
     set((state) => ({
       chats: [
         ...state.chats,

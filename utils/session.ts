@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import { init } from "@paralleldrive/cuid2";
 
-const createId = init({
+export const createCuid = init({
   random: Math.random,
   length: 25,
 });
@@ -16,7 +16,7 @@ export const getOrCreateSessionId = async () => {
   if (sessionId) {
     return sessionId;
   }
-  const newSessionId = createId();
+  const newSessionId = createCuid();
   cookieStore.set("headless.session.id", newSessionId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

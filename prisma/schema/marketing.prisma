@@ -1,5 +1,5 @@
 model Subscription {
-  id          String    @id @default(uuid())
+  id          String    @id @default(cuid())
   workspaceId String    @unique
   planId      String?
   status      String
@@ -15,7 +15,7 @@ model Subscription {
 }
 
 model Plan {
-  id            String         @id @default(uuid())
+  id            String         @id @default(cuid())
   displayName   String
   name          String         @unique
   description   String?        @db.Text
@@ -32,7 +32,7 @@ model Plan {
 }
 
 model PlanFeature {
-  id          String   @id @default(uuid())
+  id          String   @id @default(cuid())
   planId      String
   name        String
   description String?
@@ -44,7 +44,7 @@ model PlanFeature {
 }
 
 model Payment {
-  id              String         @id @default(uuid())
+  id              String         @id @default(cuid())
   workspaceId     String
   subscriptionId  String?
   amount          Float
@@ -62,7 +62,7 @@ model Payment {
 }
 
 model PaymentMethod {
-  id          String              @id @default(uuid())
+  id          String              @id @default(cuid())
   name        String              @unique
   displayName String
   status      PaymentMethodStatus @default(ACTIVE)
@@ -74,7 +74,7 @@ model PaymentMethod {
 }
 
 model Invoice {
-  id          String   @id @default(uuid())
+  id          String   @id @default(cuid())
   paymentId   String?
   invoiceCode String
   issuedAt    DateTime

@@ -1,5 +1,5 @@
 model Bot {
-  id                 String            @id @default(uuid())
+  id                 String            @id @default(cuid())
   workspaceId        String
   name               String
   description        String?
@@ -23,7 +23,7 @@ model Bot {
 }
 
 model BotConfiguration {
-  id                 String   @id @default(uuid())
+  id                 String   @id @default(cuid())
   botId              String   @unique
   avatarURL          String?
   uMessageColor      String?
@@ -46,7 +46,7 @@ model BotConfiguration {
 }
 
 model BotSources {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   botId     String
   sourceId  String
   createdAt DateTime @default(now())

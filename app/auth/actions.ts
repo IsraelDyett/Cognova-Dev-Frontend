@@ -102,7 +102,7 @@ async function createSession(user: User) {
   debug("CREATE_SESSION");
   const headersList = headers();
   const agent = userAgent({ headers: headersList });
-  const sessionToken = await hashToken(crypto.randomUUID());
+  const sessionToken = await hashToken(crypto.randomcuid());
   await prisma?.$transaction(async (tx) => {
     const activeSessions = await tx.session.findMany({
       where: {

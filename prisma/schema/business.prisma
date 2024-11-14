@@ -1,5 +1,5 @@
 model Business {
-    id          String   @id @default(uuid())
+    id          String   @id @default(cuid())
     workspaceId String
     name        String
     type        String
@@ -25,7 +25,7 @@ model Business {
 }
 
 model BusinessConfig {
-    id                 String @id @default(uuid())
+    id                 String @id @default(cuid())
     businessId         String @unique
     deliveryFee        Float?
     minOrderAmount     Float?
@@ -40,7 +40,7 @@ model BusinessConfig {
 }
 
 model Category {
-    id          String  @id @default(uuid())
+    id          String  @id @default(cuid())
     businessId  String
     name        String
     description String?
@@ -52,7 +52,7 @@ model Category {
 }
 
 model Product {
-    id          String   @id @default(uuid())
+    id          String   @id @default(cuid())
     businessId  String
     categoryId  String?
     name        String
@@ -72,7 +72,7 @@ model Product {
 }
 
 model Location {
-    id         String  @id @default(uuid())
+    id         String  @id @default(cuid())
     businessId String
     name       String
     address    String
@@ -91,7 +91,7 @@ model Location {
 }
 
 model OperatingHours {
-    id         String  @id @default(uuid())
+    id         String  @id @default(cuid())
     businessId String
     locationId String?
     dayOfWeek  Int
