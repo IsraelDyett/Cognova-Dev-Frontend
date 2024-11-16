@@ -52,18 +52,18 @@ export function NavMain({
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
               ) : (
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                <SidebarMenuButton tooltip={item.title} asChild>
                   <Link
                     href={item.url
                       .replace("{after.botId}", `/${workspaceId}/bots/${botId}`)
                       .replace("{after.workspaceId}", `/${workspaceId}`)}
-                  >
+                      >
+                    {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                  </Link>
                   {item.items && (
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   )}
+                  </Link>
                 </SidebarMenuButton>
               )}
               <CollapsibleContent>

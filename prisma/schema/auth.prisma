@@ -4,14 +4,12 @@ model User {
   email           String          @unique
   password        String
   image           String?
-  roleId          String?
   emailVerified   Boolean         @default(false)
   uplineId        String?
   lastLoggedAt    DateTime?
   createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  updatedAt       DateTime        @default(now()) @updatedAt
   sessions        Session[]
-  roles           Role?           @relation(fields: [roleId], references: [id])
   upline          User?           @relation("UserUpline", fields: [uplineId], references: [id])
   downlines       User[]          @relation("UserUpline")
   workspaces      WorkspaceUser[]
@@ -37,13 +35,14 @@ model Session {
 }
 
 model Role {
-  id          String       @id @default(cuid())
-  name        String       @unique
-  displayName String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  permissions Permission[]
-  Users       User[]
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  displayName         String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
+  permissions         Permission[]
+  workspaces          WorkspaceUser[]
+  workspaceInvitation WorkspaceInvitation[]
 
   @@map("roles")
 }
@@ -54,7 +53,7 @@ model Permission {
   displayName String
   roleId      String
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   @@map("permissions")

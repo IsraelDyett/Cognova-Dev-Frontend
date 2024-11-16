@@ -22,13 +22,14 @@ import { useRouter } from "next/navigation";
 import { useSidebarStore } from "./sidebar-store";
 import { useAuth } from "@/app/(workspace)/auth-context";
 import { useWorkspace } from "@/app/(workspace)/workspace-context";
+import { Skeleton } from "./ui/skeleton";
 
 export function WorkspaceSwitcher() {
   const router = useRouter();
   const { user } = useAuth();
   const { isMobile } = useSidebar();
   const { workspace } = useWorkspace();
-  const { workspaces, fetchWorkspaces } = useSidebarStore();
+  const { workspaces, fetchWorkspaces, loadingStates } = useSidebarStore();
 
   React.useEffect(() => {
     if (workspaces.length === 0) {
@@ -45,17 +46,30 @@ export function WorkspaceSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square overflow-hidden size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                <Image
+                {loadingStates.workspaces !== "success" ? (
+                    <Skeleton  className="h-8 w-8"/>
+                ): (
+                  <Image
                   alt="Workspace Logo"
                   src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(workspace?.name || "loading")}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`}
                   width={32}
                   height={32}
                   className="size-8"
                 />
+                )}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{workspace?.displayName}</span>
-                <span className="truncate text-xs">{workspace?.plan?.displayName}</span>
+                {loadingStates.workspaces !== "success" ? (
+                  <>
+                  <Skeleton  className="w-5/6 h-4"/>
+                  <Skeleton  className="w-3/5 h-3 mt-1"/>
+                  </>
+                ) : (
+                  <>
+                    <span className="truncate font-semibold">{workspace?.displayName}</span>
+                    <span className="truncate text-xs">{workspace?.plan?.displayName}</span>
+                  </>
+                )}
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>

@@ -37,6 +37,7 @@ export const config: NextAuthConfig = {
             email: user.email,
             name: user.name,
             password: user.id,
+            image: user.image
           },
           "google",
         )) as AuthResponse;

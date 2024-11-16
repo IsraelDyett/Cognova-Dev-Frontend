@@ -87,6 +87,14 @@ const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: U
       sameSite: "lax",
       expires: sessionToken.expiresAt,
     });
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        lastLoggedAt: new Date(),
+      }
+    })
     return {
       success: true,
       message: action,
@@ -150,7 +158,7 @@ async function createSession(user: User) {
   };
 }
 
-export async function validateSession(defaultSessionToken?: string) {
+export async function validateSession(defaultSessionToken?: string, redirectTo = "/") {
   debug("VALIDATE_SESSION");
   let sessionToken = "";
   if (defaultSessionToken) {
@@ -218,7 +226,7 @@ export async function validateSession(defaultSessionToken?: string) {
   } catch (error) {
     const er = error as Error;
     console.error(er);
-    customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
+    customRedirect(`/auth/sign-in?redirect=${redirectTo}&error=AUTH_FAILED&reason=${er.cause}`);
   }
 }
 

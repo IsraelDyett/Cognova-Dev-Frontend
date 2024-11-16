@@ -17,7 +17,7 @@ model Workspace {
   planId       String?
   ownerId      String
   createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  updatedAt    DateTime        @default(now()) @updatedAt
   bots         Bot[]
   businesses   Business[]
   payments     Payment[]
@@ -25,10 +25,11 @@ model Workspace {
   subscription Subscription?
   vectors      Vector[]
   users        WorkspaceUser[]
+  invitations  WorkspaceInvitation[]
   owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   plan         Plan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
 
-  @@index([id, planId])
+  @@index([id, planId, name])
   @@map("workspaces")
 }
 
@@ -36,10 +37,29 @@ model WorkspaceUser {
   id          String    @id @default(cuid())
   workspaceId String
   userId      String
+  roleId      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  role        Role?     @relation(fields: [roleId], references: [id])
 
+  @@index([id, userId])
   @@map("workspace_users")
+}
+
+model WorkspaceInvitation {
+  id          String                @id @default(cuid())
+  workspaceId String
+  email       String                @unique
+  status      WorkspaceInviteStatus @default(PENDING)
+  roleId      String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @default(now()) @updatedAt
+  role        Role?                 @relation(fields: [roleId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("workspace_invitations")
 }
 
 model Model {
@@ -49,10 +69,11 @@ model Model {
   planId      String?
   description String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   Bot         Bot[]
   plan        Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
 
+  @@index([name])
   @@map("models")
 }
 
@@ -68,7 +89,7 @@ model Source {
   contentHash   String
   syncTime      Int
   createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  updatedAt     DateTime     @default(now()) @updatedAt
   bots          BotSources[]
   technique     Technique?   @relation(fields: [techniqueId], references: [id])
   workspace     Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
@@ -98,7 +119,7 @@ model Technique {
   displayName String
   planId      String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   sources     Source[]
   plan        Plan?    @relation(fields: [planId], references: [id])
 
@@ -106,17 +127,18 @@ model Technique {
 }
 
 model Vector {
-  id           String                 @id @default(cuid())
-  workspaceId  String
-  sourceId     String
-  embedding    Unsupported("vector")?
-  chunkContent String
-  metadata     Json
-  chunkLength  Int
-  createdAt    DateTime               @default(now())
-  updatedAt    DateTime               @updatedAt
-  source       Source                 @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  workspace    Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id                   String                 @id @default(cuid())
+  workspaceId          String
+  sourceId             String
+  embedding            Unsupported("vector")?
+  markdownChunkContent String?                @db.Text
+  chunkContent         String
+  metadata             Json
+  chunkLength          Int
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  source               Source                 @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  workspace            Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@map("vectors")
 }

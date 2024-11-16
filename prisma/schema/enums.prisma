@@ -22,3 +22,9 @@ enum ChatFeedback {
   UPVOTED
   NONE
 }
+
+enum WorkspaceInviteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}

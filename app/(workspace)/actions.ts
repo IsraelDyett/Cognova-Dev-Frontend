@@ -179,6 +179,7 @@ export const getChats = async (conversationId: string) => {
     where: {
       conversationId: conversationId,
     },
+    orderBy: { createdAt: "asc" },
   });
   return chats;
 };

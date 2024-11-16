@@ -5,7 +5,7 @@ model Business {
     type        String
     description String?
     createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    updatedAt   DateTime @default(now()) @updatedAt
 
     products       Product[]
     locations      Location[]
@@ -19,9 +19,9 @@ model Business {
 
     workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     configurations BusinessConfig?
+    bot            Bot[]
 
     @@map("businesses")
-    bot Bot[]
 }
 
 model BusinessConfig {
@@ -63,7 +63,7 @@ model Product {
     images      String[]
     isActive    Boolean  @default(true)
     createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    updatedAt   DateTime @default(now()) @updatedAt
 
     business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
     category Category? @relation(fields: [categoryId], references: [id])

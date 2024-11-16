@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "./store";
-import { getConversations, getChats } from "./actions";
+import { getConversations } from "./actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FiMonitor, FiSmartphone, FiTablet } from "react-icons/fi";
@@ -18,6 +18,10 @@ import {
   SiInstagram,
 } from "react-icons/si";
 import { ThumbsUp, ThumbsDown, Globe } from "lucide-react";
+import { getChats } from "@/app/(workspace)/actions";
+import { MemoizedReactMarkdown } from "@/components/ui/markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 
 export default function ChatsPage() {
   const searchParams = useSearchParams();
@@ -119,7 +123,7 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="flex h-[calc(100dvh-100px)]">
+    <div className="flex flex-col md:flex-row h-[calc(100dvh-100px)]">
       <div className="w-full md:w-[27%] border-r">
         <ScrollArea className="h-full pr-3">
           {conversations.map((conversation) => (
@@ -135,13 +139,17 @@ export default function ChatsPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <span>{showBrowserIcon(conversation.browser)}</span>
-                  <span>{showOsIcon(conversation.os)}</span>
-                  <span>{showDeviceIcon(conversation.device)}</span>
-                  <img
-                    src={`https://flagsapi.com/${conversation.countryCode}/flat/64.png`}
-                    className="h-4 w-4"
-                  />
+                  {conversation.browser && <span>{showBrowserIcon(conversation.browser)}</span>}
+                  {conversation.os && <span>{showOsIcon(conversation.os)}</span>}
+                  {conversation.device && <span>{showDeviceIcon(conversation.device)}</span>}
+                  {conversation.countryCode && (
+                    <span>
+                      <img
+                        src={`https://flagsapi.com/${conversation.countryCode}/flat/64.png`}
+                        className="h-4 w-4"
+                      />
+                    </span>
+                  )}
                 </div>
                 <div className="mt-2 text-sm">Chats: {conversation.chats.length}</div>
               </CardContent>
@@ -154,7 +162,7 @@ export default function ChatsPage() {
           {chats.map((chat) => (
             <Card
               key={chat.id}
-              className={`${chat.role === "assistant" ? "bg-blue-50" : "bg-gray-50"} my-2`}
+              className={`${chat.role === "assistant" ? "bg-secondary justify-start" : "bg-primary text-primary-foreground justify-end ml-auto"} my-2 max-w-[80%]`}
             >
               <CardHeader>
                 <CardTitle className="text-sm flex justify-between">
@@ -163,15 +171,27 @@ export default function ChatsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{chat.content}</p>
-                <div className="mt-2 flex items-center space-x-2">
-                  <ThumbsUp
-                    className={`h-4 w-4 ${chat.feedback === "UPVOTED" ? "text-green-500" : "text-gray-500"}`}
-                  />
-                  <ThumbsDown
-                    className={`h-4 w-4 ${chat.feedback === "DOWNVOTED" ? "text-red-500" : "text-gray-500"}`}
-                  />
-                </div>
+                <MemoizedReactMarkdown
+                  className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  components={{
+                    p({ children }) {
+                      return <p className="mb-2 last:mb-0">{children}</p>;
+                    },
+                  }}
+                >
+                  {chat.content}
+                </MemoizedReactMarkdown>
+                {chat.role == "assistant" && (
+                  <div className="mt-2 flex items-center space-x-2">
+                    <ThumbsUp
+                      className={`h-4 w-4 ${chat.feedback === "UPVOTED" ? "text-green-500" : "text-gray-500"}`}
+                    />
+                    <ThumbsDown
+                      className={`h-4 w-4 ${chat.feedback === "DOWNVOTED" ? "text-red-500" : "text-gray-500"}`}
+                    />
+                  </div>
+                )}
                 {chat.sourceURLs.length > 0 && (
                   <div className="mt-2">
                     <strong>Sources:</strong>

@@ -1,60 +1,78 @@
 "use server";
 
-interface CreateWorkspaceResponse {
-  success: boolean;
-  error?: string;
-  workspaceId?: string;
-}
+import slugify from 'slugify';
+import { Resend } from 'resend';
+import { prisma } from "@/lib/services/prisma";
+import { invitesSchema, workspaceSchema } from '@/lib/zod/schemas/workspace';
+import { authUser } from '../auth/actions';
+import { InviteEmailTemplate } from '@/fastapi/mails/team-invite';
 
-interface InviteTeammatesResponse {
-  success: boolean;
-  error?: string;
-  invitedEmails?: string[];
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function createWorkspace(
-  name: string,
-  email: string,
-): Promise<CreateWorkspaceResponse> {
+  displayName: string,
+  planId?: string,
+) {
   try {
-    // Here you would typically:
-    // 1. Validate the input
-    // 2. Create the workspace in your database
-    // 3. Associate it with the user
-    // This is a mock implementation
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const user = await authUser().catch((er) => { })
+    // if(!user) return {
+    //   success: false,
+    //   error: "USER_NOT_FOUND"
+    // };
+    const parsed = workspaceSchema.parse({ displayName, planId });
 
-    return {
-      success: true,
-      workspaceId: "ws_" + Math.random().toString(36).substr(2, 9),
-    };
+    const workspace = await prisma.workspace.create({
+      data: {
+        displayName: parsed.displayName,
+        name: slugify(parsed.displayName, { lower: true, trim: true }),
+        planId: parsed.planId,
+        ownerId: user?.id || "cm3fqf7or000608jo8n8i9clr",
+      },
+    });
+
+    return { success: true, workspaceId: workspace.id };
   } catch (error) {
-    return {
-      success: false,
-      error: "Failed to create workspace",
-    };
+    console.error('Workspace creation failed:', error);
+    return { success: false, error: "Failed to create workspace" };
   }
 }
 
 export async function inviteTeammates(
   workspaceId: string,
-  invites: Array<{ email: string; role: string }>,
-): Promise<InviteTeammatesResponse> {
+  invites: Array<{ email: string; roleId: string }>,
+) {
   try {
-    // Here you would typically:
-    // 1. Validate the emails
-    // 2. Send invitation emails
-    // 3. Store pending invites in your database
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const parsed = invitesSchema.parse(invites);
 
-    return {
-      success: true,
-      invitedEmails: invites.map((invite) => invite.email),
-    };
+    const invitePromises = parsed.map(async (invite) => {
+      // const invitation = await prisma.workspaceInvitation.create({
+      //   data: {
+      //     workspace: { connect: { id: workspaceId } },
+      //     email: invite.email,
+      //     role: { connect: { id: invite.roleId } },
+      //     status: 'PENDING',
+      //   },
+      //   include: {
+      //     workspace: {
+      //       select: { displayName: true }
+      //     }
+      //   }
+      // });
+
+      const s = await resend.emails.send({
+        from: `${process.env.RESEND_FROM_NAME} <${process.env.RESEND_FROM_EMAIL}>`,
+        to: invite.email,
+        subject: `Invitation to join SS`,
+        react: InviteEmailTemplate({ link: `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/ss` })
+      });
+      console.log("S", s)
+      return invite.email;
+    });
+
+    const invitedEmails = await Promise.all(invitePromises);
+    return { success: true, invitedEmails };
   } catch (error) {
-    return {
-      success: false,
-      error: "Failed to send invites",
-    };
+    console.error('Failed to send invites:', error);
+    return { success: false, error: "Failed to send invites" };
   }
 }

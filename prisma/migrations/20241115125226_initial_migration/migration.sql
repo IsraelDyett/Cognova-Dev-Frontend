@@ -13,6 +13,9 @@ CREATE TYPE "PaymentMethodStatus" AS ENUM ('UNACTIVE', 'ACTIVE', 'FUTURE');
 -- CreateEnum
 CREATE TYPE "ChatFeedback" AS ENUM ('DOWNVOTED', 'UPVOTED', 'NONE');
 
+-- CreateEnum
+CREATE TYPE "WorkspaceInviteStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -404,7 +407,7 @@ CREATE TABLE "vectors" (
     "id" TEXT NOT NULL,
     "workspaceId" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
-    "embedding" vector(1024),
+    "embedding" vector,
     "chunkContent" TEXT NOT NULL,
     "metadata" JSONB NOT NULL,
     "chunkLength" INTEGER NOT NULL,
@@ -563,6 +566,3 @@ ALTER TABLE "vectors" ADD CONSTRAINT "vectors_sourceId_fkey" FOREIGN KEY ("sourc
 
 -- AddForeignKey
 ALTER TABLE "vectors" ADD CONSTRAINT "vectors_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
-CREATE INDEX vectors_embedding_idx ON vectors USING ivfflat (embedding vector_cosine_ops);
-CREATE INDEX vectors_content_idx ON vectors USING gin (to_tsvector('english', "chunkContent"));

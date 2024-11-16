@@ -1,11 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useOnboardingStore } from "./store";
 import { createWorkspace, inviteTeammates } from "./actions";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -15,54 +24,110 @@ import {
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Users, Building2, ArrowRight } from "lucide-react";
-import { siteConfig } from "@/lib/site";
+import { workspaceSchema, inviteSchema } from "@/zod/schemas/workspace";
+import { getPlans, getRoles } from "../actions";
+import type { Plan, Role } from "@prisma/client";
+import type { z } from "zod";
+
+type WorkspaceFormValues = z.infer<typeof workspaceSchema>;
+type InviteFormValues = z.infer<typeof inviteSchema>;
 
 export default function OnboardingFlow() {
   const {
     step,
-    email,
-    workspaceName,
+    plans,
+    roles,
     invites,
+    isLoading,
     setStep,
-    setWorkspaceName,
+    setPlans,
+    setRoles,
     addInvite,
     removeInvite,
+    setIsLoading,
+    workspaceId,
+    setWorkspaceId,
   } = useOnboardingStore();
-  const [isLoading, setIsLoading] = useState(false);
-  const [newInviteEmail, setNewInviteEmail] = useState("");
-  const [newInviteRole, setNewInviteRole] = useState<"member" | "admin">("member");
+
+  // Form for both workspace name and plan selection
+  const workspaceForm = useForm<WorkspaceFormValues>({
+    resolver: zodResolver(workspaceSchema),
+    defaultValues: {
+      displayName: "",
+      planId: "",
+    },
+    mode: "onChange",
+  });
+
+  const inviteForm = useForm<InviteFormValues>({
+    resolver: zodResolver(inviteSchema),
+    defaultValues: {
+      email: "",
+      roleId: "",
+    },
+  });
 
   const progress = (step / 4) * 100;
 
-  const handleCreateWorkspace = async () => {
-    setIsLoading(true);
-    const response = await createWorkspace(workspaceName, email);
-    setIsLoading(false);
+  useEffect(() => {
+    const loadData = async () => {
+      const [plansData, rolesData] = await Promise.all([getPlans(), getRoles()]);
+      setPlans(plansData);
+      setRoles(rolesData);
+      if (rolesData.length > 0) {
+        inviteForm.setValue("roleId", rolesData[0].id);
+      }
+    };
+    loadData();
+  }, []);
 
-    if (response.success) {
-      setStep(3);
+  // Called when both workspace name and plan are selected
+  const handleWorkspaceCreation = async (data: WorkspaceFormValues) => {
+    setIsLoading(true);
+    try {
+      const response = await createWorkspace(data.displayName, data.planId);
+      if (response.success && response.workspaceId) {
+        setWorkspaceId(response.workspaceId);
+        setStep(3);
+      }
+    } catch (error) {
+      console.error('Workspace creation failed:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleNextStep = () => {
+    const planId = workspaceForm.getValues("planId");
+    if (step === 1 && workspaceForm.getValues("displayName")) {
+      setStep(2);
+    } else if (step === 2 && planId) {
+      workspaceForm.handleSubmit(handleWorkspaceCreation)();
+    }
+  };
+
+  const onInviteSubmit = async (data: InviteFormValues) => {
+    addInvite(data.email, data.roleId);
+    inviteForm.reset({ ...inviteForm.getValues(), email: "" });
+  };
+
   const handleInviteTeammates = async () => {
+    alert(invites.length)
     if (!invites.length) {
       setStep(4);
       return;
     }
 
     setIsLoading(true);
-    const response = await inviteTeammates("workspace_id", invites);
-    setIsLoading(false);
-
-    if (response.success) {
-      setStep(5);
-    }
-  };
-
-  const handleAddInvite = () => {
-    if (newInviteEmail && !invites.find((invite: any) => invite.email === newInviteEmail)) {
-      addInvite(newInviteEmail, newInviteRole);
-      setNewInviteEmail("");
+    try {
+      const response = await inviteTeammates(workspaceId, invites);
+      if (response.success) {
+        setStep(4);
+      }
+    } catch (error) {
+      console.error('Failed to send invites:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,99 +137,154 @@ export default function OnboardingFlow() {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>
-              {step === 1
-                ? siteConfig.applicationName
-                : step === 2
-                  ? "Create workspace"
-                  : step === 2
-                    ? "Invite teammates"
-                    : "Get started"}
+              {step === 1 && "Name your workspace"}
+              {step === 2 && "Choose a plan"}
+              {step === 3 && "Invite your team"}
+              {step === 4 && "All set!"}
             </span>
             <Progress value={progress} className="w-20" />
           </CardTitle>
-          <CardDescription>
-            {step == 1 && `Welcome to ${siteConfig.applicationName}`}
-          </CardDescription>
         </CardHeader>
         <CardContent>
-          {step == 1 && (
-            <Button className="w-full" onClick={() => setStep(2)}>
-              Get started
-            </Button>
-          )}
-          {step === 2 && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Workspace name</label>
-                <Input
-                  placeholder="Enter workspace name"
-                  value={workspaceName}
-                  onChange={(e) => setWorkspaceName(e.target.value)}
-                />
-              </div>
-              <Button
-                className="w-full"
-                onClick={handleCreateWorkspace}
-                disabled={!workspaceName || isLoading}
-              >
-                {isLoading ? "Creating..." : "Create workspace"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+          {(step === 1 || step === 2) && (
+            <Form {...workspaceForm}>
+              <form className="space-y-4">
+                {step === 1 && (
+                  <FormField
+                    control={workspaceForm.control}
+                    name="displayName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter workspace name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {step === 2 && (
+                  <FormField
+                    control={workspaceForm.control}
+                    name="planId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="space-y-4">
+                          {plans.map((plan: Plan) => (
+                            <div
+                              key={plan.id}
+                              className={`p-4 border rounded-lg cursor-pointer transition-colors ${field.value === plan.id
+                                  ? "border-primary bg-primary/5"
+                                  : "hover:border-primary/50"
+                                }`}
+                              onClick={() => field.onChange(plan.id)}
+                            >
+                              <h3 className="font-medium">{plan.displayName}</h3>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={handleNextStep}
+                  disabled={
+                    isLoading ||
+                    (step === 1 && !workspaceForm.getValues("displayName")) ||
+                    (step === 2 && !workspaceForm.getValues("planId"))
+                  }
+                >
+                  {isLoading ? "Processing..." : "Continue"}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
+            </Form>
           )}
 
           {step === 3 && (
             <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Enter email address"
-                    value={newInviteEmail}
-                    onChange={(e) => setNewInviteEmail(e.target.value)}
-                  />
-                  <Select
-                    value={newInviteRole}
-                    onValueChange={(value: "member" | "admin") => setNewInviteRole(value)}
-                  >
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="member">Member</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handleAddInvite}>
-                  <Users className="mr-2 h-4 w-4" />
-                  Add email
-                </Button>
-              </div>
+              <Form {...inviteForm}>
+                <form onSubmit={inviteForm.handleSubmit(onInviteSubmit)} className="space-y-4">
+                  <div className="flex gap-2">
+                    <FormField
+                      control={inviteForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormControl>
+                            <Input placeholder="Email address" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={inviteForm.control}
+                      name="roleId"
+                      render={({ field }) => (
+                        <FormItem className="w-[140px]">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Role" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {roles.map((role: Role) => (
+                                <SelectItem key={role.id} value={role.id}>
+                                  {role.displayName}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Button type="submit" variant="outline" className="w-full">
+                    <Users className="mr-2 h-4 w-4" />
+                    Add team member
+                  </Button>
+                </form>
+              </Form>
 
-              {invites.map((invite: any) => (
+              {invites.map((invite) => (
                 <div
                   key={invite.email}
                   className="flex items-center justify-between p-2 bg-muted rounded-md"
                 >
                   <span className="text-sm">{invite.email}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">{invite.role}</span>
-                    <Button variant="ghost" size="sm" onClick={() => removeInvite(invite.email)}>
-                      x
-                    </Button>
-                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeInvite(invite.email)}
+                  >
+                    Remove
+                  </Button>
                 </div>
               ))}
 
-              <div className="space-y-2">
-                <Button className="w-full" onClick={handleInviteTeammates} disabled={isLoading}>
-                  {isLoading ? "Sending invites..." : "Continue"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button variant="ghost" className="w-full" onClick={() => setStep(3)}>
-                  I&apos;ll do this later
-                </Button>
-              </div>
+              <Button
+                className="w-full"
+                onClick={handleInviteTeammates}
+                disabled={isLoading}
+              >
+                {isLoading ? "Sending invites..." : "Continue"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           )}
 
@@ -174,9 +294,9 @@ export default function OnboardingFlow() {
                 <Building2 className="h-6 w-6 text-primary" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-lg font-medium">Welcome to your workspace!</h3>
+                <h3 className="text-lg font-medium">Workspace created!</h3>
                 <p className="text-sm text-muted-foreground">
-                  Your workspace has been created successfully. You can now start collaborating with
+                  Your workspace is ready. You can now start collaborating with
                   your team.
                 </p>
               </div>

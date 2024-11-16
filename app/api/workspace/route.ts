@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const workspaceName = url.searchParams.get("name");
   const sessionToken = url.searchParams.get("sessionToken");
   if (sessionToken) {
-    const session = await validateSession(sessionToken);
+    const session = await validateSession(sessionToken, workspaceName ? `/${workspaceName}` : "/");
     if (!session) {
       return NextResponse.json({
         success: false,

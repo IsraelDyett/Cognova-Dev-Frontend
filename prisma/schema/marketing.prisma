@@ -6,9 +6,9 @@ model Subscription {
   startDate   DateTime
   endDate     DateTime
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime  @default(now()) @updatedAt
   payments    Payment[]
-  plan         Plan?     @relation(fields: [planId], references: [id])
+  plan        Plan?     @relation(fields: [planId], references: [id])
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
@@ -21,7 +21,7 @@ model Plan {
   description   String?        @db.Text
   billingCycle  BillingCycle   @default(MONTHLY)
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  updatedAt     DateTime       @default(now()) @updatedAt
   models        Model[]
   features      PlanFeature[]
   subscriptions Subscription[]
@@ -38,7 +38,7 @@ model PlanFeature {
   description String?
   allowed     Boolean  @default(true)
   createdAt   DateTime @default(now())
-  plan         Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan        Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
 
   @@map("plan_features")
 }
@@ -52,10 +52,10 @@ model Payment {
   status          PaymentStatus  @default(PENDING)
   paidAt          DateTime
   createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  updatedAt       DateTime       @default(now()) @updatedAt
   invoices        Invoice[]
   paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
-  subscription    Subscription?   @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscription    Subscription?  @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   workspace       Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@map("payments")
@@ -67,7 +67,7 @@ model PaymentMethod {
   displayName String
   status      PaymentMethodStatus @default(ACTIVE)
   createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  updatedAt   DateTime            @default(now()) @updatedAt
   payments    Payment[]
 
   @@map("payment_methods")
@@ -80,7 +80,7 @@ model Invoice {
   issuedAt    DateTime
   dueDate     DateTime
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   payment     Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
 
   @@map("invoices")

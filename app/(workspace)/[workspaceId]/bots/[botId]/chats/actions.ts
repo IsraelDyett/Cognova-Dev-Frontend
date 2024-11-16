@@ -12,10 +12,3 @@ export async function getConversations() {
     },
   });
 }
-
-export async function getChats(conversationId: string) {
-  return await prisma.chat.findMany({
-    where: { conversationId },
-    orderBy: { createdAt: "asc" },
-  });
-}

@@ -10,7 +10,7 @@ model Bot {
   starterQuestions   String[]
   modelId            String?
   createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  updatedAt          DateTime          @default(now()) @updatedAt
   configurations     BotConfiguration?
   sources            BotSources[]
   model              Model?            @relation(fields: [modelId], references: [id], onDelete: SetNull)
@@ -38,7 +38,7 @@ model BotConfiguration {
   embedAutoOpen      Boolean?
   embedPingMessage   String?
   createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  updatedAt          DateTime @default(now()) @updatedAt
   botChatAvatarURL   String?
   bot                Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
 
