@@ -1,23 +1,21 @@
 model Business {
-    id          String   @id @default(cuid())
-    workspaceId String
-    name        String
-    type        String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @default(now()) @updatedAt
+    id             String   @id @default(cuid())
+    workspaceId    String
+    name           String
+    type           String
+    description    String?
+    hasDelivery    Boolean  @default(false)
+    hasPickup      Boolean  @default(false)
+    acceptsReturns Boolean  @default(false)
+    hasWarranty    Boolean  @default(false)
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @default(now()) @updatedAt
 
-    products       Product[]
-    locations      Location[]
-    categories     Category[]
-    operatingHours OperatingHours[]
-
-    hasDelivery    Boolean @default(false)
-    hasPickup      Boolean @default(false)
-    acceptsReturns Boolean @default(false)
-    hasWarranty    Boolean @default(false)
-
-    workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    products       BusinessProduct[]
+    locations      BusinessLocation[]
+    categories     BusinessCategory[]
+    operatingHours BusinessOperatingHours[]
+    workspace      Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     configurations BusinessConfig?
     bot            Bot[]
 
@@ -25,33 +23,34 @@ model Business {
 }
 
 model BusinessConfig {
-    id                 String @id @default(cuid())
-    businessId         String @unique
-    deliveryFee        Float?
-    minOrderAmount     Float?
-    taxRate            Float?
-    returnPeriodDays   Int?
-    warrantyPeriodDays Int?
-    currency           String @default("USD")
+    id                       String  @id @default(cuid())
+    businessId               String  @unique
+    deliveryFee              Float?
+    estimatedDeliveryArrival String?
+    minOrderAmount           Float?
+    taxRate                  Float?
+    returnPeriodDays         Int?
+    warrantyPeriodDays       Int?
+    currency                 String  @default("USD")
 
     business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
     @@map("business_configs")
 }
 
-model Category {
+model BusinessCategory {
     id          String  @id @default(cuid())
     businessId  String
     name        String
     description String?
 
-    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    products Product[]
+    business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    products BusinessProduct[]
 
-    @@map("categories")
+    @@map("business_categories")
 }
 
-model Product {
+model BusinessProduct {
     id          String   @id @default(cuid())
     businessId  String
     categoryId  String?
@@ -65,13 +64,13 @@ model Product {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now()) @updatedAt
 
-    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    category Category? @relation(fields: [categoryId], references: [id])
+    business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    category BusinessCategory? @relation(fields: [categoryId], references: [id])
 
-    @@map("products")
+    @@map("business_products")
 }
 
-model Location {
+model BusinessLocation {
     id         String  @id @default(cuid())
     businessId String
     name       String
@@ -84,13 +83,13 @@ model Location {
     email      String?
     isMain     Boolean @default(false)
 
-    business Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    hours    OperatingHours[]
+    business Business                 @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    hours    BusinessOperatingHours[]
 
-    @@map("locations")
+    @@map("business_locations")
 }
 
-model OperatingHours {
+model BusinessOperatingHours {
     id         String  @id @default(cuid())
     businessId String
     locationId String?
@@ -99,8 +98,8 @@ model OperatingHours {
     closeTime  String
     isClosed   Boolean @default(false)
 
-    business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    location Location? @relation(fields: [locationId], references: [id])
+    business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    location BusinessLocation? @relation(fields: [locationId], references: [id])
 
-    @@map("operating_hours")
+    @@map("business_operating_hours")
 }

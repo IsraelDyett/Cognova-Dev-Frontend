@@ -36,7 +36,6 @@ async function mainSeeder() {
       email: "troy@cognova.io",
       password: await bcrypt.hash("123456", parseInt(process.env.SALT_ROUNDS)),
       emailVerified: true,
-      roleId: ADMIN_ROLE_ID,
     },
   });
   console.log("Root User created or updated");

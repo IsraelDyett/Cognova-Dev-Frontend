@@ -1,0 +1,51 @@
+model Workspace {
+  id           String                @id @default(cuid())
+  displayName  String
+  name         String                @unique
+  planId       String?
+  ownerId      String
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @default(now()) @updatedAt
+  bots         Bot[]
+  businesses   Business[]
+  payments     Payment[]
+  sources      Source[]
+  subscription Subscription?
+  vectors      Vector[]
+  users        WorkspaceUser[]
+  invitations  WorkspaceInvitation[]
+  owner        User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  plan         Plan?                 @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  @@index([id, planId, name])
+  @@map("workspaces")
+}
+
+model WorkspaceUser {
+  id          String    @id @default(cuid())
+  workspaceId String
+  userId      String
+  roleId      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  role        Role?     @relation(fields: [roleId], references: [id])
+
+  @@index([id, userId])
+  @@map("workspace_users")
+}
+
+model WorkspaceInvitation {
+  id          String                @id @default(cuid())
+  workspaceId String
+  email       String                @unique
+  status      WorkspaceInviteStatus @default(PENDING)
+  roleId      String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @default(now()) @updatedAt
+  role        Role?                 @relation(fields: [roleId], references: [id])
+  workspace   Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("workspace_invitations")
+}

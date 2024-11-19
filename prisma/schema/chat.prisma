@@ -3,6 +3,8 @@ model Chat {
   conversationId String
   role           String
   content        String
+  toolCalls      Json?
+  toolCallId     String?
   tokens         Int
   feedback       ChatFeedback @default(NONE)
   sourceURLs     String[]

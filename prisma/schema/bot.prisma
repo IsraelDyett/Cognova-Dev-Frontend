@@ -55,3 +55,18 @@ model BotSources {
 
   @@map("bot_sources")
 }
+
+model Model {
+  id          String   @id @default(cuid())
+  displayName String
+  name        String   @unique
+  planId      String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  bot         Bot[]
+  plan        Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  @@index([name])
+  @@map("models")
+}
