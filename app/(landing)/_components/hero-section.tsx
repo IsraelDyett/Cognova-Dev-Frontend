@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { RainbowButton } from "@/components/ui/rainbow-button";
 import { ChevronRightIcon } from "lucide-react";
 import React from "react";
 
@@ -51,16 +52,18 @@ export default function HeroSection() {
             Transform Your Customer Support with AI Chat
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Our innovative application leverages AI to provide seamless chat support, allowing
-            businesses to respond instantly to customer inquiries. Upload your data, connect your
-            WhatsApp Business, and watch as our AI learns and engages with your customers like never
-            before.
+            Cognova is an advanced AI-powered customer support platform that uses natural language
+            processing and machine learning to provide 24/7 automated support across multiple
+            channels, including WhatsApp and web chat.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
-            <Button>Sign Up Now</Button>
+            {/* <Button size={'lg'} >Create A Free Bot</Button> */}
+            <a href="/auth/sign-up">
+              <RainbowButton>Create A Free Bot</RainbowButton>
+            </a>
           </div>
         </div>
-        {/* <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+        <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
           <svg
             viewBox="0 0 366 729"
             role="img"
@@ -86,13 +89,10 @@ export default function HeroSection() {
               transform="translate(24 24)"
               clipPath="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)"
             >
-              <img
-                src="https://sendbird.imgix.net/cms/chatbot_on-demand.png?auto=format,compress&crop=faces"
-                alt=""
-              />
+              <img src="/images/demos/whatsapp-screenshot.png" alt="" />
             </foreignObject>
           </svg>
-        </div> */}
+        </div>
       </div>
     </div>
   );

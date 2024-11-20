@@ -6,13 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useOnboardingStore } from "./store";
 import { createWorkspace, inviteTeammates } from "./actions";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -91,7 +85,7 @@ export default function OnboardingFlow() {
         setStep(3);
       }
     } catch (error) {
-      console.error('Workspace creation failed:', error);
+      console.error("Workspace creation failed:", error);
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +106,7 @@ export default function OnboardingFlow() {
   };
 
   const handleInviteTeammates = async () => {
-    alert(invites.length)
+    alert(invites.length);
     if (!invites.length) {
       setStep(4);
       return;
@@ -125,7 +119,7 @@ export default function OnboardingFlow() {
         setStep(4);
       }
     } catch (error) {
-      console.error('Failed to send invites:', error);
+      console.error("Failed to send invites:", error);
     } finally {
       setIsLoading(false);
     }
@@ -156,10 +150,7 @@ export default function OnboardingFlow() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input
-                            placeholder="Enter workspace name"
-                            {...field}
-                          />
+                          <Input placeholder="Enter workspace name" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -177,10 +168,11 @@ export default function OnboardingFlow() {
                           {plans.map((plan: Plan) => (
                             <div
                               key={plan.id}
-                              className={`p-4 border rounded-lg cursor-pointer transition-colors ${field.value === plan.id
+                              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                                field.value === plan.id
                                   ? "border-primary bg-primary/5"
                                   : "hover:border-primary/50"
-                                }`}
+                              }`}
                               onClick={() => field.onChange(plan.id)}
                             >
                               <h3 className="font-medium">{plan.displayName}</h3>
@@ -232,10 +224,7 @@ export default function OnboardingFlow() {
                       name="roleId"
                       render={({ field }) => (
                         <FormItem className="w-[140px]">
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
+                          <Select value={field.value} onValueChange={field.onChange}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Role" />
@@ -267,21 +256,13 @@ export default function OnboardingFlow() {
                   className="flex items-center justify-between p-2 bg-muted rounded-md"
                 >
                   <span className="text-sm">{invite.email}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeInvite(invite.email)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => removeInvite(invite.email)}>
                     Remove
                   </Button>
                 </div>
               ))}
 
-              <Button
-                className="w-full"
-                onClick={handleInviteTeammates}
-                disabled={isLoading}
-              >
+              <Button className="w-full" onClick={handleInviteTeammates} disabled={isLoading}>
                 {isLoading ? "Sending invites..." : "Continue"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -296,8 +277,7 @@ export default function OnboardingFlow() {
               <div className="space-y-2">
                 <h3 className="text-lg font-medium">Workspace created!</h3>
                 <p className="text-sm text-muted-foreground">
-                  Your workspace is ready. You can now start collaborating with
-                  your team.
+                  Your workspace is ready. You can now start collaborating with your team.
                 </p>
               </div>
               <Button className="w-full">

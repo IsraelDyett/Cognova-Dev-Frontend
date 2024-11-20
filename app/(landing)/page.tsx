@@ -5,12 +5,14 @@ import TestimonialsSection from "./_components/testimonials-section";
 import PricingSection from "./_components/pricing-section";
 import StepsFlowSection from "./_components/steps-flow-section";
 import FAQSection from "./_components/faq-section";
+import FlowDemoSection from "./_components/flow-demo-section";
 
 export default function LandingPage() {
   return (
     <>
       <HeroSection />
       <StepsFlowSection />
+      <FlowDemoSection />
       <PricingSection />
       <FeaturesSection />
       <SignUpSection />

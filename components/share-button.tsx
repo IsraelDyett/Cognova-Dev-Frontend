@@ -31,7 +31,12 @@ export const shareBot = async (bot: Bot) => {
 
 export default function ShareButton({ bot, disabled = false }: { bot: Bot; disabled?: boolean }) {
   return (
-    <Button disabled={disabled} onClick={() => shareBot(bot)} className="w-full" variant={"ringHover"}>
+    <Button
+      disabled={disabled}
+      onClick={() => shareBot(bot)}
+      className="w-full"
+      variant={"ringHover"}
+    >
       Share Bot Link <Share2 className="ml-2 size-4" />
     </Button>
   );

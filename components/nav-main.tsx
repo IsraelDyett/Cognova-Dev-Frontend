@@ -57,12 +57,12 @@ export function NavMain({
                     href={item.url
                       .replace("{after.botId}", `/${workspaceId}/bots/${botId}`)
                       .replace("{after.workspaceId}", `/${workspaceId}`)}
-                      >
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                  {item.items && (
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  )}
+                    {item.items && (
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    )}
                   </Link>
                 </SidebarMenuButton>
               )}

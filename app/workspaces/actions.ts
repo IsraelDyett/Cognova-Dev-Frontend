@@ -1,20 +1,17 @@
 "use server";
 
-import slugify from 'slugify';
-import { Resend } from 'resend';
+import slugify from "slugify";
+import { Resend } from "resend";
 import { prisma } from "@/lib/services/prisma";
-import { invitesSchema, workspaceSchema } from '@/lib/zod/schemas/workspace';
-import { authUser } from '../auth/actions';
-import { InviteEmailTemplate } from '@/fastapi/mails/team-invite';
+import { invitesSchema, workspaceSchema } from "@/lib/zod/schemas/workspace";
+import { authUser } from "../auth/actions";
+import { InviteEmailTemplate } from "@/fastapi/mails/team-invite";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function createWorkspace(
-  displayName: string,
-  planId?: string,
-) {
+export async function createWorkspace(displayName: string, planId?: string) {
   try {
-    const user = await authUser().catch((er) => { })
+    const user = await authUser().catch((er) => {});
     // if(!user) return {
     //   success: false,
     //   error: "USER_NOT_FOUND"
@@ -32,7 +29,7 @@ export async function createWorkspace(
 
     return { success: true, workspaceId: workspace.id };
   } catch (error) {
-    console.error('Workspace creation failed:', error);
+    console.error("Workspace creation failed:", error);
     return { success: false, error: "Failed to create workspace" };
   }
 }
@@ -63,16 +60,16 @@ export async function inviteTeammates(
         from: `${process.env.RESEND_FROM_NAME} <${process.env.RESEND_FROM_EMAIL}>`,
         to: invite.email,
         subject: `Invitation to join SS`,
-        react: InviteEmailTemplate({ link: `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/ss` })
+        react: InviteEmailTemplate({ link: `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/ss` }),
       });
-      console.log("S", s)
+      console.log("S", s);
       return invite.email;
     });
 
     const invitedEmails = await Promise.all(invitePromises);
     return { success: true, invitedEmails };
   } catch (error) {
-    console.error('Failed to send invites:', error);
+    console.error("Failed to send invites:", error);
     return { success: false, error: "Failed to send invites" };
   }
 }

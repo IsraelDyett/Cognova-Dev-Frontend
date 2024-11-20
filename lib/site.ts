@@ -9,6 +9,7 @@ export const siteConfig = {
   },
   description: appDescription,
   applicationName: "Cognova",
+  applicationBaseUrl: "https://app.cognova.io",
   keywords: [
     "cognova",
     "cognova ai",

@@ -93,8 +93,8 @@ const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: U
       },
       data: {
         lastLoggedAt: new Date(),
-      }
-    })
+      },
+    });
     return {
       success: true,
       message: action,

@@ -1,16 +1,18 @@
 model Subscription {
-  id          String    @id @default(cuid())
-  workspaceId String    @unique
-  planId      String?
-  status      String
-  startDate   DateTime
-  endDate     DateTime
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
-  payments    Payment[]
-  plan        Plan?     @relation(fields: [planId], references: [id])
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id           String       @id @default(cuid())
+  workspaceId  String       @unique
+  planId       String?
+  status       SubscriptionStatus @default(ACTIVE)
+  startDate    DateTime
+  endDate      DateTime
+  billingCycle BillingCycle @default(MONTHLY)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @default(now()) @updatedAt
+  payments     Payment[]
+  plan         Plan?        @relation(fields: [planId], references: [id])
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
+  @@index([workspaceId])
   @@map("subscriptions")
 }
 
@@ -19,14 +21,15 @@ model Plan {
   displayName   String
   name          String         @unique
   description   String?        @db.Text
-  billingCycle  BillingCycle   @default(MONTHLY)
+  monthlyPrice  Float          @default(0)
+  annuallyPrice Float          @default(0)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
   models        Model[]
   features      PlanFeature[]
   subscriptions Subscription[]
   techniques    Technique[]
-  workspaces    Workspace[]
+  botTypes      BotTypes[]
 
   @@map("plans")
 }
@@ -34,7 +37,7 @@ model Plan {
 model PlanFeature {
   id          String   @id @default(cuid())
   planId      String
-  name        String
+  title       String
   description String?
   allowed     Boolean  @default(true)
   createdAt   DateTime @default(now())

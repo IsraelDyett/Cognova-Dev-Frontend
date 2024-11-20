@@ -17,6 +17,8 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import SourcesDropdown from "./_components/sources-dropdown";
 import ShareButton from "@/components/share-button";
+import { siteConfig } from "@/lib/site";
+import Logo from "@/components/logo";
 
 export default function PlaygroundPage(props: WorkspacePageProps & { share?: boolean }) {
   const botId = props.params.botId;
@@ -184,6 +186,20 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
               </Button>
             </form>
           </div>
+          {props.searchParams["embed"] && (
+            <div className="w-full py-2 text-muted-foreground flex justify-center items-center text-center text-sm font-normal">
+              Powered by
+              <div className="pl-1 flex items-center">
+                <Logo size="xxs" />
+                <a
+                  className="underline text-foreground font-medium pl-1 underline-offset-2"
+                  href={siteConfig.applicationBaseUrl}
+                >
+                  {siteConfig.applicationName}
+                </a>
+              </div>
+            </div>
+          )}
           {props.share && (
             <div className="px-3 pt-3 pb-2">
               {/* @ts-ignore */}

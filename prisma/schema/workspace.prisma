@@ -2,7 +2,6 @@ model Workspace {
   id           String                @id @default(cuid())
   displayName  String
   name         String                @unique
-  planId       String?
   ownerId      String
   createdAt    DateTime              @default(now())
   updatedAt    DateTime              @default(now()) @updatedAt
@@ -15,9 +14,8 @@ model Workspace {
   users        WorkspaceUser[]
   invitations  WorkspaceInvitation[]
   owner        User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  plan         Plan?                 @relation(fields: [planId], references: [id], onDelete: SetNull)
 
-  @@index([id, planId, name])
+  @@index([id, name])
   @@map("workspaces")
 }
 

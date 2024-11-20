@@ -9,10 +9,12 @@ model Bot {
   welcomeMessage     String?
   starterQuestions   String[]
   modelId            String?
+  waPhoneNumber      String?           @unique
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @default(now()) @updatedAt
   configurations     BotConfiguration?
   sources            BotSources[]
+  type               BotTypes          @default(KNOWLEDGE_BASE_ASSISTANT)
   model              Model?            @relation(fields: [modelId], references: [id], onDelete: SetNull)
   workspace          Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   conversations      Conversation[]
@@ -57,16 +59,34 @@ model BotSources {
 }
 
 model Model {
-  id          String   @id @default(cuid())
-  displayName String
-  name        String   @unique
-  planId      String?
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  bot         Bot[]
-  plan        Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
+  id           String      @id @default(cuid())
+  name         String      @unique
+  displayName  String
+  planId       String?
+  aiProviderId String?
+  description  String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+  bot          Bot[]
+  plan         Plan?       @relation(fields: [planId], references: [id], onDelete: SetNull)
+  aiProvider   AiProvider? @relation(fields: [aiProviderId], references: [id], onDelete: SetNull)
 
   @@index([name])
   @@map("models")
+}
+
+model AiProvider {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String
+  apiKey      String   @default("sk-no-key-required")
+  endpointUrl String
+  provider    String
+  planId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  model Model[]
+
+  @@map("ai_providers")
 }

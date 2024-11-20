@@ -28,3 +28,14 @@ enum WorkspaceInviteStatus {
   ACCEPTED
   REJECTED
 }
+enum SubscriptionStatus {
+  ACTIVE
+  UNACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum BotTypes {
+  PRODUCTS_BUYER_ASSISTANT
+  KNOWLEDGE_BASE_ASSISTANT
+}

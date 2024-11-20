@@ -73,7 +73,7 @@ export function NavBots({ workspaceId }: { workspaceId: string }) {
                     side={isMobile ? "bottom" : "right"}
                     align={isMobile ? "end" : "start"}
                   >
-                    <DropdownMenuItem  onClick={() => shareBot(bot)}>
+                    <DropdownMenuItem onClick={() => shareBot(bot)}>
                       <Forward className="text-muted-foreground" />
                       <span>Share Bot</span>
                     </DropdownMenuItem>

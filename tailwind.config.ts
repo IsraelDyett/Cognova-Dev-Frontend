@@ -68,6 +68,11 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "rainbow-color-1": "hsl(var(--rainbow-color-1))",
+        "rainbow-color-2": "hsl(var(--rainbow-color-2))",
+        "rainbow-color-3": "hsl(var(--rainbow-color-3))",
+        "rainbow-color-4": "hsl(var(--rainbow-color-4))",
+        "rainbow-color-5": "hsl(var(--rainbow-color-5))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -91,10 +96,28 @@ const config: Config = {
             height: "0",
           },
         },
+        rainbow: {
+          "0%": {
+            "background-position": "0%",
+          },
+          "100%": {
+            "background-position": "200%",
+          },
+        },
+        orbit: {
+          "0%": {
+            transform: "rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg)",
+          },
+        },
       },
       animation: {
+        rainbow: "rainbow var(--rainbow-speed, 2s) infinite linear",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        orbit: "orbit calc(var(--duration)*1s) linear infinite",
       },
     },
   },
