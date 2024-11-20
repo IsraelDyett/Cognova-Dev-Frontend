@@ -16,7 +16,11 @@ export const getWorkspaces = async (userId: string, withPlan = true) => {
     select: {
       workspace: {
         include: {
-          plan: withPlan,
+          subscription: {
+            select: {
+              plan: withPlan
+            }
+          },
         },
       },
     },
@@ -24,18 +28,6 @@ export const getWorkspaces = async (userId: string, withPlan = true) => {
   return workspaces.map((ws) => ws.workspace);
 };
 
-export const getWorkspacePlan = async (workspaceId: string) => {
-  debug("GET WORKSPACE PLAN");
-  const workspace = await prisma.workspace.findFirst({
-    where: {
-      OR: [{ name: workspaceId }, { id: workspaceId }],
-    },
-    select: {
-      plan: true,
-    },
-  });
-  return workspace?.plan;
-};
 
 export const getModels = async () => {
   debug("GET MODELS");
@@ -168,11 +160,24 @@ export const getWorkspace = async (workspaceId: string, withPlan = false) => {
       OR: [{ name: workspaceId }, { id: workspaceId }],
     },
     include: {
-      plan: withPlan,
+      subscription: {
+        select: {
+          plan: withPlan,
+        },
+      }
     },
   });
+
+  if (workspace && "subscription" in workspace) {
+    const { subscription, ...restWorkspace } = workspace;
+    return {
+      ...restWorkspace,
+      plan: subscription?.plan
+    };
+  }
   return workspace;
 };
+
 export const getChats = async (conversationId: string) => {
   debug("GET CHATS");
   const chats = await prisma.chat.findMany({

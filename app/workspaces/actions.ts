@@ -9,20 +9,19 @@ import { InviteEmailTemplate } from "@/fastapi/mails/team-invite";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function createWorkspace(displayName: string, planId?: string) {
+export async function createWorkspace(displayName: string) {
   try {
-    const user = await authUser().catch((er) => {});
+    const user = await authUser().catch((er) => { });
     // if(!user) return {
     //   success: false,
     //   error: "USER_NOT_FOUND"
     // };
-    const parsed = workspaceSchema.parse({ displayName, planId });
+    const parsed = workspaceSchema.parse({ displayName });
 
     const workspace = await prisma.workspace.create({
       data: {
         displayName: parsed.displayName,
         name: slugify(parsed.displayName, { lower: true, trim: true }),
-        planId: parsed.planId,
         ownerId: user?.id || "cm3fqf7or000608jo8n8i9clr",
       },
     });

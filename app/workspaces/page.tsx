@@ -48,7 +48,6 @@ export default function OnboardingFlow() {
     resolver: zodResolver(workspaceSchema),
     defaultValues: {
       displayName: "",
-      planId: "",
     },
     mode: "onChange",
   });
@@ -79,7 +78,7 @@ export default function OnboardingFlow() {
   const handleWorkspaceCreation = async (data: WorkspaceFormValues) => {
     setIsLoading(true);
     try {
-      const response = await createWorkspace(data.displayName, data.planId);
+      const response = await createWorkspace(data.displayName);
       if (response.success && response.workspaceId) {
         setWorkspaceId(response.workspaceId);
         setStep(3);
@@ -92,10 +91,9 @@ export default function OnboardingFlow() {
   };
 
   const handleNextStep = () => {
-    const planId = workspaceForm.getValues("planId");
     if (step === 1 && workspaceForm.getValues("displayName")) {
       setStep(2);
-    } else if (step === 2 && planId) {
+    } else if (step === 2) {
       workspaceForm.handleSubmit(handleWorkspaceCreation)();
     }
   };
@@ -114,7 +112,7 @@ export default function OnboardingFlow() {
 
     setIsLoading(true);
     try {
-      const response = await inviteTeammates(workspaceId, invites);
+      const response = await inviteTeammates(`${workspaceId}`, invites);
       if (response.success) {
         setStep(4);
       }
@@ -158,41 +156,13 @@ export default function OnboardingFlow() {
                   />
                 )}
 
-                {step === 2 && (
-                  <FormField
-                    control={workspaceForm.control}
-                    name="planId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="space-y-4">
-                          {plans.map((plan: Plan) => (
-                            <div
-                              key={plan.id}
-                              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                                field.value === plan.id
-                                  ? "border-primary bg-primary/5"
-                                  : "hover:border-primary/50"
-                              }`}
-                              onClick={() => field.onChange(plan.id)}
-                            >
-                              <h3 className="font-medium">{plan.displayName}</h3>
-                            </div>
-                          ))}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
                 <Button
                   type="button"
                   className="w-full"
                   onClick={handleNextStep}
                   disabled={
                     isLoading ||
-                    (step === 1 && !workspaceForm.getValues("displayName")) ||
-                    (step === 2 && !workspaceForm.getValues("planId"))
+                    (step === 1 && !workspaceForm.getValues("displayName"))
                   }
                 >
                   {isLoading ? "Processing..." : "Continue"}

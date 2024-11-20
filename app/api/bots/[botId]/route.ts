@@ -3,7 +3,7 @@ import { prisma } from "@/lib/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 const ParamsSchema = z.object({
-  botId: z.string().cuid(),
+  botId: z.string().cuid2(),
 });
 export async function GET(request: NextRequest, { params }: { params: { botId: string } }) {
   try {
