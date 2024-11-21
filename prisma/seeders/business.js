@@ -2,9 +2,10 @@ const bcrypt = require("bcryptjs");
 const { PrismaClient, Workspace } = require("@prisma/client");
 const BUSINESS_PLAN_ID = "cm3fq9f3c000208jo25xqesv2";
 class BusinessSeeder {
-  constructor(workspace) {
+  constructor(workspace, sellerBotId) {
     this.prisma = new PrismaClient();
     this.workspace = workspace;
+    this.sellerBotId = sellerBotId;
     this.businessData = {
       business: {
         name: "Kigali Shoes & More",
@@ -226,6 +227,14 @@ class BusinessSeeder {
       console.log("🌱 Starting business seeding process...");
       await this.cleanDatabase();
       const business = await this.createBusiness(this.workspace.id);
+      await this.prisma.bot.update({
+        where: {
+          id: this.sellerBotId,
+        },
+        data: {
+          businessId: business.id,
+        },
+      });
       await this.createBusinessConfig(business.id);
       const categories = await this.createCategories(business.id);
       await this.createProducts(business.id, categories);

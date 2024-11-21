@@ -2,9 +2,9 @@ const { BusinessSeeder } = require("./seeders/business");
 const { mainSeeder } = require("./seeders/main");
 
 mainSeeder()
-  .then((workspace) => {
+  .then((data) => {
     console.log("Main seeder  ran successfully");
-    const businessSeeder = new BusinessSeeder(workspace.workspace);
+    const businessSeeder = new BusinessSeeder(data.workspace, data.sellerBotId);
     businessSeeder
       .seed()
       .then("Business seeder  ran successfully")

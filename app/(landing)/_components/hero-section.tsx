@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { RainbowButton } from "@/components/ui/rainbow-button";
+import { siteConfig } from "@/lib/site";
 import { ChevronRightIcon } from "lucide-react";
 import React from "react";
 
@@ -52,9 +53,9 @@ export default function HeroSection() {
             Transform Your Customer Support with AI Chat
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Cognova is an advanced AI-powered customer support platform that uses natural language
-            processing and machine learning to provide 24/7 automated support across multiple
-            channels, including WhatsApp and web chat.
+            {siteConfig.applicationName} is an advanced AI-powered customer support platform that
+            uses natural language processing and machine learning to provide 24/7 automated support
+            across multiple channels, including WhatsApp and web chat.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
             {/* <Button size={'lg'} >Create A Free Bot</Button> */}
@@ -89,7 +90,9 @@ export default function HeroSection() {
               transform="translate(24 24)"
               clipPath="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)"
             >
-              <img src="/images/demos/whatsapp-screenshot.png" alt="" />
+              <video id="wa-demo-video" preload="true" autoPlay muted>
+                <source src={siteConfig.r2.waDemoVideo} type="video/mp4" />
+              </video>
             </foreignObject>
           </svg>
         </div>

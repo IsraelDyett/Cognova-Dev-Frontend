@@ -28,11 +28,13 @@ export default function DataTable({
   columns,
   searchField,
   toolBarChildren,
+  initialPageSize = 10,
 }: {
   data: any[];
   columns: ColumnDef<any>[];
   searchField: string;
   toolBarChildren?: React.ReactNode;
+  initialPageSize?: number;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -50,6 +52,12 @@ export default function DataTable({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    initialState: {
+      sorting: [{ id: "createdAt", desc: true }],
+      pagination: {
+        pageSize: initialPageSize,
+      },
+    },
     state: {
       sorting,
       columnFilters,

@@ -2,6 +2,7 @@ import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { Icons } from "./icons";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -52,12 +53,25 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  processing?: boolean;
 }
 
 export type ButtonIconProps = IconProps | IconRefProps;
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps>(
-  ({ className, variant, size, asChild = false, Icon, iconPlacement, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      processing = false,
+      Icon,
+      iconPlacement,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
@@ -70,6 +84,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
         {Icon && iconPlacement === "right" && (
           <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-2 group-hover:opacity-100">
             <Icon />
+          </div>
+        )}
+        {processing && (
+          <div className="w-0 translate-x-[100%] transition-all duration-200 pl-2 opacity-100">
+            <Icons.IconSpinner className="animate-spin size-6" />
           </div>
         )}
       </Comp>

@@ -4,6 +4,7 @@ const { PrismaClient, BillingCycle, SubscriptionStatus } = require("@prisma/clie
 const prisma = new PrismaClient();
 
 const SYSTEM_BOT_ID = "cm3fqhmhh000708job4qfgfpn";
+const SELLER_BOT_ID = "cm3q1dw1b000208iehplyahyh";
 const FREE_PLAN_ID = "cm3pmta2r000008k62n3e5wd9";
 const BUSINESS_PLAN_ID = "cm3fq9f3c000208jo25xqesv2";
 const ENTERPRISE_PLAN_ID = "cm3pmthg6000108k660lz073i";
@@ -234,6 +235,7 @@ async function mainSeeder() {
   });
   await prisma.bot.create({
     data: {
+      id: SELLER_BOT_ID,
       name: "KGL Shoes Assistant",
       workspaceId: SYSTEM_WORKSPACE_ID,
       type: "PRODUCTS_BUYER_ASSISTANT",
@@ -275,6 +277,7 @@ async function mainSeeder() {
   prisma.$disconnect();
   return {
     workspace: system_workspace,
+    sellerBotId: SELLER_BOT_ID,
   };
 }
 

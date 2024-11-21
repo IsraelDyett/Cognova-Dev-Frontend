@@ -1,10 +1,9 @@
 import React from "react";
 import Image from "next/image";
-
-const LOGO_PATH = "/images/logo.png";
+import { siteConfig } from "@/lib/site";
 
 interface LogoProps {
-  size?: "xs" | "sm" | "md" | "lg" | "xxs";
+  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 }
 
 const sizeMap = {
@@ -13,12 +12,21 @@ const sizeMap = {
   sm: "w-8 h-8",
   md: "w-12 h-12",
   lg: "w-16 h-16",
+  xl: "w-20 h-20",
+  xxl: "w-24 h-24",
 };
 
 export default function Logo({ size = "md" }: LogoProps) {
   return (
     <div className={`relative ${sizeMap[size]}`}>
-      <Image src={LOGO_PATH} alt="Logo" fill className="object-contain" priority />
+      <Image
+        width={926}
+        height={922}
+        src={siteConfig.r2.logoUrl}
+        alt="Logo"
+        className="object-contain"
+        priority
+      />
     </div>
   );
 }

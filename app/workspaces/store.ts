@@ -1,50 +1,63 @@
 import { create } from "zustand";
 import type { Plan, Role } from "@prisma/client";
 
-interface OnboardingState {
-  step: number;
-  plans: Plan[];
-  roles: Role[];
-  invites: Array<{ email: string; roleId: string }>;
+interface WorkspaceFormData {
+  displayName: string;
+  team: Array<{
+    email: string;
+    roleId: string;
+  }>;
+}
+
+interface WorkspaceState {
+  isOpen: boolean;
   isLoading: boolean;
-  workspaceId: string | null;
-  setStep: (step: number) => void;
-  setPlans: (plans: Plan[]) => void;
+  roles: Role[];
+  formData: WorkspaceFormData;
+  setOpen: (open: boolean) => void;
+  setLoading: (loading: boolean) => void;
   setRoles: (roles: Role[]) => void;
-  addInvite: (email: string, roleId: string) => void;
-  removeInvite: (email: string) => void;
-  setIsLoading: (loading: boolean) => void;
-  setWorkspaceId: (id: string) => void;
+  updateFormData: (data: Partial<WorkspaceFormData>) => void;
+  addTeamMember: (email: string, roleId: string) => void;
+  removeTeamMember: (email: string) => void;
   reset: () => void;
 }
 
-export const useOnboardingStore = create<OnboardingState>((set) => ({
-  step: 1,
-  plans: [],
-  roles: [],
-  invites: [],
-  isLoading: false,
-  workspaceId: null,
-  setStep: (step) => set({ step }),
-  setPlans: (plans) => set({ plans }),
-  setRoles: (roles) => set({ roles }),
-  setIsLoading: (isLoading) => set({ isLoading }),
-  addInvite: (email, roleId) =>
-    set((state) => ({
-      invites: [...state.invites, { email, roleId }],
-    })),
+const initialFormData: WorkspaceFormData = {
+  displayName: "",
+  team: [],
+};
 
-  setWorkspaceId: (id) => set({ workspaceId: id }),
-  removeInvite: (email) =>
+export const useWorkspaceStore = create<WorkspaceState>((set) => ({
+  isOpen: false,
+  isLoading: false,
+  roles: [],
+  formData: initialFormData,
+  setOpen: (open) => set({ isOpen: open }),
+  setLoading: (loading) => set({ isLoading: loading }),
+  setRoles: (roles) => set({ roles }),
+  updateFormData: (data) =>
     set((state) => ({
-      invites: state.invites.filter((invite) => invite.email !== email),
+      formData: { ...state.formData, ...data },
+    })),
+  addTeamMember: (email, roleId) =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        team: [...state.formData.team, { email, roleId }],
+      },
+    })),
+  removeTeamMember: (email) =>
+    set((state) => ({
+      formData: {
+        ...state.formData,
+        team: state.formData.team.filter((member) => member.email !== email),
+      },
     })),
   reset: () =>
     set({
-      step: 1,
-      plans: [],
-      roles: [],
-      invites: [],
+      formData: initialFormData,
+      isOpen: false,
       isLoading: false,
     }),
 }));

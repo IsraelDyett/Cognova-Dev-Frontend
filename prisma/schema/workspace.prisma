@@ -37,7 +37,7 @@ model WorkspaceUser {
 model WorkspaceInvitation {
   id          String                @id @default(cuid())
   workspaceId String
-  email       String                @unique
+  email       String
   status      WorkspaceInviteStatus @default(PENDING)
   roleId      String?
   createdAt   DateTime              @default(now())

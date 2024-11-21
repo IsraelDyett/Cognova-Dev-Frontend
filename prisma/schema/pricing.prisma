@@ -29,7 +29,6 @@ model Plan {
   features      PlanFeature[]
   subscriptions Subscription[]
   techniques    Technique[]
-  botTypes      BotTypes[]
 
   @@map("plans")
 }

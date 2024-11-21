@@ -42,4 +42,14 @@ export const siteConfig = {
     description: appDescription,
     creator: "@cognovaio",
   },
+  r2: {
+    baseUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/",
+    arrowUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/vercel-arrow.png",
+    logoUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/logo.png",
+    waDemoVideo: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/wa-demo-video.mp4",
+  },
+  domains: {
+    auth: "https://app.cognova.io",
+    base: "https://app.cognova.io",
+  },
 };

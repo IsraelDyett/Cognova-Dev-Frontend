@@ -1,8 +1,9 @@
 import Header from "./_components/header";
 import Footer from "./_components/footer";
+import { siteConfig } from "@/lib/site";
 
 const LandingPageLayout = ({ children }: { children: React.ReactNode }) => {
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.cognova.io";
+  const origin = typeof window !== "undefined" ? window.location.origin : siteConfig.domains.base;
   const botID = process.env.SYS_BOT_ID || "cm3fqhmhh000708job4qfgfpn";
   return (
     <div className="flex flex-col min-h-screen bg-background">

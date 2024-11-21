@@ -20,21 +20,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Form = FormProvider;
 
-function IconSpinner({ className, ...props }: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("size-4 animate-spin text-white", className)}
-      {...props}
-    >
-      <circle strokeWidth={4} stroke="currentColor" r="10" cy="12" cx="12" className="opacity-25" />
-      <path d="M4 12a8 8 0 018-8v8H4z" fill="currentColor" className="opacity-75" />
-    </svg>
-  );
-}
-
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -194,16 +179,12 @@ const FormAction = React.forwardRef<
       ref={ref}
       className={cn("mt-4 w-full", className)}
       disabled={isSubmitting}
+      processing={isSubmitting}
       type="submit"
       variant={variant === "expandIcon" && isSubmitting ? undefined : variant}
       {...props}
     >
       {children}
-      {isSubmitting && (
-        <div className="w-0 translate-x-[100%] transition-all duration-200 pl-2 opacity-100">
-          <IconSpinner className="animate-spin size-6" />
-        </div>
-      )}
     </Button>
   );
 });

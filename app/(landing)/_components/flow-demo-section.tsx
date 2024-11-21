@@ -477,7 +477,7 @@ const Icons = {
       <title>chrome-color</title>
       <desc>Created with Sketch.</desc>
       <defs></defs>
-      <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="Icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="Color-" transform="translate(-400.000000, -1043.000000)">
           <g id="chrome" transform="translate(400.000000, 1043.000000)">
             <path
@@ -513,8 +513,8 @@ const Icons = {
       xmlns="http://www.w3.org/2000/svg"
       fill="#000000"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
       <g id="SVGRepo_iconCarrier">
         <defs>
           <radialGradient
@@ -524,8 +524,8 @@ const Icons = {
             r="4271.92"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset=".09" stop-color="#fa8f21"></stop>
-            <stop offset=".78" stop-color="#d82d7e"></stop>
+            <stop offset=".09" stopColor="#fa8f21"></stop>
+            <stop offset=".78" stopColor="#d82d7e"></stop>
           </radialGradient>
           <radialGradient
             id="1"
@@ -534,8 +534,8 @@ const Icons = {
             r="3759.33"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset=".64" stop-color="#8c3aaa" stop-opacity="0"></stop>
-            <stop offset="1" stop-color="#8c3aaa"></stop>
+            <stop offset=".64" stopColor="#8c3aaa" stopOpacity="0"></stop>
+            <stop offset="1" stopColor="#8c3aaa"></stop>
           </radialGradient>
         </defs>
         <path

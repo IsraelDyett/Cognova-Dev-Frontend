@@ -18,8 +18,8 @@ export const getWorkspaces = async (userId: string, withPlan = true) => {
         include: {
           subscription: {
             select: {
-              plan: withPlan
-            }
+              plan: withPlan,
+            },
           },
         },
       },
@@ -27,7 +27,6 @@ export const getWorkspaces = async (userId: string, withPlan = true) => {
   });
   return workspaces.map((ws) => ws.workspace);
 };
-
 
 export const getModels = async () => {
   debug("GET MODELS");
@@ -164,7 +163,7 @@ export const getWorkspace = async (workspaceId: string, withPlan = false) => {
         select: {
           plan: withPlan,
         },
-      }
+      },
     },
   });
 
@@ -172,7 +171,7 @@ export const getWorkspace = async (workspaceId: string, withPlan = false) => {
     const { subscription, ...restWorkspace } = workspace;
     return {
       ...restWorkspace,
-      plan: subscription?.plan
+      plan: subscription?.plan,
     };
   }
   return workspace;

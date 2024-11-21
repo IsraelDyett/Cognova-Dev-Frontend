@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/site";
 import React from "react";
 
 export default function SignUpSection() {
@@ -12,7 +13,7 @@ export default function SignUpSection() {
       </p>
       <div className="mx-auto mt-10 flex max-w-md flex-col gap-4">
         <Button variant={"secondary"} asChild>
-          <a href="https://app.cognova.io/auth/sign-up">Sign Up</a>
+          <a href={siteConfig.domains.auth + "/auth/sign-up"}>Sign Up</a>
         </Button>
       </div>
       <svg
