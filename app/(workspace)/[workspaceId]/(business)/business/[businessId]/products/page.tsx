@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useWorkspace } from "@/app/(workspace)/workspace-context";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import { useProductStore } from "./store";
 import { columns } from "./components/columns";
 import DataTable from "@/components/ui/data-table";

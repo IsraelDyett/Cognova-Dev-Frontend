@@ -1,4 +1,4 @@
-import { useWorkspace } from "@/app/(workspace)/workspace-context";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import NextLink, { LinkProps } from "next/link";
 import { PropsWithChildren } from "react";
 

@@ -9,10 +9,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { authUser } from "../auth/actions";
-import { AuthProvider } from "./auth-context";
+import { AuthProvider } from "./contexts/auth-context";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
-import { WorkspaceProvider } from "./workspace-context";
+import { WorkspaceProvider } from "./contexts/workspace-context";
 import { siteConfig } from "@/lib/site";
 
 const cachedUser = cache(async () => {

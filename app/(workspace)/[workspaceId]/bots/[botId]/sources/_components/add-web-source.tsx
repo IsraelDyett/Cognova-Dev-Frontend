@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { scraperApi, useScraperStore } from "./scraper-store";
-import { useWorkspace } from "@/app/(workspace)/workspace-context";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import { useParams, useRouter } from "next/navigation";
 
 interface ParentDialogProps {

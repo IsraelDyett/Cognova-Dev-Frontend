@@ -2,7 +2,7 @@
 import { Workspace, Plan } from "@prisma/client";
 import { useParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getWorkspace } from "./actions";
+import { getWorkspace } from "../actions";
 import { debug } from "@/lib/utils";
 
 interface WorkspaceWithPlan extends Workspace {
