@@ -475,24 +475,25 @@ export default function ${model.name}Dashboard() {
 
   if (loading) return <LoadingPageSpinner />;
   if (error) return <div>Error: {error}</div>;
-  if (!${model.name.toLowerCase()}s.length && !loading) return <NoStateComponent />;
 
   return (
     <>
       <div className="container mx-auto p-4">
-        <DataTable
-          columns={columns}
-          data={${model.name.toLowerCase()}s}
-          searchField="name"
-          toolBarChildren={
-            <Button onClick={onOpenCreateForm}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Add New ${model.name}
-            </Button>
-          }
-        />
+        {(${model.name.toLowerCase()}s.length === 0 && !loading) ? <NoStateComponent /> : (
+          <DataTable
+            columns={columns}
+            data={${model.name.toLowerCase()}s}
+            searchField="name"
+            toolBarChildren={
+              <Button onClick={onOpenCreateForm}>
+                <PlusIcon className="mr-2 h-4 w-4" /> Add New ${model.name}
+              </Button>
+            }
+          />
+        )}  
       </div>
 
-      {/* CRUD Form Dialog */}
+      {/* Create-Edit Form Dialog */}
       <${model.name}Form />
     </>
   );

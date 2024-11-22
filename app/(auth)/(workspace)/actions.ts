@@ -134,7 +134,6 @@ export const isUserInWorkspace = async (userId: string, workspaceSlug: string) =
 			workspace: true,
 		},
 	});
-	console.log("IN ",workspaceUser)
 	return {
 		success: !!workspaceUser,
 		workspace: workspaceUser?.workspace,

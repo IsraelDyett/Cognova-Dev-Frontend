@@ -33,21 +33,22 @@ export default function BusinessLocationDashboard() {
 
   if (loading) return <LoadingPageSpinner />;
   if (error) return <div>Error: {error}</div>;
-  if (!businesslocations.length && !loading) return <NoStateComponent />;
 
   return (
     <>
       <div className="container mx-auto p-4">
-        <DataTable
-          columns={columns}
-          data={businesslocations}
-          searchField="name"
-          toolBarChildren={
-            <Button onClick={onOpenCreateForm}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Add New BusinessLocation
-            </Button>
-          }
-        />
+        {(businesslocations.length === 0 && !loading) ? <NoStateComponent /> : (
+          <DataTable
+            columns={columns}
+            data={businesslocations}
+            searchField="name"
+            toolBarChildren={
+              <Button onClick={onOpenCreateForm}>
+                <PlusIcon className="mr-2 h-4 w-4" /> Add New BusinessLocation
+              </Button>
+            }
+          />
+        )}
       </div>
 
       {/* CRUD Form Dialog */}

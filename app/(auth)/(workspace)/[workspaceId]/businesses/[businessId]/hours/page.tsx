@@ -32,24 +32,22 @@ export default function HourDashboard() {
 
   if (loading) return <LoadingPageSpinner />;
   if (error) return <div>Error: {error}</div>;
-  if (!hours.length && !loading) return <NoStateComponent />;
-
   return (
     <>
       <div className="container mx-auto p-4">
-        <DataTable
-          columns={columns}
-          data={hours}
-          searchField="name"
-          toolBarChildren={
-            <Button onClick={onOpenCreateForm}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Add New Hour
-            </Button>
-          }
-        />
+        {(hours.length === 0 && !loading) ? <NoStateComponent /> : (
+          <DataTable
+            columns={columns}
+            data={hours}
+            searchField="name"
+            toolBarChildren={
+              <Button onClick={onOpenCreateForm}>
+                <PlusIcon className="mr-2 h-4 w-4" /> Add New Hour
+              </Button>
+            }
+          />
+        )}
       </div>
-
-      {/* CRUD Form Dialog */}
       <HourForm />
     </>
   );

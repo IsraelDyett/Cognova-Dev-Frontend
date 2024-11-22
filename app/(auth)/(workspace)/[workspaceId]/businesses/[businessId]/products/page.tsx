@@ -10,6 +10,7 @@ import DataTable from "@/components/ui/data-table";
 import { NoStateComponent } from "./components/no-state";
 import { useParams } from "next/navigation";
 import { ProductForm } from "./components/form";
+import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 
 export default function ProductDashboard() {
 	const { businessId } = useParams();
@@ -23,22 +24,24 @@ export default function ProductDashboard() {
 		}
 	}, [workspace, fetchProducts]);
 
-	if (loading) return <div>Loading...</div>;
+	if (loading) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;
-	if (!products.length && !loading) return <NoStateComponent />;
 
 	return (
 		<div className="container mx-auto p-4">
-			<DataTable
-				columns={columns}
-				data={products}
-				searchField="name"
-				toolBarChildren={
-					<Button onClick={onOpenCreateForm}>
-						<PlusIcon className="mr-2 h-4 w-4" /> Add New Product
-					</Button>
-				}
-			/>
+			{(products.length === 0 && !loading) ? <NoStateComponent /> : (
+				<DataTable
+					columns={columns}
+					data={products}
+					searchField="name"
+					toolBarChildren={
+						<Button onClick={onOpenCreateForm}>
+							<PlusIcon className="mr-2 h-4 w-4" /> Add New Product
+						</Button>
+					}
+				/>
+
+			)}
 			<ProductForm />
 		</div>
 	);
