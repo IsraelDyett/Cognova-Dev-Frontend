@@ -14,16 +14,8 @@ import { ProductForm } from "./components/form";
 export default function ProductDashboard() {
   const { businessId } = useParams();
   const { workspace } = useWorkspace();
-  const {
-    products,
-    loading,
-    error,
-    fetchProducts,
-    onOpenCreateForm,
-    isOpenCrudForm,
-    onCloseCrudForm,
-    initialCrudFormData,
-  } = useProductStore();
+  const { products, loading, error, fetchProducts, onOpenCreateForm, isOpenCrudForm } =
+    useProductStore();
 
   useEffect(() => {
     if (workspace) {

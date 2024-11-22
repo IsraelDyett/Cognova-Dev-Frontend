@@ -36,13 +36,20 @@ async function sendWorkspaceInvitation(
 }
 
 async function createWorkspaceRecord(displayName: string, name: string, ownerId: string) {
-  return prisma.workspace.create({
+  const workspace = await prisma.workspace.create({
     data: {
       displayName,
       name,
       ownerId,
     },
   });
+  await prisma.workspaceUser.create({
+    data: {
+      workspaceId: workspace.id,
+      userId: ownerId,
+    },
+  });
+  return workspace;
 }
 
 async function createWorkspaceInvitation(

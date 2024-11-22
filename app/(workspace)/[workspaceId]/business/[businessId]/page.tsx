@@ -5,8 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useBusinessStore } from "../store";
 import DataTable from "@/components/ui/data-table";
-import { botsColumns } from "../components/list-bots-columns";
-import { productsColumns } from "../components/list-products-columns";
+import { botsColumns } from "../components/columns/bots";
+import { productsColumns } from "../components/columns/products";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -18,8 +18,8 @@ import {
   Building,
   Settings,
 } from "lucide-react";
-import { operatingHoursColumns } from "../components/list-operating-hours-columns";
-import { locationsColumns } from "../components/list-locations-columns";
+import { operatingHoursColumns } from "../components/columns/operating-hours";
+import { locationsColumns } from "../components/columns/locations";
 import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { retrieveBusiness } from "../actions";
@@ -105,7 +105,7 @@ export default function BusinessDetail() {
             <CardTitle>Business Configuration</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Currency</p>
             <p className="font-medium">{currentBusiness.configurations?.currency}</p>
