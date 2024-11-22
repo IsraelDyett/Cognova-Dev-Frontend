@@ -34,5 +34,5 @@
 		".next/types/**/*.ts",
 		"app/(auth)/(workspace)/[workspaceId]/bots/[botId]/analytics/_charts/browser-charts"
 	],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", "**/*.js"]
 }

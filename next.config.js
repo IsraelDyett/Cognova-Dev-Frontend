@@ -12,6 +12,16 @@ const nextConfig = {
 		],
 		dangerouslyAllowSVG: true,
 	},
+	// logging: {
+	// 	fetches: {
+	// 		fullUrl: true,
+	// 		hmrRefreshes: true,
+	// 	},
+	// },
+	logging: false,
+	experimental: {
+		instrumentationHook: true,
+	},
 };
 
 module.exports = nextConfig;
