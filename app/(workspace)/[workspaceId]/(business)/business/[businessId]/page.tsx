@@ -23,25 +23,29 @@ import { operatingHoursColumns } from "../components/list-operating-hours-column
 import { locationsColumns } from "../components/list-locations-columns";
 import { useWorkspace } from "@/app/(workspace)/workspace-context";
 import { WorkspaceLink } from "@/app/(workspace)/_components/link";
+import { retrieveBusiness } from "../actions";
 
 export default function BusinessDetail() {
   const router = useRouter();
   const params = useParams();
   const { workspace } = useWorkspace();
-  const { currentBusiness, fetchBusiness, deleteCurrentBusiness } = useBusinessStore();
+  const [currentBusiness, setCurrentBusiness] = useState<any>(null);
+  const { fetchBusinesss, deleteBusiness } = useBusinessStore();
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
 
   useEffect(() => {
     if (params.businessId) {
-      fetchBusiness(params.businessId as string);
+      retrieveBusiness(params.businessId as string).then((res) => {
+        setCurrentBusiness(res.data);
+      });
     }
-  }, [params.businessId, fetchBusiness]);
+  }, [params.businessId, fetchBusinesss]);
 
   if (!currentBusiness) return <div>Loading...</div>;
 
   const handleDeleteBusiness = async () => {
     if (confirm("Are you sure you want to delete this business? This action cannot be undone.")) {
-      await deleteCurrentBusiness(currentBusiness.id);
+      await deleteBusiness(currentBusiness.id);
       router.push(`/${workspace?.name}/business`);
     }
   };

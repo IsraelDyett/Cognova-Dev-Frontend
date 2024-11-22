@@ -50,25 +50,10 @@ export async function deleteBusiness(id: string): Promise<ApiResponse<Business>>
   }
 }
 
-export async function retrieveBusiness(id: string): Promise<ApiResponse<Business>> {
+export async function getBusiness(id: string): Promise<ApiResponse<Business>> {
   try {
     const result = await prisma.business.findUnique({
       where: { id },
-      include: {
-        configurations: true,
-        categories: true,
-        products: true,
-        locations: true,
-        operatingHours: {
-          include: {
-            location: true,
-          },
-          orderBy: {
-            dayOfWeek: "asc",
-          },
-        },
-        bots: true,
-      },
     });
     if (!result) {
       return { success: false, error: "Business not found" };

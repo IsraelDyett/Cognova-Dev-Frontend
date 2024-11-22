@@ -1,4 +1,3 @@
-"use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
@@ -30,6 +29,15 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export const columns: ColumnDef<Business>[] = [
+  {
+    accessorKey: "workspaceId",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="WorkspaceId" />;
+    },
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("workspaceId")}</div>;
+    },
+  },
   {
     accessorKey: "name",
     header: ({ column }) => {

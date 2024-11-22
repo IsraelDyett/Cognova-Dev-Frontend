@@ -1,4 +1,3 @@
-"use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
@@ -12,11 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
-import type { Business } from "@prisma/client";
-import { toast } from "sonner";
+import type { BusinessProduct as Product } from "@prisma/client";
 import { WorkspaceLink } from "@/app/(workspace)/_components/link";
 import { format } from "date-fns";
-import { useBusinessStore } from "../store";
+import { useProductStore } from "../store";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,76 +27,57 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const columns: ColumnDef<Business>[] = [
+export const columns: ColumnDef<Product>[] = [
+  {
+    accessorKey: "categoryId",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="CategoryId" />,
+    cell: ({ row }) => <div className="font-medium">{row.getValue("categoryId")}</div>,
+  },
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Name" />;
-    },
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("name")}</div>;
-    },
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "type",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Type" />;
-    },
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("type")}</div>;
-    },
+    accessorKey: "price",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
+    cell: ({ row }) => (
+      <div className="font-medium">
+        $
+        {Number(row.getValue("price")).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </div>
+    ),
   },
   {
-    accessorKey: "hasDelivery",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="HasDelivery" />;
-    },
-    cell: ({ row }) => {
-      return (
-        <Badge variant={row.getValue("hasDelivery") ? "success" : "secondary"}>
-          {row.getValue("hasDelivery") ? "Yes" : "No"}
-        </Badge>
-      );
-    },
+    accessorKey: "stock",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Stock" />,
+    cell: ({ row }) => (
+      <div className="font-medium">{Number(row.getValue("stock")).toLocaleString()}</div>
+    ),
   },
   {
-    accessorKey: "hasPickup",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="HasPickup" />;
-    },
-    cell: ({ row }) => {
-      return (
-        <Badge variant={row.getValue("hasPickup") ? "success" : "secondary"}>
-          {row.getValue("hasPickup") ? "Yes" : "No"}
-        </Badge>
-      );
-    },
+    accessorKey: "sku",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Sku" />,
+    cell: ({ row }) => <div className="font-medium">{row.getValue("sku")}</div>,
   },
   {
-    accessorKey: "acceptsReturns",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="AcceptsReturns" />;
-    },
-    cell: ({ row }) => {
-      return (
-        <Badge variant={row.getValue("acceptsReturns") ? "success" : "secondary"}>
-          {row.getValue("acceptsReturns") ? "Yes" : "No"}
-        </Badge>
-      );
-    },
+    accessorKey: "images",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Images" />,
+    cell: ({ row }) => (
+      <div className="font-medium">{(row.getValue("images") as string[]).length} items</div>
+    ),
   },
   {
-    accessorKey: "hasWarranty",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="HasWarranty" />;
-    },
-    cell: ({ row }) => {
-      return (
-        <Badge variant={row.getValue("hasWarranty") ? "success" : "secondary"}>
-          {row.getValue("hasWarranty") ? "Yes" : "No"}
-        </Badge>
-      );
-    },
+    accessorKey: "isActive",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="IsActive" />,
+    cell: ({ row }) => (
+      <Badge variant={row.getValue("isActive") ? "success" : "secondary"}>
+        {row.getValue("isActive") ? "Yes" : "No"}
+      </Badge>
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -117,7 +96,7 @@ export const columns: ColumnDef<Business>[] = [
     id: "actions",
     cell: ({ row }) => {
       const item = row.original;
-      const { deleteBusiness, onOpenEditForm } = useBusinessStore();
+      const { deleteProduct, onOpenEditForm } = useProductStore();
 
       return (
         <DropdownMenu>
@@ -130,7 +109,7 @@ export const columns: ColumnDef<Business>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <WorkspaceLink href={`/business/${item.id}`}>
+              <WorkspaceLink href={`/product/${item.id}`}>
                 <Eye className="h-4 w-4" />
                 <span>View</span>
               </WorkspaceLink>
@@ -153,7 +132,7 @@ export const columns: ColumnDef<Business>[] = [
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Business</AlertDialogTitle>
+                    <AlertDialogTitle>Delete Product</AlertDialogTitle>
                     <AlertDialogDescription>
                       Are you sure you want to delete this item? This action cannot be undone.
                     </AlertDialogDescription>
@@ -161,7 +140,7 @@ export const columns: ColumnDef<Business>[] = [
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={() => deleteBusiness(item.id)}
+                      onClick={() => deleteProduct(item.id)}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       Delete

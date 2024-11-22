@@ -87,8 +87,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
           </div>
         )}
         {processing && (
-          <div className="w-0 translate-x-[100%] transition-all duration-200 pl-2 opacity-100">
-            <Icons.IconSpinner className="animate-spin size-6" />
+          <div className="pl-2">
+            <Icons.IconSpinner className="animate-spin size-4" />
           </div>
         )}
       </Comp>

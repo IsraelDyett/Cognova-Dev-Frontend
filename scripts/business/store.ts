@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createBusiness, updateBusiness, deleteBusiness, listBusinesss } from "./actions";
+import {
+  createBusiness,
+  updateBusiness,
+  deleteBusiness,
+  getBusiness,
+  listBusinesss,
+} from "./actions";
 import type { Business } from "@prisma/client";
 
 interface BusinessState {
@@ -46,6 +52,20 @@ export const useBusinessStore = create<BusinessState>((set) => ({
       toast.error("Failed to load Businesss");
     } finally {
       set({ loading: false });
+    }
+  },
+  retrieveBusiness: async (businessId: string) => {
+    try {
+      const response = await getBusiness(businessId);
+      if (response.success) {
+        return response.data;
+      } else {
+        throw new Error(response.error);
+      }
+    } catch (err: any) {
+      const error: Error = err;
+      set({ error: error.message });
+      toast.error("Failed to load Business");
     }
   },
 
