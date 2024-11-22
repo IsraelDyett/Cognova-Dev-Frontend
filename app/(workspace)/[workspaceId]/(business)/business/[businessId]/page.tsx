@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useBusinessStore } from "../store";
 import DataTable from "@/components/ui/data-table";
-import { CreateUpdateProduct } from "../components/create-update-product";
 import { botsColumns } from "../components/list-bots-columns";
 import { productsColumns } from "../components/list-products-columns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -191,11 +190,6 @@ export default function BusinessDetail() {
           columns={productsColumns}
           data={currentBusiness.products ?? []}
           searchField="name"
-        />
-        <CreateUpdateProduct
-          open={isProductDialogOpen}
-          onOpenChange={setIsProductDialogOpen}
-          onSubmit={() => {}}
         />
       </div>
 
