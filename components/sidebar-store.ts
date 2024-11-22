@@ -9,7 +9,7 @@ import {
 	SquareTerminal,
 } from "lucide-react";
 import { Bot, Workspace } from "@prisma/client";
-import { getWorkspaceBots, getWorkspaces } from "@/app/(workspace)/actions";
+import { getWorkspaceBots, getWorkspaces } from "@/app/(auth)/(workspace)/actions";
 import { debug } from "@/lib/utils";
 
 type LoadingState = "idle" | "loading" | "error" | "success";

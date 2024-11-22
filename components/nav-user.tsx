@@ -18,7 +18,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/app/(workspace)/contexts/auth-context";
+import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
 
 export function NavUser() {
 	const { user } = useAuth();

@@ -20,8 +20,8 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSidebarStore } from "./sidebar-store";
-import { useAuth } from "@/app/(workspace)/contexts/auth-context";
-import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
+import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { Skeleton } from "./ui/skeleton";
 
 export function WorkspaceSwitcher() {

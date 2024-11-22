@@ -1,4 +1,4 @@
-import { SignUpOrInAction } from "./app/auth/actions";
+import { SignUpOrInAction } from "./app/(guest)/auth/actions";
 import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import { cookies } from "next/headers";
