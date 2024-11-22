@@ -1,99 +1,99 @@
 "use server";
 import { prisma } from "@/lib/services/prisma";
 import {
-  AnalyticsResponse,
-  PrismaQueryPerDay,
-  PrismaCountryDistribution,
-  PrismaDeviceDistribution,
-  PrismaBrowserDistribution,
-  PrismaOsDistribution,
+	AnalyticsResponse,
+	PrismaQueryPerDay,
+	PrismaCountryDistribution,
+	PrismaDeviceDistribution,
+	PrismaBrowserDistribution,
+	PrismaOsDistribution,
 } from "./types";
 
 const bigIntToNumber = (value: bigint): number => {
-  try {
-    return Number(value);
-  } catch (error) {
-    console.error("Error converting BigInt to number:", error);
-    return 0;
-  }
+	try {
+		return Number(value);
+	} catch (error) {
+		console.error("Error converting BigInt to number:", error);
+		return 0;
+	}
 };
 
 export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
-  const [
-    conversationData,
-    chatData,
-    queriesPerDay,
-    countryDistribution,
-    deviceDistribution,
-    browserDistribution,
-    osDistribution,
-  ] = await Promise.all([
-    // Conversation metrics
-    prisma.$transaction(async (tx) => {
-      const totalConversations = await tx.conversation.count({
-        where: {
-          botId,
-        },
-      });
+	const [
+		conversationData,
+		chatData,
+		queriesPerDay,
+		countryDistribution,
+		deviceDistribution,
+		browserDistribution,
+		osDistribution,
+	] = await Promise.all([
+		// Conversation metrics
+		prisma.$transaction(async (tx) => {
+			const totalConversations = await tx.conversation.count({
+				where: {
+					botId,
+				},
+			});
 
-      const conversationsWithChatCount = await tx.conversation.findMany({
-        where: {
-          botId,
-        },
-        include: {
-          _count: {
-            select: { chats: true },
-          },
-        },
-      });
+			const conversationsWithChatCount = await tx.conversation.findMany({
+				where: {
+					botId,
+				},
+				include: {
+					_count: {
+						select: { chats: true },
+					},
+				},
+			});
 
-      const uniqueUsers = await tx.conversation.groupBy({
-        by: ["sessionId"],
-        where: {
-          botId,
-        },
-      });
+			const uniqueUsers = await tx.conversation.groupBy({
+				by: ["sessionId"],
+				where: {
+					botId,
+				},
+			});
 
-      const totalChats = conversationsWithChatCount.reduce(
-        (acc, conv) => acc + conv._count.chats,
-        0,
-      );
+			const totalChats = conversationsWithChatCount.reduce(
+				(acc, conv) => acc + conv._count.chats,
+				0,
+			);
 
-      return {
-        totalConversations,
-        averageChatsPerConversation: totalChats / totalConversations || 0,
-        uniqueUsers: uniqueUsers.length,
-      };
-    }),
+			return {
+				totalConversations,
+				averageChatsPerConversation: totalChats / totalConversations || 0,
+				uniqueUsers: uniqueUsers.length,
+			};
+		}),
 
-    // Chat metrics
-    prisma.$transaction(async (tx) => {
-      const totalChats = await tx.chat.count({
-        where: {
-          conversation: {
-            botId,
-          },
-        },
-      });
+		// Chat metrics
+		prisma.$transaction(async (tx) => {
+			const totalChats = await tx.chat.count({
+				where: {
+					conversation: {
+						botId,
+					},
+				},
+			});
 
-      const downvotedChats = await tx.chat.count({
-        where: {
-          conversation: {
-            botId,
-          },
-          feedback: "DOWNVOTED",
-        },
-      });
+			const downvotedChats = await tx.chat.count({
+				where: {
+					conversation: {
+						botId,
+					},
+					feedback: "DOWNVOTED",
+				},
+			});
 
-      return {
-        totalChats,
-        downvotedChats,
-        downvotePercentage: (downvotedChats / totalChats) * 100 || 0,
-      };
-    }),
+			return {
+				totalChats,
+				downvotedChats,
+				downvotePercentage: (downvotedChats / totalChats) * 100 || 0,
+			};
+		}),
 
-    // Queries per day
-    prisma.$queryRaw<PrismaQueryPerDay[]>`
+		// Queries per day
+		prisma.$queryRaw<PrismaQueryPerDay[]>`
             WITH bot_conversations AS (
             SELECT DISTINCT
                 "id"
@@ -114,71 +114,71 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
               date Desc
         `,
 
-    // @ts-ignore Country distribution
-    prisma.conversation.groupBy({
-      by: ["countryCode"],
-      where: {
-        botId,
-        countryCode: { not: null },
-      },
-      _count: true,
-    }) as Promise<PrismaCountryDistribution[]>,
+		// @ts-ignore Country distribution
+		prisma.conversation.groupBy({
+			by: ["countryCode"],
+			where: {
+				botId,
+				countryCode: { not: null },
+			},
+			_count: true,
+		}) as Promise<PrismaCountryDistribution[]>,
 
-    // @ts-ignore Device distribution
-    prisma.conversation.groupBy({
-      by: ["device"],
-      where: {
-        botId,
-      },
-      _count: true,
-    }) as Promise<PrismaDeviceDistribution[]>,
+		// @ts-ignore Device distribution
+		prisma.conversation.groupBy({
+			by: ["device"],
+			where: {
+				botId,
+			},
+			_count: true,
+		}) as Promise<PrismaDeviceDistribution[]>,
 
-    // @ts-ignore Browser distribution
-    prisma.conversation.groupBy({
-      by: ["browser"],
-      where: {
-        botId,
-      },
-      _count: true,
-    }) as Promise<PrismaBrowserDistribution[]>,
+		// @ts-ignore Browser distribution
+		prisma.conversation.groupBy({
+			by: ["browser"],
+			where: {
+				botId,
+			},
+			_count: true,
+		}) as Promise<PrismaBrowserDistribution[]>,
 
-    // @ts-ignore OS distribution
-    prisma.conversation.groupBy({
-      by: ["os"],
-      where: {
-        botId,
-      },
-      _count: true,
-    }) as Promise<PrismaOsDistribution[]>,
-  ]);
+		// @ts-ignore OS distribution
+		prisma.conversation.groupBy({
+			by: ["os"],
+			where: {
+				botId,
+			},
+			_count: true,
+		}) as Promise<PrismaOsDistribution[]>,
+	]);
 
-  // Transform the data
-  const processedQueriesPerDay = queriesPerDay.map((item) => ({
-    date: item.date.toISOString().split("T")[0],
-    chats: bigIntToNumber(item.count),
-  }));
+	// Transform the data
+	const processedQueriesPerDay = queriesPerDay.map((item) => ({
+		date: item.date.toISOString().split("T")[0],
+		chats: bigIntToNumber(item.count),
+	}));
 
-  return {
-    conversationMetrics: {
-      ...conversationData,
-    },
-    chatMetrics: chatData,
-    queriesPerDay: processedQueriesPerDay,
-    countryDistribution: countryDistribution.map((item) => ({
-      name: item.countryCode,
-      value: bigIntToNumber(item._count),
-    })),
-    deviceDistribution: deviceDistribution.map((item) => ({
-      name: item.device || "Unknown",
-      value: bigIntToNumber(item._count),
-    })),
-    browserDistribution: browserDistribution.map((item) => ({
-      name: item.browser || "Unknown",
-      value: bigIntToNumber(item._count),
-    })),
-    osDistribution: osDistribution.map((item) => ({
-      name: item.os || "Unknown",
-      value: bigIntToNumber(item._count),
-    })),
-  };
+	return {
+		conversationMetrics: {
+			...conversationData,
+		},
+		chatMetrics: chatData,
+		queriesPerDay: processedQueriesPerDay,
+		countryDistribution: countryDistribution.map((item) => ({
+			name: item.countryCode,
+			value: bigIntToNumber(item._count),
+		})),
+		deviceDistribution: deviceDistribution.map((item) => ({
+			name: item.device || "Unknown",
+			value: bigIntToNumber(item._count),
+		})),
+		browserDistribution: browserDistribution.map((item) => ({
+			name: item.browser || "Unknown",
+			value: bigIntToNumber(item._count),
+		})),
+		osDistribution: osDistribution.map((item) => ({
+			name: item.os || "Unknown",
+			value: bigIntToNumber(item._count),
+		})),
+	};
 }

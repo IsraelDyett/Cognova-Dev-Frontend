@@ -10,19 +10,21 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = siteConfig;
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: dark)", color: "black" },
+	],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body className={clsx("bg-background font-sans antialiased", fontSans.variable)}>
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>{children}</Providers>
-      </body>
-    </html>
-  );
+	return (
+		<html suppressHydrationWarning lang="en">
+			<head />
+			<body className={clsx("bg-background font-sans antialiased", fontSans.variable)}>
+				<Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+					{children}
+				</Providers>
+			</body>
+		</html>
+	);
 }

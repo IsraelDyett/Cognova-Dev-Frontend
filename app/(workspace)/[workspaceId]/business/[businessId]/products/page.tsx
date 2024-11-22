@@ -12,34 +12,34 @@ import { useParams } from "next/navigation";
 import { ProductForm } from "./components/form";
 
 export default function ProductDashboard() {
-  const { businessId } = useParams();
-  const { workspace } = useWorkspace();
-  const { products, loading, error, fetchProducts, onOpenCreateForm, isOpenCrudForm } =
-    useProductStore();
+	const { businessId } = useParams();
+	const { workspace } = useWorkspace();
+	const { products, loading, error, fetchProducts, onOpenCreateForm, isOpenCrudForm } =
+		useProductStore();
 
-  useEffect(() => {
-    if (workspace) {
-      fetchProducts(`${businessId}`);
-    }
-  }, [workspace, fetchProducts]);
+	useEffect(() => {
+		if (workspace) {
+			fetchProducts(`${businessId}`);
+		}
+	}, [workspace, fetchProducts]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!products.length && !isOpenCrudForm) return <NoStateComponent />;
+	if (loading) return <div>Loading...</div>;
+	if (error) return <div>Error: {error}</div>;
+	if (!products.length && !isOpenCrudForm) return <NoStateComponent />;
 
-  return (
-    <div className="container mx-auto p-4">
-      <DataTable
-        columns={columns}
-        data={products}
-        searchField="name"
-        toolBarChildren={
-          <Button onClick={onOpenCreateForm}>
-            <PlusIcon className="mr-2 h-4 w-4" /> Add New Product
-          </Button>
-        }
-      />
-      <ProductForm />
-    </div>
-  );
+	return (
+		<div className="container mx-auto p-4">
+			<DataTable
+				columns={columns}
+				data={products}
+				searchField="name"
+				toolBarChildren={
+					<Button onClick={onOpenCreateForm}>
+						<PlusIcon className="mr-2 h-4 w-4" /> Add New Product
+					</Button>
+				}
+			/>
+			<ProductForm />
+		</div>
+	);
 }

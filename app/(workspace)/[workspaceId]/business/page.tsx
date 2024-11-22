@@ -11,37 +11,37 @@ import DataTable from "@/components/ui/data-table";
 import { NoStateComponent } from "./components/no-state";
 
 export default function BusinessDashboard() {
-  const { workspace } = useWorkspace();
-  const { businesss, loading, error, fetchBusinesss, isOpenCrudForm, onOpenCreateForm } =
-    useBusinessStore();
+	const { workspace } = useWorkspace();
+	const { businesss, loading, error, fetchBusinesss, isOpenCrudForm, onOpenCreateForm } =
+		useBusinessStore();
 
-  useEffect(() => {
-    if (workspace) {
-      fetchBusinesss(workspace.id);
-    }
-  }, [workspace, fetchBusinesss]);
+	useEffect(() => {
+		if (workspace) {
+			fetchBusinesss(workspace.id);
+		}
+	}, [workspace, fetchBusinesss]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!businesss.length && !isOpenCrudForm) return <NoStateComponent />;
+	if (loading) return <div>Loading...</div>;
+	if (error) return <div>Error: {error}</div>;
+	if (!businesss.length && !isOpenCrudForm) return <NoStateComponent />;
 
-  return (
-    <>
-      <div className="container mx-auto p-4">
-        <DataTable
-          columns={columns}
-          data={businesss}
-          searchField="name"
-          toolBarChildren={
-            <Button onClick={onOpenCreateForm}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Add New Business
-            </Button>
-          }
-        />
-      </div>
+	return (
+		<>
+			<div className="container mx-auto p-4">
+				<DataTable
+					columns={columns}
+					data={businesss}
+					searchField="name"
+					toolBarChildren={
+						<Button onClick={onOpenCreateForm}>
+							<PlusIcon className="mr-2 h-4 w-4" /> Add New Business
+						</Button>
+					}
+				/>
+			</div>
 
-      {/* CRUD Form Dialog */}
-      <BusinessForm />
-    </>
-  );
+			{/* CRUD Form Dialog */}
+			<BusinessForm />
+		</>
+	);
 }

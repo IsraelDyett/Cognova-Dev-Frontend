@@ -2,5 +2,5 @@ import PlaygroundPage from "@/app/(workspace)/[workspaceId]/bots/[botId]/playgro
 import { WorkspacePageProps } from "@/types";
 
 export default function ChatsPage(defaultProps: WorkspacePageProps) {
-  return <PlaygroundPage {...defaultProps} />;
+	return <PlaygroundPage {...defaultProps} />;
 }

@@ -8,16 +8,16 @@ import FAQSection from "./components/faq-section";
 import FlowDemoSection from "./components/flow-demo-section";
 
 export default function LandingPage() {
-  return (
-    <>
-      <HeroSection />
-      <StepsFlowSection />
-      <FlowDemoSection />
-      <PricingSection />
-      <FeaturesSection />
-      <SignUpSection />
-      <FAQSection />
-      {/* <TestimonialsSection /> */}
-    </>
-  );
+	return (
+		<>
+			<HeroSection />
+			<StepsFlowSection />
+			<FlowDemoSection />
+			<PricingSection />
+			<FeaturesSection />
+			<SignUpSection />
+			<FAQSection />
+			{/* <TestimonialsSection /> */}
+		</>
+	);
 }

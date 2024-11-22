@@ -7,19 +7,19 @@ import { Bot } from "@prisma/client";
 
 export const revalidate = 10;
 export default async function BotPreviewPage(props: WorkspacePageProps) {
-  let bot: Bot | null = null;
-  try {
-    bot = await getBot(props.params.botId);
-    if (!bot) {
-      notFound();
-    }
-  } catch (error) {
-    notFound();
-  }
-  return (
-    <div className="flex flex-col items-center justify-center flex-1 h-full">
-      <h2>BOT: {bot.name}</h2>
-      <ShareButton bot={bot} />
-    </div>
-  );
+	let bot: Bot | null = null;
+	try {
+		bot = await getBot(props.params.botId);
+		if (!bot) {
+			notFound();
+		}
+	} catch (error) {
+		notFound();
+	}
+	return (
+		<div className="flex flex-col items-center justify-center flex-1 h-full">
+			<h2>BOT: {bot.name}</h2>
+			<ShareButton bot={bot} />
+		</div>
+	);
 }
