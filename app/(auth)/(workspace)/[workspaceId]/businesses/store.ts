@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createBusiness, updateBusiness, deleteBusiness, listBusinesss } from "./actions";
+import { createBusiness, updateBusiness, deleteBusiness, listBusinesses } from "./actions";
 import type { Business } from "@prisma/client";
 
 interface BusinessState {
-	businesss: Business[];
+	businesses: Business[];
 	loading: boolean;
 	error: string | null;
 
@@ -12,7 +12,7 @@ interface BusinessState {
 	initialCrudFormData?: Business | null;
 	isOpenCrudForm: boolean;
 
-	fetchBusinesss: (workspaceId: string) => Promise<void>;
+	fetchBusinesses: (workspaceId: string) => Promise<void>;
 	createBusiness: (data: Omit<Business, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 	updateBusiness: (id: string, data: Partial<Business>) => Promise<void>;
 	deleteBusiness: (id: string) => Promise<void>;
@@ -24,26 +24,26 @@ interface BusinessState {
 }
 
 export const useBusinessStore = create<BusinessState>((set) => ({
-	businesss: [],
+	businesses: [],
 	loading: false,
 	error: null,
 
 	initialCrudFormData: null,
 	isOpenCrudForm: false,
 
-	fetchBusinesss: async (workspaceId: string) => {
+	fetchBusinesses: async (workspaceId: string) => {
 		set({ loading: true, error: null });
 		try {
-			const response = await listBusinesss({ where: { workspaceId } });
+			const response = await listBusinesses({ where: { workspaceId } });
 			if (response.success) {
-				set({ businesss: response.data });
+				set({ businesses: response.data });
 			} else {
 				throw new Error(response.error);
 			}
 		} catch (err: any) {
 			const error: Error = err;
 			set({ error: error.message });
-			toast.error("Failed to load Businesss");
+			toast.error("Failed to load Businesses");
 		} finally {
 			set({ loading: false });
 		}
@@ -54,7 +54,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			const response = await createBusiness(data);
 			if (response.success) {
 				set((state) => ({
-					businesss: [...state.businesss, response?.data ?? ({} as Business)],
+					businesses: [...state.businesses, response?.data ?? ({} as Business)],
 				}));
 				toast.success("Business created successfully");
 			} else {
@@ -72,7 +72,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			const response = await updateBusiness(id, data);
 			if (response.success) {
 				set((state) => ({
-					businesss: state.businesss.map((item) =>
+					businesses: state.businesses.map((item) =>
 						item.id === id ? (response.data ?? ({} as Business)) : item,
 					),
 				}));
@@ -93,7 +93,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			const response = await deleteBusiness(id);
 			if (response.success) {
 				set((state) => ({
-					businesss: state.businesss.filter((item) => item.id !== id),
+					businesses: state.businesses.filter((item) => item.id !== id),
 				}));
 				toast.success("Business deleted successfully");
 			} else {

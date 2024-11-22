@@ -25,7 +25,7 @@ export default function ProductDashboard() {
 
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error: {error}</div>;
-	if (!products.length && !isOpenCrudForm) return <NoStateComponent />;
+	if (!products.length && !loading) return <NoStateComponent />;
 
 	return (
 		<div className="container mx-auto p-4">

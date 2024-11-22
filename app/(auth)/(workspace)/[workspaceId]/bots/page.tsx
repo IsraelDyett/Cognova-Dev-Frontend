@@ -41,8 +41,6 @@ export default function BotDashboard() {
 					}
 				/>
 			</div>
-
-			{/* CRUD Form Dialog */}
 			<BotForm />
 		</>
 	);

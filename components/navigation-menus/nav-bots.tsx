@@ -1,11 +1,10 @@
 "use client";
 
-import { Folder, Forward, MoreHorizontal, Trash2, Bot as BotIcon } from "lucide-react";
+import { Forward, MoreHorizontal, Bot as BotIcon } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -17,28 +16,21 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import React from "react";
-import { useSidebarStore } from "./sidebar-store";
-import { Skeleton } from "./ui/skeleton";
-import { shareBot } from "./share-button";
+import { Skeleton } from "../ui/skeleton";
+import { shareBot } from "../share-button";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
+import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 
-export function NavBots({ workspaceId }: { workspaceId: string }) {
+export function NavBots() {
 	const { isMobile } = useSidebar();
-	const alreadyMounted = React.useRef(false);
-	const { bots, fetchBots, loadingStates } = useSidebarStore();
-
-	React.useEffect(() => {
-		if (!alreadyMounted.current && bots.length === 0) {
-			fetchBots(workspaceId);
-			alreadyMounted.current = true;
-		}
-	}, []);
+	const { workspace, isLoading } = useWorkspace();
+	if((workspace?.bots || []).length == 0 && !isLoading) return null;
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Bots</SidebarGroupLabel>
 			<SidebarMenu>
-				{loadingStates.bots !== "success" ? (
+				{isLoading ? (
 					<>
 						{Array.from({ length: 3 }).map((_, index) => (
 							<SidebarMenuItem key={index}>
@@ -53,16 +45,15 @@ export function NavBots({ workspaceId }: { workspaceId: string }) {
 					</>
 				) : (
 					<>
-						{bots.slice(0, 3).map((bot) => (
+						{workspace?.bots?.slice(0, 3).map((bot) => (
 							<SidebarMenuItem key={bot.name}>
-								<SidebarMenuButton asChild>
-									<Link
-										href={`/${workspaceId}/bots/${bot.id}`}
-										className="w-full"
+								<SidebarMenuButton asChild className="w-full">
+									<WorkspaceLink
+										href={`/bots/${bot.id}`}
 									>
 										<BotIcon />
 										<span>{bot.name}</span>
-									</Link>
+									</WorkspaceLink>
 								</SidebarMenuButton>
 								<DropdownMenu>
 									<DropdownMenuTrigger asChild>
@@ -80,18 +71,13 @@ export function NavBots({ workspaceId }: { workspaceId: string }) {
 											<Forward className="text-muted-foreground" />
 											<span>Share Bot</span>
 										</DropdownMenuItem>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem>
-											<Trash2 className="text-muted-foreground" />
-											<span>Delete Bot</span>
-										</DropdownMenuItem>
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</SidebarMenuItem>
 						))}
 					</>
 				)}
-				{bots.length > 3 && (
+				{(workspace?.bots || []).length > 3 && (
 					<SidebarMenuItem>
 						<SidebarMenuButton className="text-sidebar-foreground/70">
 							<MoreHorizontal className="text-sidebar-foreground/70" />

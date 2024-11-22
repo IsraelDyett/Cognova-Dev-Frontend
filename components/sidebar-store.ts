@@ -7,9 +7,12 @@ import {
 	Settings2,
 	SquareMousePointer,
 	SquareTerminal,
+	Building, BarChartIcon as ChartBar, ShoppingBag, MapPin, Clock, Settings,
+	Bot,
+	Stars
 } from "lucide-react";
-import { Bot, Workspace } from "@prisma/client";
-import { getWorkspaceBots, getWorkspaces } from "@/app/(auth)/(workspace)/actions";
+import { Workspace } from "@prisma/client";
+import { getWorkspaces } from "@/app/(auth)/(workspace)/actions";
 import { debug } from "@/lib/utils";
 
 type LoadingState = "idle" | "loading" | "error" | "success";
@@ -29,10 +32,8 @@ interface SidebarStore {
 	errorStates: ErrorStates;
 
 	workspaces: Workspace[];
-	bots: Bot[];
 
 	fetchWorkspaces: (userId: string) => Promise<void>;
-	fetchBots: (workspaceId: string) => Promise<void>;
 
 	setLoading: (feature: keyof LoadingStates) => void;
 	setError: (feature: keyof ErrorStates, error: string) => void;
@@ -51,7 +52,6 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 	},
 
 	workspaces: [],
-	bots: [],
 
 	setLoading: (feature) =>
 		set((state) => ({
@@ -86,7 +86,7 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 		})),
 
 	fetchWorkspaces: async (userId) => {
-		debug("[STORE] {USE-SIDEBAR-STORE} FETCH WORKSPACES");
+		debug("CLIENT", "fetchWorkspaces", "STORE");
 		const { setLoading, setError, setSuccess } = get();
 		setLoading("workspaces");
 
@@ -98,24 +98,96 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 			setError("workspaces", "Failed to load workspaces. Please try again.");
 		}
 	},
-
-	fetchBots: async (workspaceId) => {
-		debug("[STORE] {USE-SIDEBAR-STORE} FETCH BOTS");
-		const { setLoading, setError, setSuccess } = get();
-		setLoading("bots");
-
-		try {
-			const bots = await getWorkspaceBots(workspaceId);
-			set({ bots: bots.data });
-			setSuccess("bots");
-		} catch (error) {
-			setError("bots", "Failed to load bots. Please try again.");
-		}
-	},
 }));
 
 export const sidebarData = {
 	mainNavigationMenus: [
+		{
+			title: "Overview",
+			url: `/`,
+			icon: Stars,
+			isActive: true,
+		},
+		{
+			title: "Businesses",
+			url: "/businesses",
+			icon: Building,
+		},
+		{
+			title: "Bots",
+			url: "/bots",
+			icon: Bot,
+		},
+		{
+			title: "Sources",
+			url: "/sources",
+			icon: Brain,
+		},
+	],
+	businessNavigationMenus: [
+		{
+			title: "Overview",
+			icon: Building,
+			url: "businesses/{businessId}/"
+		},
+		{
+			title: "Analytics",
+			icon: ChartBar,
+			url: "businesses/{businessId}/analytics"
+		},
+		{
+			title: "Products",
+			icon: ShoppingBag,
+			url: "businesses/{businessId}/products"
+		},
+		{
+			title: "Locations",
+			icon: MapPin,
+			url: "businesses/{businessId}/locations"
+		},
+		{
+			title: "Operating Hours", icon: Clock,
+			url: "businesses/{businessId}/hours"
+		},
+		{
+			title: "Settings",
+			icon: Settings,
+			url: "businesses/{businessId}/settings"
+		},
+	],
+	botNavigationMenus: [
+		{
+			title: "Sources",
+			url: "bots/{botId}/sources",
+			icon: Brain,
+		},
+		{
+			title: "Analytics",
+			url: "bots/{botId}/analytics",
+			icon: ChartArea,
+		},
+		{
+			title: "Playground",
+			url: "bots/{botId}/playground",
+			icon: SquareTerminal,
+		},
+		{
+			title: "Customize",
+			url: "bots/{botId}/customize",
+			icon: Cog,
+		},
+		{
+			title: "Chats",
+			url: "bots/{botId}/chats",
+			icon: MessageSquareText,
+		},
+		{
+			title: "Embed",
+			url: "bots/{botId}/customize",
+			icon: SquareMousePointer,
+		},
+	],
+	workspaceNavigationMenus: [
 		{
 			title: "Settings",
 			url: "#",
@@ -134,43 +206,6 @@ export const sidebarData = {
 					url: "#",
 				},
 			],
-		},
-		{
-			title: "Sources",
-			url: "{after.workspaceId}/sources",
-			icon: Brain,
-		},
-	],
-	botNavigationMenus: [
-		{
-			title: "Sources",
-			url: "{after.botId}/sources",
-			icon: Brain,
-		},
-		{
-			title: "Analytics",
-			url: "{after.botId}/analytics",
-			icon: ChartArea,
-		},
-		{
-			title: "Playground",
-			url: "{after.botId}/playground",
-			icon: SquareTerminal,
-		},
-		{
-			title: "Customize",
-			url: "{after.botId}/customize",
-			icon: Cog,
-		},
-		{
-			title: "Chats",
-			url: "{after.botId}/chats",
-			icon: MessageSquareText,
-		},
-		{
-			title: "Embed",
-			url: "{after.botId}/customize",
-			icon: SquareMousePointer,
 		},
 	],
 	slideVariants: {

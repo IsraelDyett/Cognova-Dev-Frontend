@@ -3,71 +3,72 @@ const path = require("path");
 
 // Types
 interface Field {
-	name: string;
-	type: string;
-	isOptional: boolean;
-	isArray: boolean;
-	defaultValue?: string;
-	attributes: string[];
+  name: string;
+  type: string;
+  isOptional: boolean;
+  isArray: boolean;
+  defaultValue?: string;
+  attributes: string[];
 }
 
 interface Model {
-	name: string;
-	fields: Field[];
-	mappedName?: string;
+  name: string;
+  fields: Field[];
+  mappedName?: string;
 }
 
 // Schema parser
 function parsePrismaSchema(filePath: string): Model {
-	const content = fs.readFileSync(filePath, "utf8");
-	const modelMatch = content.match(/model\s+(\w+)\s*{([^}]*)}/s);
+  const content = fs.readFileSync(filePath, "utf8");
+  const modelMatch = content.match(/model\s+(\w+)\s*{([^}]*)}/s);
 
-	if (!modelMatch) {
-		throw new Error("No model found in schema file");
-	}
+  if (!modelMatch) {
+    throw new Error("No model found in schema file");
+  }
 
-	const [_, modelName, modelContent] = modelMatch;
-	const mappingMatch = content.match(/@@map\("([^"]+)"\)/);
-	const mappedName = mappingMatch ? mappingMatch[1] : undefined;
+  const [_, modelName, modelContent] = modelMatch;
+  const mappingMatch = content.match(/@@map\("([^"]+)"\)/);
+  const mappedName = mappingMatch ? mappingMatch[1] : undefined;
 
-	const fields: Field[] = [];
-	const fieldLines = modelContent.trim().split("\n");
+  const fields: Field[] = [];
+  const fieldLines = modelContent.trim().split("\n");
 
-	for (const line of fieldLines) {
-		const trimmedLine = line.trim();
-		if (!trimmedLine || trimmedLine.startsWith("@@")) continue;
+  for (const line of fieldLines) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith("@@")) continue;
 
-		const fieldMatch = trimmedLine.match(/(\w+)\s+(\w+)(\[\])?\s*(@[^]*)?/);
-		if (fieldMatch) {
-			const [_, name, type, isArray, attributes] = fieldMatch;
-			const isOptional = trimmedLine.includes("?");
-			const defaultMatch = trimmedLine.match(/@default\(([^)]+)\)/);
-			const defaultValue = defaultMatch ? defaultMatch[1] : undefined;
+    const fieldMatch = trimmedLine.match(/(\w+)\s+(\w+)(\[\])?\s*(@[^]*)?/);
+    if (fieldMatch) {
+      const [_, name, type, isArray, attributes] = fieldMatch;
+      const isOptional = trimmedLine.includes("?");
+      const defaultMatch = trimmedLine.match(/@default\(([^)]+)\)/);
+      const defaultValue = defaultMatch ? defaultMatch[1] : undefined;
 
-			fields.push({
-				name,
-				type,
-				isOptional,
-				isArray: !!isArray,
-				defaultValue,
-				attributes: attributes ? attributes.split("@").filter(Boolean) : [],
-			});
-		}
-	}
+      fields.push({
+        name,
+        type,
+        isOptional,
+        isArray: !!isArray,
+        defaultValue,
+        attributes: attributes ? attributes.split("@").filter(Boolean) : [],
+      });
+    }
+  }
 
-	return { name: modelName, fields, mappedName };
+  return { name: modelName, fields, mappedName };
 }
 
 // Generator functions
-function generateStore(model: Model): string {
-	return `
+function generateStore(model: Model, debug = true): string {
+  return `
+${debug && `import { debug } from "@/lib/utils";`}
 import { create } from 'zustand';
 import { toast } from 'sonner';
 import { 
   create${model.name}, 
   update${model.name}, 
   delete${model.name}, 
-  list${model.name}s 
+  get${model.name}s 
 } from './actions';
 import type { ${model.name} } from '@prisma/client';
 
@@ -100,9 +101,10 @@ export const use${model.name}Store = create<${model.name}State>((set) => ({
   isOpenCrudForm: false,
 
   fetch${model.name}s: async (workspaceId: string) => {
+    ${debug && `debug("CLIENT", "fetch${model.name}s", "STORE")`}
     set({ loading: true, error: null });
     try {
-      const response = await list${model.name}s({ where: { workspaceId }});
+      const response = await get${model.name}s({ where: { workspaceId }});
       if (response.success) {
         set({ ${model.name.toLowerCase()}s: response.data });
       } else {
@@ -117,6 +119,7 @@ export const use${model.name}Store = create<${model.name}State>((set) => ({
     }
   },
   create${model.name}: async (data) => {
+    ${debug && `debug("CLIENT", "create${model.name}", "STORE")`}
     try {
       const response = await create${model.name}(data);
       if (response.success) {
@@ -135,6 +138,7 @@ export const use${model.name}Store = create<${model.name}State>((set) => ({
   },
 
   update${model.name}: async (id, data) => {
+    ${debug && `debug("CLIENT", " update${model.name}", "STORE")`}
     try {
       const response = await update${model.name}(id, data);
       if (response.success) {
@@ -155,6 +159,7 @@ export const use${model.name}Store = create<${model.name}State>((set) => ({
   },
 
   delete${model.name}: async (id) => {
+    ${debug && `debug("CLIENT", " delete${model.name}", "STORE")`}
     set({ loading: true, error: null });
     try {
       const response = await delete${model.name}(id);
@@ -198,9 +203,10 @@ export const use${model.name}Store = create<${model.name}State>((set) => ({
 `;
 }
 
-function generateActions(model: Model): string {
-	return `
+function generateActions(model: Model, debug = true): string {
+  return `
 "use server";
+${debug && `import { debug } from "@/lib/utils";`}
 import { prisma } from "@/lib/services/prisma";
 import type { ${model.name} } from '@prisma/client';
 
@@ -213,6 +219,7 @@ interface ApiResponse<T> {
 export async function create${model.name}(
   data: Omit<${model.name}, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<ApiResponse<${model.name}>> {
+  ${debug && `debug("SERVER", "create${model.name}", "PRISMA ACTIONS")`}
   try {
     const result = await prisma.${model.name.toLowerCase()}.create({
       data,
@@ -228,6 +235,7 @@ export async function update${model.name}(
   id: string,
   data: Partial<${model.name}>
 ): Promise<ApiResponse<${model.name}>> {
+  ${debug && `debug("SERVER", "update${model.name}", "PRISMA ACTIONS")`}
   try {
     const result = await prisma.${model.name.toLowerCase()}.update({
       where: { id },
@@ -243,6 +251,7 @@ export async function update${model.name}(
 export async function delete${model.name}(
   id: string
 ): Promise<ApiResponse<${model.name}>> {
+  ${debug && `debug("SERVER", "delete${model.name}", "PRISMA ACTIONS")`}
   try {
     const result = await prisma.${model.name.toLowerCase()}.delete({
       where: { id },
@@ -257,6 +266,7 @@ export async function delete${model.name}(
 export async function retrieve${model.name}(
   id: string
 ): Promise<ApiResponse<${model.name}>> {
+  ${debug && `debug("SERVER", "retrieve${model.name}", "PRISMA ACTIONS")`}
   try {
     const result = await prisma.${model.name.toLowerCase()}.findUnique({
       where: { id },
@@ -271,9 +281,10 @@ export async function retrieve${model.name}(
   }
 }
 
-export async function list${model.name}s(
+export async function get${model.name}s(
   whereInput: { where?: any } = {}
 ): Promise<ApiResponse<${model.name}[]>> {
+  ${debug && `debug("SERVER", "list${model.name}s", "PRISMA ACTIONS")`}
   try {
     const results = await prisma.${model.name.toLowerCase()}.findMany(whereInput);
     return { success: true, data: results };
@@ -286,9 +297,9 @@ export async function list${model.name}s(
 }
 
 function generateColumns(model: Model, hiddenFields = ["id", "updatedAt", "description"]): string {
-	const displayableFields = model.fields.filter((f) => !hiddenFields.includes(f.name));
+  const displayableFields = model.fields.filter((f) => !hiddenFields.includes(f.name));
 
-	return `
+  return `
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
@@ -304,7 +315,7 @@ import {
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import type { ${model.name} } from "@prisma/client";
 import { toast } from "sonner";
-import { WorkspaceLink } from "@/app/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 import { format } from "date-fns";
 import { use${model.name}Store } from "../store";
 import {
@@ -321,8 +332,8 @@ import {
 
 export const columns: ColumnDef<${model.name}>[] = [
   ${displayableFields
-		.map(
-			(field) => `{
+      .map(
+        (field) => `{
     accessorKey: "${field.name}",
     header: ({ column }) => {
       return (
@@ -334,39 +345,38 @@ export const columns: ColumnDef<${model.name}>[] = [
     },
     cell: ({ row,  }) => {
       return (
-      ${
-			field.type === "Boolean"
-				? `<Badge variant={row.getValue("${field.name}") ? "success" : "secondary"}>
+      ${field.type === "Boolean"
+            ? `<Badge variant={row.getValue("${field.name}") ? "success" : "secondary"}>
               {row.getValue("${field.name}") ? "Yes" : "No"}
               </Badge>`
-				: field.type === "Float"
-					? `<div className="font-medium">
+            : field.type === "Float"
+              ? `<div className="font-medium">
             ${field.name === "price" ? "$ " : ""}
             {Number(row.getValue("${field.name}")).toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             })}
           </div>`
-					: field.type === "Int"
-						? `<div className="font-medium">
+              : field.type === "Int"
+                ? `<div className="font-medium">
             {Number(row.getValue("${field.name}")).toLocaleString()}
           </div>`
-						: field.isArray
-							? `<div className="font-medium">
+                : field.isArray
+                  ? `<div className="font-medium">
             {(row.getValue("${field.name}") as string[]).length} items
           </div>`
-							: field.type === "DateTime"
-								? ` <div className="font-medium">
+                  : field.type === "DateTime"
+                    ? ` <div className="font-medium">
               {format(new Date(row.getValue("${field.name}")), "yyyy-MM-dd HH:mm")}
           </div>
                   `
-								: `<div className="font-medium">{row.getValue("${field.name}")}</div>`
-		}
+                    : `<div className="font-medium">{row.getValue("${field.name}")}</div>`
+          }
       )
     }
   }`,
-		)
-		.join(",\n")},
+      )
+      .join(",\n")},
   {
     id: "actions",
     cell: ({ row }) => {
@@ -431,13 +441,13 @@ export const columns: ColumnDef<${model.name}>[] = [
 }
 
 function generatePage(model: Model) {
-	return `
+  return `
 "use client";
 
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { use${model.name}Store } from "./store";
 import { columns } from "./components/columns";
 import { ${model.name}Form } from "./components/form";
@@ -489,43 +499,43 @@ export default function ${model.name}Dashboard() {
 }`;
 }
 function generateFormComponent(model: Model) {
-	// Filter out system fields
-	const formFields = model.fields.filter(
-		(f) => !["id", "createdAt", "updatedAt"].includes(f.name),
-	);
+  // Filter out system fields
+  const formFields = model.fields.filter(
+    (f) => !["id", "createdAt", "updatedAt"].includes(f.name),
+  );
 
-	// Determine grid layout based on number of fields
-	let gridClassName = "space-y-4"; // Default for 4 or fewer fields
-	let dialogSize = "lg";
-	if (formFields.length > 4) {
-		// For more than 4 fields, use grid layout
-		gridClassName = "grid gap-4";
-		dialogSize = "xl";
-		if (formFields.length <= 6) {
-			gridClassName += "grid-cols-1 sm:grid-cols-2";
-			dialogSize = "2xl";
-		} else if (formFields.length <= 8) {
-			gridClassName += "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
-			dialogSize = "3xl";
-		} else {
-			gridClassName += "grid-cols-1 sm:grid-cols-3 md:grid-cols-4";
-			dialogSize = "3xl";
-		}
-	}
+  // Determine grid layout based on number of fields
+  let gridClassName = "space-y-4"; // Default for 4 or fewer fields
+  let dialogSize = "lg";
+  if (formFields.length > 4) {
+    // For more than 4 fields, use grid layout
+    gridClassName = "grid gap-4";
+    dialogSize = "xl";
+    if (formFields.length <= 6) {
+      gridClassName += "grid-cols-1 sm:grid-cols-2";
+      dialogSize = "2xl";
+    } else if (formFields.length <= 8) {
+      gridClassName += "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
+      dialogSize = "3xl";
+    } else {
+      gridClassName += "grid-cols-1 sm:grid-cols-3 md:grid-cols-4";
+      dialogSize = "3xl";
+    }
+  }
 
-	// Determine which fields should take full width
-	const shouldBeFullWidth = (field: Field) => {
-		return (
-			field.name === "description" ||
-			field.isArray ||
-			field.type === "Boolean" ||
-			field.name === "notes" ||
-			field.name === "content" ||
-			field.name === "address"
-		);
-	};
+  // Determine which fields should take full width
+  const shouldBeFullWidth = (field: Field) => {
+    return (
+      field.name === "description" ||
+      field.isArray ||
+      field.type === "Boolean" ||
+      field.name === "notes" ||
+      field.name === "content" ||
+      field.name === "address"
+    );
+  };
 
-	return `
+  return `
 "use client";
 
 import { useEffect } from "react";
@@ -559,44 +569,44 @@ import type { ${model.name} } from "@prisma/client";
 
 const formSchema = z.object({
   ${formFields
-		.map((field) => {
-			if (field.type === "String" && field.isArray) {
-				return `${field.name}: z.array(z.string())${field.isOptional ? ".optional()" : ""}`;
-			}
-			if (field.type === "String") {
-				return `${field.name}: z.string()${field.isOptional ? ".optional()" : '.min(1, "Required")'}`;
-			}
-			if (field.type === "Int") {
-				return `${field.name}: z.number()${field.isOptional ? ".optional()" : ""}`;
-			}
-			if (field.type === "Float") {
-				return `${field.name}: z.number()${field.isOptional ? ".optional()" : ""}`;
-			}
-			if (field.type === "Boolean") {
-				return `${field.name}: z.boolean()${field.isOptional ? ".optional()" : ""}`;
-			}
-			return `${field.name}: z.string()${field.isOptional ? ".optional()" : ""}`;
-		})
-		.join(",\n  ")}
+      .map((field) => {
+        if (field.type === "String" && field.isArray) {
+          return `${field.name}: z.array(z.string())${field.isOptional ? ".optional()" : ""}`;
+        }
+        if (field.type === "String") {
+          return `${field.name}: z.string()${field.isOptional ? ".optional()" : '.min(1, "Required")'}`;
+        }
+        if (field.type === "Int") {
+          return `${field.name}: z.number()${field.isOptional ? ".optional()" : ""}`;
+        }
+        if (field.type === "Float") {
+          return `${field.name}: z.number()${field.isOptional ? ".optional()" : ""}`;
+        }
+        if (field.type === "Boolean") {
+          return `${field.name}: z.boolean()${field.isOptional ? ".optional()" : ""}`;
+        }
+        return `${field.name}: z.string()${field.isOptional ? ".optional()" : ""}`;
+      })
+      .join(",\n  ")}
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 const defaultValues = {
       ${formFields
-			.map((field) => {
-				if (field.isArray) {
-					return `${field.name}: []`;
-				}
-				if (field.type === "Boolean") {
-					return `${field.name}: false`;
-				}
-				if (field.type === "Int" || field.type === "Float") {
-					return `${field.name}: 0`;
-				}
-				return `${field.name}: ""`;
-			})
-			.join(",\n      ")}
+      .map((field) => {
+        if (field.isArray) {
+          return `${field.name}: []`;
+        }
+        if (field.type === "Boolean") {
+          return `${field.name}: false`;
+        }
+        if (field.type === "Int" || field.type === "Float") {
+          return `${field.name}: 0`;
+        }
+        return `${field.name}: ""`;
+      })
+      .join(",\n      ")}
   }
 export function ${model.name}Form() {
   const { create${model.name}, update${model.name}, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } = use${model.name}Store();
@@ -625,19 +635,19 @@ export function ${model.name}Form() {
     if (isOpenCrudForm && initialCrudFormData) {
       form.reset({
       ${formFields
-			.map((field) => {
-				if (field.isArray) {
-					return `${field.name}: initialCrudFormData?.${field.name} || []`;
-				}
-				if (field.type === "Boolean") {
-					return `${field.name}: initialCrudFormData?.${field.name} || false`;
-				}
-				if (field.type === "Int" || field.type === "Float") {
-					return `${field.name}: initialCrudFormData?.${field.name} || 0`;
-				}
-				return `${field.name}: initialCrudFormData?.${field.name} || ""`;
-			})
-			.join(",\n      ")}
+      .map((field) => {
+        if (field.isArray) {
+          return `${field.name}: initialCrudFormData?.${field.name} || []`;
+        }
+        if (field.type === "Boolean") {
+          return `${field.name}: initialCrudFormData?.${field.name} || false`;
+        }
+        if (field.type === "Int" || field.type === "Float") {
+          return `${field.name}: initialCrudFormData?.${field.name} || 0`;
+        }
+        return `${field.name}: initialCrudFormData?.${field.name} || ""`;
+      })
+      .join(",\n      ")}
     });
     } else if (isOpenCrudForm) {
       form.reset(defaultValues);
@@ -658,11 +668,11 @@ export function ${model.name}Form() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="${gridClassName}">
             ${formFields
-				.map((field) => {
-					const fullWidthClass = shouldBeFullWidth(field) ? "col-span-full" : "";
+      .map((field) => {
+        const fullWidthClass = shouldBeFullWidth(field) ? "col-span-full" : "";
 
-					if (field.type === "Boolean") {
-						return `
+        if (field.type === "Boolean") {
+          return `
               <FormField
                 control={form.control}
                 name="${field.name}"
@@ -680,9 +690,9 @@ export function ${model.name}Form() {
                   </FormItem>
                 )}
               />`;
-					}
-					if (field.name === "description" || field.isArray) {
-						return `
+        }
+        if (field.name === "description" || field.isArray) {
+          return `
               <FormField
                 control={form.control}
                 name="${field.name}"
@@ -702,9 +712,9 @@ export function ${model.name}Form() {
                   </FormItem>
                 )}
               />`;
-					}
-					if (field.type === "Float" || field.type === "Int") {
-						return `
+        }
+        if (field.type === "Float" || field.type === "Int") {
+          return `
               <FormField
                 control={form.control}
                 name="${field.name}"
@@ -726,8 +736,8 @@ export function ${model.name}Form() {
                   </FormItem>
                 )}
               />`;
-					}
-					return `
+        }
+        return `
               <FormField
                 control={form.control}
                 name="${field.name}"
@@ -747,8 +757,8 @@ export function ${model.name}Form() {
                   </FormItem>
                 )}
               />`;
-				})
-				.join("\n            ")}
+      })
+      .join("\n            ")}
             <DialogFooter className="col-span-full">
               <Button
                 disabled={isLoading}
@@ -771,15 +781,15 @@ export function ${model.name}Form() {
 `;
 }
 function generateNoState(model: Model): string {
-	return `
+  return `
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { use${model.name}Store } from "./store";
-import { WorkspaceLink } from "@/app/(workspace)/components/link";
+import { use${model.name}Store } from "../store";
+import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 
-  const { onOpenCreateForm } = use${model.name}Store();
 
 export function NoStateComponent() {
+  const { onOpenCreateForm } = use${model.name}Store();
   return (
     <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
       <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
@@ -798,67 +808,67 @@ export function NoStateComponent() {
 
 // Main generator function
 async function generateUI(outputPath: string, schemaPath: string) {
-	try {
-		// Parse schema
-		const model = parsePrismaSchema(schemaPath);
+  try {
+    // Parse schema
+    const model = parsePrismaSchema(schemaPath);
 
-		// Create output directory structure
-		const baseDir = path.join(outputPath);
-		const componentsDir = path.join(baseDir, "components");
+    // Create output directory structure
+    const baseDir = path.join(outputPath);
+    const componentsDir = path.join(baseDir, "components");
 
-		fs.mkdirSync(baseDir, { recursive: true });
-		fs.mkdirSync(componentsDir, { recursive: true });
+    fs.mkdirSync(baseDir, { recursive: true });
+    fs.mkdirSync(componentsDir, { recursive: true });
 
-		// Generate files
-		const files = [
-			{
-				path: path.join(baseDir, "store.ts"),
-				content: generateStore(model),
-			},
-			{
-				path: path.join(baseDir, "actions.ts"),
-				content: generateActions(model),
-			},
-			{
-				path: path.join(baseDir, "page.tsx"),
-				content: generatePage(model),
-			},
-			{
-				path: path.join(componentsDir, "columns.tsx"),
-				content: generateColumns(model),
-			},
-			{
-				path: path.join(componentsDir, "no-state.tsx"),
-				content: generateNoState(model),
-			},
-			{
-				path: path.join(componentsDir, "form.tsx"),
-				content: generateFormComponent(model),
-			},
-		];
+    // Generate files
+    const files = [
+      {
+        path: path.join(baseDir, "store.ts"),
+        content: generateStore(model),
+      },
+      {
+        path: path.join(baseDir, "actions.ts"),
+        content: generateActions(model),
+      },
+      {
+        path: path.join(baseDir, "page.tsx"),
+        content: generatePage(model),
+      },
+      {
+        path: path.join(componentsDir, "columns.tsx"),
+        content: generateColumns(model),
+      },
+      {
+        path: path.join(componentsDir, "no-state.tsx"),
+        content: generateNoState(model),
+      },
+      {
+        path: path.join(componentsDir, "form.tsx"),
+        content: generateFormComponent(model),
+      },
+    ];
 
-		// Write all files
-		for (const file of files) {
-			fs.writeFileSync(file.path, file.content, "utf8");
-			console.log(`Generated: ${file.path}`);
-		}
+    // Write all files
+    for (const file of files) {
+      fs.writeFileSync(file.path, file.content, "utf8");
+      console.log(`Generated: ${file.path}`);
+    }
 
-		console.log(`\nSuccessfully generated UI components for ${model.name} in ${baseDir}`);
-	} catch (err: any) {
-		const error: Error = err;
-		console.error("Error generating UI components:", error);
-		process.exit(1);
-	}
+    console.log(`\nSuccessfully generated UI components for ${model.name} in ${baseDir}`);
+  } catch (err: any) {
+    const error: Error = err;
+    console.error("Error generating UI components:", error);
+    process.exit(1);
+  }
 }
 
 // CLI
 if (require.main === module) {
-	const args = process.argv.slice(2);
-	if (args.length !== 2) {
-		console.error("Usage: ts-node gen-ui.ts <output-dir> <schema-file>");
-		process.exit(1);
-	}
+  const args = process.argv.slice(2);
+  if (args.length !== 2) {
+    console.error("Usage: ts-node gen-ui.ts <output-dir> <schema-file>");
+    process.exit(1);
+  }
 
-	const [outputDir, schemaFile] = args;
-	generateUI(outputDir, schemaFile);
+  const [outputDir, schemaFile] = args;
+  generateUI(outputDir, schemaFile);
 }

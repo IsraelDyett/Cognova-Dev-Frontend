@@ -1,66 +1,49 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, Stars } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavBots } from "@/components/nav-bots";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from "@/components/navigation-menus/nav-main";
+import { NavBots } from "@/components/navigation-menus/nav-bots";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { sidebarData } from "./sidebar-store";
 import { useParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { NavBusinesses } from "./navigation-menus/nav-business";
+import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { Skeleton } from "./ui/skeleton";
+import dynamic from "next/dynamic";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
-	const { botId, workspaceId } = useParams();
-	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot">("default");
-	const [mainNavigationMenus, setNavigationMenus] = React.useState<any[]>(
-		sidebarData.mainNavigationMenus,
-	);
-
-	const alreadyMounted = React.useRef(false);
+	const { botId, businessId } = useParams();
+	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">("default");
 	React.useEffect(() => {
-		if (!alreadyMounted.current && workspaceId) {
-			setNavigationMenus((remainedMenus) => {
-				return [
-					{
-						title: "Overview",
-						url: `/${workspaceId}/`,
-						icon: Stars,
-						isActive: true,
-					},
-					...remainedMenus,
-				];
-			});
-			alreadyMounted.current = true;
-		}
-	}, []);
-
-	React.useEffect(() => {
-		if (botId) {
+		if (businessId) {
+			setCurrentNavbar("business")
+		} else if (botId) {
 			setCurrentNavbar("bot");
 		} else {
 			setCurrentNavbar("default");
 		}
 	}, [pathname]);
+
+	const NavUser = dynamic(() => import("@/components/navigation-menus/nav-user"), { ssr: false });
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
 				<WorkspaceSwitcher />
-				{currentNavbar == "bot" && (
-					<Link
-						href={`/${workspaceId}/`}
+				{currentNavbar !== "default" && (
+					<WorkspaceLink
 						className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center"
 					>
 						<ChevronLeft
 							className="h-4 w-4 transition-transform duration-100 hover:-translate-x-0.5"
 							strokeWidth={2}
 						/>
-						Bot
-					</Link>
+						{currentNavbar}
+					</WorkspaceLink>
 				)}
 			</SidebarHeader>
 			<SidebarContent>
@@ -74,10 +57,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							variants={sidebarData.baseSlideVariants}
 							transition={{ duration: 0.1, type: "tween" }}
 						>
-							<NavMain items={mainNavigationMenus} />
-							<NavBots workspaceId={`${workspaceId}`} />
+							<NavMain items={sidebarData.mainNavigationMenus} />
+							<NavBusinesses />
+							<NavBots />
+							<NavMain title="Workspace" items={sidebarData.workspaceNavigationMenus} />
 						</motion.div>
 					)}
+					{currentNavbar == "business" && (
+						<motion.div
+							key="bot"
+							initial="enter"
+							animate="center"
+							exit="exit"
+							variants={sidebarData.slideVariants}
+							transition={{ duration: 0.1, type: "tween" }}
+						>
+							<NavMain items={sidebarData.businessNavigationMenus} />
+						</motion.div>
+					)}
+
 					{currentNavbar == "bot" && (
 						<motion.div
 							key="bot"
@@ -93,7 +91,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</AnimatePresence>
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser />
+				<React.Suspense fallback={<Skeleton className="w-full h-8" />}>
+					<NavUser />
+				</React.Suspense>
 			</SidebarFooter>
 		</Sidebar>
 	);

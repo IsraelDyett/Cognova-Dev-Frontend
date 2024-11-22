@@ -6,30 +6,25 @@ import { Button } from "@/components/ui/button";
 import { useBusinessStore } from "../store";
 import DataTable from "@/components/ui/data-table";
 import { botsColumns } from "../components/columns/bots";
-import { productsColumns } from "../components/columns/products";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Store,
 	Truck,
 	ShoppingBag,
 	AlertTriangle,
-	Calendar,
-	Building,
 	Settings,
 } from "lucide-react";
-import { operatingHoursColumns } from "../components/columns/operating-hours";
-import { locationsColumns } from "../components/columns/locations";
 import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 import { retrieveBusiness } from "../actions";
+import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 
 export default function BusinessDetail() {
 	const router = useRouter();
 	const params = useParams();
 	const { workspace } = useWorkspace();
 	const [currentBusiness, setCurrentBusiness] = useState<any>(null);
-	const { fetchBusinesss, deleteBusiness } = useBusinessStore();
-	const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+	const { fetchBusinesses, deleteBusiness } = useBusinessStore();
 
 	useEffect(() => {
 		if (params.businessId) {
@@ -37,9 +32,9 @@ export default function BusinessDetail() {
 				setCurrentBusiness(res.data);
 			});
 		}
-	}, [params.businessId, fetchBusinesss]);
+	}, [params.businessId, fetchBusinesses]);
 
-	if (!currentBusiness) return <div>Loading...</div>;
+	if (!currentBusiness) return <LoadingPageSpinner />;
 
 	const handleDeleteBusiness = async () => {
 		if (
@@ -59,7 +54,7 @@ export default function BusinessDetail() {
 					<h1 className="text-3xl font-bold">{currentBusiness.name}</h1>
 				</div>
 				<Button variant="outline" asChild>
-					<WorkspaceLink href={`/business/${currentBusiness.id}/edit`}>
+					<WorkspaceLink href={`/businesses/${currentBusiness.id}/edit`}>
 						Edit Business
 					</WorkspaceLink>
 				</Button>
@@ -143,60 +138,6 @@ export default function BusinessDetail() {
 					</div>
 				</CardContent>
 			</Card>
-
-			{/* Locations */}
-			<Card>
-				<CardHeader>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center gap-2">
-							<Building className="w-5 h-5" />
-							<CardTitle>Business Locations</CardTitle>
-						</div>
-						<Button onClick={() => alert("Add new location")}>Add Location</Button>
-					</div>
-				</CardHeader>
-				<CardContent>
-					<DataTable
-						columns={locationsColumns}
-						data={currentBusiness.locations ?? []}
-						searchField="name"
-					/>
-				</CardContent>
-			</Card>
-
-			{/* Operating Hours Section */}
-			<Card>
-				<CardHeader>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center gap-2">
-							<Calendar className="w-5 h-5" />
-							<CardTitle>Operating Hours</CardTitle>
-						</div>
-						<Button onClick={() => alert("Add operating hours")}>Add Hours</Button>
-					</div>
-				</CardHeader>
-				<CardContent>
-					<DataTable
-						columns={operatingHoursColumns}
-						data={currentBusiness.operatingHours ?? []}
-						searchField="name"
-						initialPageSize={5}
-					/>
-				</CardContent>
-			</Card>
-
-			{/* Products Section */}
-			<div className="space-y-4">
-				<div className="flex justify-between items-center">
-					<h2 className="text-xl font-bold">Products</h2>
-					<Button onClick={() => setIsProductDialogOpen(true)}>Add New Product</Button>
-				</div>
-				<DataTable
-					columns={productsColumns}
-					data={currentBusiness.products ?? []}
-					searchField="name"
-				/>
-			</div>
 
 			{/* Bots Section */}
 			<div className="space-y-4">

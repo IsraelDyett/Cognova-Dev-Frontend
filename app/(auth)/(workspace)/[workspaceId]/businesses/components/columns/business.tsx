@@ -130,7 +130,7 @@ export const columns: ColumnDef<Business>[] = [
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 						<DropdownMenuItem asChild>
-							<WorkspaceLink href={`/business/${item.id}`}>
+							<WorkspaceLink href={`/businesses/${item.id}`}>
 								<Eye className="h-4 w-4" />
 								<span>View</span>
 							</WorkspaceLink>

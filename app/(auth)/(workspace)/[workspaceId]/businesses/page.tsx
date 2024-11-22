@@ -12,25 +12,25 @@ import { NoStateComponent } from "./components/no-state";
 
 export default function BusinessDashboard() {
 	const { workspace } = useWorkspace();
-	const { businesss, loading, error, fetchBusinesss, isOpenCrudForm, onOpenCreateForm } =
+	const { businesses, loading, error, fetchBusinesses, isOpenCrudForm, onOpenCreateForm } =
 		useBusinessStore();
 
 	useEffect(() => {
 		if (workspace) {
-			fetchBusinesss(workspace.id);
+			fetchBusinesses(workspace.id);
 		}
-	}, [workspace, fetchBusinesss]);
+	}, [workspace, fetchBusinesses]);
 
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error: {error}</div>;
-	if (!businesss.length && !isOpenCrudForm) return <NoStateComponent />;
+	if (!businesses.length && !loading) return <NoStateComponent />;
 
 	return (
 		<>
 			<div className="container mx-auto p-4">
 				<DataTable
 					columns={columns}
-					data={businesss}
+					data={businesses}
 					searchField="name"
 					toolBarChildren={
 						<Button onClick={onOpenCreateForm}>
@@ -39,8 +39,6 @@ export default function BusinessDashboard() {
 					}
 				/>
 			</div>
-
-			{/* CRUD Form Dialog */}
 			<BusinessForm />
 		</>
 	);

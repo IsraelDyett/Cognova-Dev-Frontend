@@ -37,7 +37,7 @@ export default function SignUpForm() {
 		const result = await signUpAction(data);
 		if (result.success) {
 			toast.success(getMessage(result.message));
-			router.push(searchParams.get("redirect") ?? "/");
+			router.push(searchParams.get("redirect") ?? "/workspaces");
 		} else {
 			console.error(result.message);
 			form.setError("email", {

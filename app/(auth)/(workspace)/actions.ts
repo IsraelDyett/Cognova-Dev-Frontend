@@ -134,6 +134,7 @@ export const isUserInWorkspace = async (userId: string, workspaceSlug: string) =
 			workspace: true,
 		},
 	});
+	console.log("IN ",workspaceUser)
 	return {
 		success: !!workspaceUser,
 		workspace: workspaceUser?.workspace,
@@ -153,7 +154,7 @@ export const getDefaultWorkspace = async (userId: string) => {
 	return workspaceUser?.workspace;
 };
 export const retrieveWorkspace = async (workspaceId: string, withPlan = false) => {
-	debug("SERVER", "getWorkspace", "PRISMA ACTIONS");
+	debug("SERVER", "retrieveWorkspace", "PRISMA ACTIONS");
 	const workspace = await prisma.workspace.findFirst({
 		where: {
 			OR: [{ name: workspaceId }, { id: workspaceId }],
@@ -164,6 +165,8 @@ export const retrieveWorkspace = async (workspaceId: string, withPlan = false) =
 					plan: withPlan,
 				},
 			},
+			bots: true,
+			businesses: true
 		},
 	});
 

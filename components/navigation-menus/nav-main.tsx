@@ -13,11 +13,11 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 
 export function NavMain({
 	items,
+	title = "Platform"
 }: {
 	items: {
 		title: string;
@@ -29,11 +29,11 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
+	title?: string
 }) {
-	const { botId, workspaceId } = useParams();
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Platform</SidebarGroupLabel>
+			<SidebarGroupLabel>{title}</SidebarGroupLabel>
 			<SidebarMenu>
 				{items.map((item) => (
 					<Collapsible
@@ -53,20 +53,15 @@ export function NavMain({
 								</CollapsibleTrigger>
 							) : (
 								<SidebarMenuButton tooltip={item.title} asChild>
-									<Link
-										href={item.url
-											.replace(
-												"{after.botId}",
-												`/${workspaceId}/bots/${botId}`,
-											)
-											.replace("{after.workspaceId}", `/${workspaceId}`)}
+									<WorkspaceLink
+										href={item.url}
 									>
 										{item.icon && <item.icon />}
 										<span>{item.title}</span>
 										{item.items && (
 											<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
 										)}
-									</Link>
+									</WorkspaceLink>
 								</SidebarMenuButton>
 							)}
 							<CollapsibleContent>
@@ -74,14 +69,11 @@ export function NavMain({
 									{item.items?.map((subItem) => (
 										<SidebarMenuSubItem key={subItem.title}>
 											<SidebarMenuSubButton asChild>
-												<Link
-													href={subItem.url.replace(
-														"{after.botId}",
-														`/${workspaceId}/bots/${botId}`,
-													)}
+												<WorkspaceLink
+													href={subItem.url}
 												>
 													<span>{subItem.title}</span>
-												</Link>
+												</WorkspaceLink>
 											</SidebarMenuSubButton>
 										</SidebarMenuSubItem>
 									))}

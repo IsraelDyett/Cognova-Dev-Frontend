@@ -11,17 +11,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Building2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { debug } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { createWorkspaceWithTeam } from "../actions";
 import InviteToWorkspaceForm from "./invite-to-workspace-form";
 import { useWorkspaceStore } from "../store";
+import { getRoles } from "@/app/actions";
 
-export default function CreateWorkspaceDialog() {
-	const { isOpen, isLoading, formData, setOpen, setLoading, removeTeamMember, roles, reset } =
+export default function CreateWorkspaceDialog({ customTrigger }: { customTrigger?: React.ReactNode }) {
+	const { isOpen, isLoading, formData, setOpen, setLoading, removeTeamMember, roles, reset, setRoles } =
 		useWorkspaceStore();
 
-	const [error, setError] = React.useState("");
 	const router = useRouter();
+	const [error, setError] = React.useState("");
 	const [workspaceName, setWorkspaceName] = React.useState("");
 
 	const handleOpenChange = (open: boolean) => {
@@ -50,7 +52,10 @@ export default function CreateWorkspaceDialog() {
 			if (result.success) {
 				handleOpenChange(false);
 				toast.success("Workspace created successfully");
-				router.push(`/${result.workspaceId}`);
+				window.location.assign(`/${result.workspaceId}`);
+			}
+			if (!result.success) {
+				setError(result.error || "Failed to create workspace");
 			}
 		} catch (error) {
 			console.error("Error creating workspace:", error);
@@ -59,14 +64,26 @@ export default function CreateWorkspaceDialog() {
 			setLoading(false);
 		}
 	};
+	React.useEffect(() => {
+		const loadRoles = async () => {
+			debug("CLIENT", "loadRoles", "PAGE");
+			const roles = await getRoles();
+			setRoles(roles);
+		};
+		if(roles.length  === 0) {
+			loadRoles();
+		}
+	}, [setRoles]);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				<Button type="button">
-					<Building2 className="mr-2 h-4 w-4" />
-					Create Workspace
-				</Button>
+				{customTrigger ? customTrigger : (
+					<Button type="button">
+						<Building2 className="mr-2 h-4 w-4" />
+						Create Workspace
+					</Button>
+				)}
 			</DialogTrigger>
 			<DialogContent className="max-w-2xl">
 				<DialogHeader>

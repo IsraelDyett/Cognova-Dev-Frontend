@@ -1,6 +1,7 @@
 "use server";
-import { prisma } from "@/lib/services/prisma";
+import { debug } from "@/lib/utils";
 import type { Bot } from "@prisma/client";
+import { prisma } from "@/lib/services/prisma";
 
 interface ApiResponse<T> {
 	success: boolean;
@@ -11,6 +12,7 @@ interface ApiResponse<T> {
 export async function createBot(
 	data: Omit<Bot, "id" | "createdAt" | "updatedAt">,
 ): Promise<ApiResponse<Bot>> {
+	debug("SERVER", "createBot", "PRISMA ACTIONS");
 	try {
 		const result = await prisma.bot.create({
 			data,
@@ -23,6 +25,7 @@ export async function createBot(
 }
 
 export async function updateBot(id: string, data: Partial<Bot>): Promise<ApiResponse<Bot>> {
+	debug("SERVER", "updateBot", "PRISMA ACTIONS");
 	try {
 		const result = await prisma.bot.update({
 			where: { id },
@@ -36,6 +39,7 @@ export async function updateBot(id: string, data: Partial<Bot>): Promise<ApiResp
 }
 
 export async function deleteBot(id: string): Promise<ApiResponse<Bot>> {
+	debug("SERVER", "deleteBot", "PRISMA ACTIONS");
 	try {
 		const result = await prisma.bot.delete({
 			where: { id },
@@ -48,6 +52,7 @@ export async function deleteBot(id: string): Promise<ApiResponse<Bot>> {
 }
 
 export async function retrieveBot(id: string): Promise<ApiResponse<Bot>> {
+	debug("SERVER", "retrieveBot", "PRISMA ACTIONS");
 	try {
 		const result = await prisma.bot.findUnique({
 			where: { id },
@@ -63,6 +68,7 @@ export async function retrieveBot(id: string): Promise<ApiResponse<Bot>> {
 }
 
 export async function listBots(whereInput: { where?: any } = {}): Promise<ApiResponse<Bot[]>> {
+	debug("SERVER", "listBots", "PRISMA ACTIONS");
 	try {
 		const results = await prisma.bot.findMany(whereInput);
 		return { success: true, data: results };

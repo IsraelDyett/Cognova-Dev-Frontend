@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
 
-export function NavUser() {
+export default function NavUser() {
 	const { user } = useAuth();
 	const { isMobile } = useSidebar();
 	return (

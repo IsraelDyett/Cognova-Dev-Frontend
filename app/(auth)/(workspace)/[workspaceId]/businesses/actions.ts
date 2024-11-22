@@ -57,16 +57,6 @@ export async function retrieveBusiness(id: string): Promise<ApiResponse<Business
 			include: {
 				configurations: true,
 				categories: true,
-				products: true,
-				locations: true,
-				operatingHours: {
-					include: {
-						location: true,
-					},
-					orderBy: {
-						dayOfWeek: "asc",
-					},
-				},
 				bots: true,
 			},
 		});
@@ -80,7 +70,7 @@ export async function retrieveBusiness(id: string): Promise<ApiResponse<Business
 	}
 }
 
-export async function listBusinesss(
+export async function listBusinesses(
 	whereInput: { where?: any } = {},
 ): Promise<ApiResponse<Business[]>> {
 	try {

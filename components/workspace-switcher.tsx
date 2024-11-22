@@ -23,19 +23,23 @@ import { useSidebarStore } from "./sidebar-store";
 import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
 import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { Skeleton } from "./ui/skeleton";
+import dynamic from "next/dynamic";
 
 export function WorkspaceSwitcher() {
 	const router = useRouter();
 	const { user } = useAuth();
 	const { isMobile } = useSidebar();
-	const { workspace } = useWorkspace();
-	const { workspaces, fetchWorkspaces, loadingStates } = useSidebarStore();
+	const { workspace, isLoading } = useWorkspace();
+	const { workspaces, fetchWorkspaces } = useSidebarStore();
 
+	const alreadyMounted = React.useRef(false)
 	React.useEffect(() => {
-		if (workspaces.length === 0) {
+		if (!alreadyMounted.current) {
 			fetchWorkspaces(user.id);
+			alreadyMounted.current = true;
 		}
 	}, []);
+	const CreateWorkspaceDialog = dynamic(() => import("@/app/(auth)/workspaces/components/create-workspace-dialog"), { ssr: false});
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -46,7 +50,7 @@ export function WorkspaceSwitcher() {
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<div className="flex aspect-square overflow-hidden size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-								{loadingStates.workspaces !== "success" ? (
+								{isLoading ? (
 									<Skeleton className="h-8 w-8" />
 								) : (
 									<Image
@@ -59,7 +63,7 @@ export function WorkspaceSwitcher() {
 								)}
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								{loadingStates.workspaces !== "success" ? (
+								{isLoading ? (
 									<>
 										<Skeleton className="w-5/6 h-4" />
 										<Skeleton className="w-3/5 h-3 mt-1" />
@@ -106,14 +110,23 @@ export function WorkspaceSwitcher() {
 							</DropdownMenuItem>
 						))}
 						<DropdownMenuSeparator />
-						<DropdownMenuItem className="gap-2 p-2">
-							<div className="flex size-6 items-center justify-center rounded-md border bg-background">
-								<Plus className="size-4" />
-							</div>
-							<div className="font-medium text-muted-foreground">
-								Create new workspace
-							</div>
-						</DropdownMenuItem>
+						<React.Suspense fallback={<DropdownMenuItem disabled>Loading...</DropdownMenuItem>}>
+							<CreateWorkspaceDialog
+								customTrigger={
+									<DropdownMenuItem
+										onSelect={(e) => e.preventDefault()}
+										className="gap-2 p-2"
+									>
+										<div className="flex size-6 items-center justify-center rounded-md border bg-background">
+											<Plus className="size-4" />
+										</div>
+										<div className="font-medium text-muted-foreground">
+											Create new workspace
+										</div>
+									</DropdownMenuItem>
+								}
+							/>
+						</React.Suspense>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>

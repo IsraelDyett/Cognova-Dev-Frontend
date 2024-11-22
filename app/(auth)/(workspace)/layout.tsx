@@ -1,19 +1,11 @@
 import React, { cache, use } from "react";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { authUser } from "../../(guest)/auth/actions";
 import { AuthProvider } from "./contexts/auth-context";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { WorkspaceProvider } from "./contexts/workspace-context";
-import { siteConfig } from "@/lib/site";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 const cachedUser = cache(async () => {
 	const user = await authUser();
@@ -42,19 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<div className="flex items-center gap-2 px-4">
 								<SidebarTrigger className="-ml-1" />
 								<Separator orientation="vertical" className="h-4 mr-2" />
-								<Breadcrumb>
-									<BreadcrumbList>
-										<BreadcrumbItem className="hidden md:block">
-											<BreadcrumbLink href="#">
-												{siteConfig.applicationName}
-											</BreadcrumbLink>
-										</BreadcrumbItem>
-										<BreadcrumbSeparator className="hidden md:block" />
-										<BreadcrumbItem>
-											<BreadcrumbPage>Bots</BreadcrumbPage>
-										</BreadcrumbItem>
-									</BreadcrumbList>
-								</Breadcrumb>
+								<Breadcrumbs/>
 							</div>
 						</header>
 						<main

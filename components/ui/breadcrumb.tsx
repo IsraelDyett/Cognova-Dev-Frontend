@@ -3,6 +3,7 @@ import { ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Slot } from "@radix-ui/react-slot";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const Breadcrumb = React.forwardRef<
 	HTMLElement,
@@ -37,9 +38,10 @@ const BreadcrumbLink = React.forwardRef<
 	HTMLAnchorElement,
 	React.ComponentPropsWithoutRef<"a"> & {
 		asChild?: boolean;
+		href: string;
 	}
 >(({ asChild, className, ...props }, ref) => {
-	const Comp = asChild ? Slot : "a";
+	const Comp = asChild ? Slot : Link;
 
 	return (
 		<Comp

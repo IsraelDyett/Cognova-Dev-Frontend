@@ -1,20 +1,24 @@
 "use client";
-import { Workspace, Plan } from "@prisma/client";
+import { Workspace, Plan, Bot, Business } from "@prisma/client";
 import { useParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { retrieveWorkspace } from "../actions";
 import { debug } from "@/lib/utils";
 
-interface WorkspaceWithPlan extends Workspace {
+interface ExtendedWorkspace extends Workspace {
 	plan?: Plan | null;
+	bots: Bot[] | null
+	businesses: Business[] | null
 }
 
 const DefaultProps = {
-	workspace: null as WorkspaceWithPlan | null,
+	workspace: null as ExtendedWorkspace | null,
+	isLoading: false
 };
 
 export interface WorkspaceContextType {
-	workspace: WorkspaceWithPlan | null;
+	workspace: ExtendedWorkspace | null;
+	isLoading: boolean;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType>(DefaultProps);
@@ -22,7 +26,8 @@ const WorkspaceContext = createContext<WorkspaceContextType>(DefaultProps);
 export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { workspaceId } = useParams();
 	const alreadyMounted = React.useRef(false);
-	const [workspace, setWorkspace] = useState<WorkspaceWithPlan | null>(null);
+	const [workspace, setWorkspace] = useState<ExtendedWorkspace | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchWorkspace = async () => {
 		if (workspaceId) {
@@ -30,6 +35,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 			const retrievedWorkspace = await retrieveWorkspace(`${workspaceId}`, true);
 			if (retrievedWorkspace) {
 				setWorkspace(retrievedWorkspace);
+				setIsLoading(false)
 			}
 		}
 	};
@@ -43,7 +49,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 		}
 	}, [workspaceId]);
 
-	return <WorkspaceContext.Provider value={{ workspace }}>{children}</WorkspaceContext.Provider>;
+	return <WorkspaceContext.Provider value={{ workspace, isLoading }}>{children}</WorkspaceContext.Provider>;
 };
 
 export const useWorkspace = (): WorkspaceContextType => {
