@@ -6,13 +6,13 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint/eslint-plugin", "complexity"],
-  // extends: ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier"],
+  extends: ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier"],
   root: true,
   env: {
     node: true,
     jest: true,
   },
-  ignorePatterns: [".eslintrc.js", "embed.js", "prisma/*"],
+  ignorePatterns: [".eslintrc.js", "embed.js", "prisma/*", "scripts/*"],
   rules: {
     complexity: ["error", 30],
     "@typescript-eslint/ban-ts-ignore": "off",

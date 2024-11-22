@@ -14,9 +14,9 @@ import {
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import type { Business } from "@prisma/client";
 import { toast } from "sonner";
-import { WorkspaceLink } from "@/app/(workspace)/_components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { format } from "date-fns";
-import { useBusinessStore } from "../store";
+import { useBusinessStore } from "../../store";
 import {
   AlertDialog,
   AlertDialogAction,

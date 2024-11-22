@@ -1,6 +1,6 @@
 import { getChats, getOrCreateConversation } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
-import { createCuid } from "@/utils/session";
+import { createCuid } from "@/lib/actions/server/session";
 import { Bot, ChatFeedback } from "@prisma/client";
 import { toast } from "sonner";
 import { create } from "zustand";

@@ -15,7 +15,7 @@ import { WorkspacePageProps } from "@/types";
 import { MemoizedReactMarkdown } from "@/components/ui/markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-import SourcesDropdown from "./_components/sources-dropdown";
+import SourcesDropdown from "./components/sources-dropdown";
 import ShareButton from "@/components/share-button";
 import { siteConfig } from "@/lib/site";
 import Logo from "@/components/logo";

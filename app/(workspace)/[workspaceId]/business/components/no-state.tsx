@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { WorkspaceLink } from "@/app/(workspace)/_components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 
 export function NoStateComponent() {
   return (

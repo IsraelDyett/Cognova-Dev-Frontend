@@ -3,7 +3,7 @@ import * as z from "zod";
 import { authUser } from "../auth/actions";
 import { prisma } from "@/lib/services/prisma";
 import { workspaceSchema } from "@/lib/zod";
-import { generateUniqueName } from "@/utils/transactions";
+import { generateUniqueName } from "@/lib/actions/server/prisma";
 import { User, WorkspaceInviteStatus } from "@prisma/client";
 import { InviteEmailTemplate } from "@/components/mails/team-invite";
 import resendClient, { RESEND_CONFIG } from "@/lib/services/resend";

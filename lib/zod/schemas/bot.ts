@@ -44,12 +44,3 @@ export const botConfigurationBaseSchema = z.object({
 export type BotConfig = z.infer<typeof botConfigurationBaseSchema>;
 export const createBotConfigurationSchema = botConfigurationBaseSchema;
 export const updateBotConfigurationSchema = botConfigurationBaseSchema.partial();
-
-// Base Bot Sources Schema
-const botSourcesBaseSchema = z.object({
-  botId: z.string().cuid2("Invalid bot id"),
-  sourceId: z.string().cuid2("invalid source id"),
-});
-
-export const createBotSourcesSchema = botSourcesBaseSchema;
-export const updateBotSourcesSchema = botSourcesBaseSchema.partial();

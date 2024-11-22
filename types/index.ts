@@ -12,4 +12,5 @@ export interface WorkspacePageProps {
 export interface Params {
   workspaceId: string;
   botId: string;
+  businessId: string;
 }

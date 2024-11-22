@@ -21,7 +21,7 @@ import {
 import { operatingHoursColumns } from "../components/list-operating-hours-columns";
 import { locationsColumns } from "../components/list-locations-columns";
 import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
-import { WorkspaceLink } from "@/app/(workspace)/_components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { retrieveBusiness } from "../actions";
 
 export default function BusinessDetail() {

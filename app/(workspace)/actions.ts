@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/services/prisma";
 import { BotConfig, createBotSchema } from "@/lib/zod/schemas/bot";
 import { debug } from "@/lib/utils";
-import { getBrowserMetadata, getOrCreateSessionId } from "@/utils/session";
+import { getBrowserMetadata, getOrCreateSessionId } from "@/lib/actions/server/session";
 import { headers } from "next/headers";
 import { Bot, Conversation } from "@prisma/client";
 

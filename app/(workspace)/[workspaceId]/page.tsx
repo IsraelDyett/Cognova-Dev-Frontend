@@ -1,5 +1,5 @@
 import React from "react";
-import { CreateBot } from "../_components/create-bot";
+import { CreateBot } from "../components/create-bot";
 
 export const revalidate = 10;
 export default async function WorkspaceOverviewPage() {

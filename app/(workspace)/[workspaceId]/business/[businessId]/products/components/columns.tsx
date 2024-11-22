@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import type { BusinessProduct as Product } from "@prisma/client";
-import { WorkspaceLink } from "@/app/(workspace)/_components/link";
 import { format } from "date-fns";
 import { useProductStore } from "../store";
 import {
@@ -26,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 
 export const columns: ColumnDef<Product>[] = [
   {

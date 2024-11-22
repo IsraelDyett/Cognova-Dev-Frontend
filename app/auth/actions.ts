@@ -8,7 +8,7 @@ import { prisma } from "@/lib/services/prisma";
 import { cookies, headers } from "next/headers";
 import { userAgent } from "next/server";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
-import { comparePassword, hashPassword } from "@/utils/transactions";
+import { comparePassword, hashPassword } from "@/lib/actions/server/prisma";
 import { redis } from "@/lib/services/redis";
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {

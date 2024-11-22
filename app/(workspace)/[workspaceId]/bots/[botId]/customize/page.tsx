@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { WorkspacePageProps } from "@/types";
-import { CustomizeForm } from "./_components/customize-form";
+import { CustomizeForm } from "./components/customize-form";
 import { cBot, useCustomizeStore } from "./store";
-import { ChatPreview } from "./_components/chat-preview";
+import { ChatPreview } from "./components/chat-preview";
 import { FormProvider } from "react-hook-form";
 
 interface CustomizeFormValues {

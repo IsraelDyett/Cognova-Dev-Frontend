@@ -1,11 +1,11 @@
-import HeroSection from "./_components/hero-section";
-import FeaturesSection from "./_components/features-section";
-import SignUpSection from "./_components/sign-up-section";
-import TestimonialsSection from "./_components/testimonials-section";
-import PricingSection from "./_components/pricing-section";
-import StepsFlowSection from "./_components/steps-flow-section";
-import FAQSection from "./_components/faq-section";
-import FlowDemoSection from "./_components/flow-demo-section";
+import HeroSection from "./components/hero-section";
+import FeaturesSection from "./components/features-section";
+import SignUpSection from "./components/sign-up-section";
+import TestimonialsSection from "./components/testimonials-section";
+import PricingSection from "./components/pricing-section";
+import StepsFlowSection from "./components/steps-flow-section";
+import FAQSection from "./components/faq-section";
+import FlowDemoSection from "./components/flow-demo-section";
 
 export default function LandingPage() {
   return (
