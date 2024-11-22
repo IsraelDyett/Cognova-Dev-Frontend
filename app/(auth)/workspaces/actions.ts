@@ -7,6 +7,7 @@ import { generateUniqueName } from "@/lib/actions/server/prisma";
 import { User, WorkspaceInviteStatus } from "@prisma/client";
 import { InviteEmailTemplate } from "@/components/mails/team-invite";
 import resendClient, { RESEND_CONFIG } from "@/lib/services/resend";
+import { debug } from "@/lib/utils";
 
 export type WorkspaceFormData = z.infer<typeof workspaceSchema>;
 
@@ -20,6 +21,7 @@ async function sendWorkspaceInvitation(
 	displayName: string,
 	inviter: User,
 ) {
+	debug("SERVER", "sendWorkspaceInvitation", "PRISMA ACTIONS");
 	const teamMembersEmails = emails.map((email) => {
 		return {
 			from: `${RESEND_CONFIG.fromName} <${RESEND_CONFIG.fromEmail}>`,
@@ -36,6 +38,7 @@ async function sendWorkspaceInvitation(
 }
 
 async function createWorkspaceRecord(displayName: string, name: string, ownerId: string) {
+	debug("SERVER", "createWorkspaceRecord", "PRISMA ACTIONS");
 	const workspace = await prisma.workspace.create({
 		data: {
 			displayName,
@@ -60,12 +63,14 @@ async function createWorkspaceInvitation(
 		roleId: string;
 	}[],
 ) {
+	debug("SERVER", "createWorkspaceInvitation", "PRISMA ACTIONS");
 	return prisma.workspaceInvitation.createMany({
 		data: members,
 	});
 }
 
 export async function createWorkspaceWithTeam(data: WorkspaceFormData) {
+	debug("SERVER", "createWorkspaceWithTeam", "PRISMA ACTIONS");
 	try {
 		const user = await authUser().catch(() => null);
 		const ownerId = user?.id || WORKSPACE_CONFIG.defaultOwnerId;

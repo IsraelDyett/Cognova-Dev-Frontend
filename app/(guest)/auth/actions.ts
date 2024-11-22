@@ -12,7 +12,7 @@ import { comparePassword, hashPassword } from "@/lib/actions/server/prisma";
 import { redis } from "@/lib/services/redis";
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
-	debug("SIGN IN");
+	debug("SERVER", "signInAction", "PRISMA ACTIONS");
 	const user = await prisma?.user.findUnique({
 		where: {
 			email: data.email,
@@ -30,7 +30,7 @@ export async function signInAction(data: z.infer<typeof SignInSchema>) {
 }
 
 export async function signUpAction(data: z.infer<typeof SignUpSchema>) {
-	debug("SIGN UP");
+	debug("SERVER", "signUpAction", "PRISMA ACTIONS");
 	const existingUser = await prisma?.user.findUnique({
 		where: {
 			email: data.email,
@@ -52,7 +52,7 @@ export async function SignUpOrInAction(
 	data: z.infer<typeof SignUpSchema> & { id?: string },
 	provider?: string,
 ) {
-	debug("SIGN UP OR IN");
+	debug("SERVER", "SignUpOrInAction", "PRISMA ACTIONS");
 	const existingUser = await prisma?.user.findUnique({
 		where: {
 			email: data.email,
@@ -77,7 +77,7 @@ export async function SignUpOrInAction(
 }
 
 const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: User) => {
-	debug("AUTHENTICATE");
+	debug("SERVER", "authenticate", "PRISMA ACTIONS");
 	try {
 		const sessionToken = await createSession(user);
 		cookies().set("auth.session.token", sessionToken.sessionToken, {
@@ -107,7 +107,7 @@ const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: U
 };
 
 async function createSession(user: User) {
-	debug("CREATE_SESSION");
+	debug("SERVER", "createSession", "PRISMA ACTIONS");
 	const headersList = headers();
 	const agent = userAgent({ headers: headersList });
 	const sessionToken = await hashToken(crypto.randomUUID());
@@ -160,7 +160,7 @@ async function createSession(user: User) {
 }
 
 export async function validateSession(defaultSessionToken?: string, redirectTo = "/") {
-	debug("VALIDATE_SESSION");
+	debug("SERVER", "validateSession", "PRISMA ACTIONS");
 	let sessionToken = "";
 	if (defaultSessionToken) {
 		sessionToken = defaultSessionToken;
@@ -234,7 +234,7 @@ export async function validateSession(defaultSessionToken?: string, redirectTo =
 }
 
 export async function authUser() {
-	debug("AUTH_USER");
+	debug("SERVER", "authUser", "PRISMA ACTIONS");
 	try {
 		const sessionToken = cookies().get("auth.session.token")?.value;
 		if (sessionToken) {
@@ -266,6 +266,7 @@ export async function authUser() {
 	}
 }
 export const hashToken = async (token: string) => {
+	debug("SERVER", "hashToken", "PRISMA ACTIONS");
 	const encoder = new TextEncoder();
 
 	const data = encoder.encode(token);
@@ -275,6 +276,7 @@ export const hashToken = async (token: string) => {
 	return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
 const customRedirect = (url: string) => {
+	debug("SERVER", "customRedirect", "PRISMA ACTIONS");
 	try {
 	} catch (error) {
 	} finally {

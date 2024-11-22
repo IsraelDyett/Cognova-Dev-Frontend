@@ -1,7 +1,9 @@
 "use server";
+import { debug } from "@/lib/utils";
 import { prisma } from "@/lib/services/prisma";
 
 export async function getPlans() {
+	debug("SERVER", "getPlans", "PRISMA ACTIONS");
 	try {
 		const plans = await prisma.plan.findMany({
 			include: {
@@ -15,6 +17,7 @@ export async function getPlans() {
 	}
 }
 export async function getRoles() {
+	debug("SERVER", "getRoles", "PRISMA ACTIONS");
 	try {
 		return prisma.role.findMany();
 	} catch (error) {

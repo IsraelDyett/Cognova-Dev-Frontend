@@ -1,11 +1,13 @@
 import { z } from "zod";
 import { prisma } from "@/lib/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { debug } from "@/lib/utils";
 
 const ParamsSchema = z.object({
 	botId: z.string().cuid2(),
 });
 export async function GET(request: NextRequest, { params }: { params: { botId: string } }) {
+	debug("API", "GET", "PRISMA ACTIONS", "app/(guest)/api/bots/[botId]/route.ts");
 	try {
 		const result = ParamsSchema.safeParse({ botId: params.botId });
 

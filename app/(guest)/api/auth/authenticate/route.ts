@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { type NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-	debug("[API] AUTH/AUTHENTICATE");
+	debug("API", "POST", "PRISMA ACTIONS", "app/(guest)/api/auth/authenticate/route.ts");
 	try {
 		const body = await request.json().catch(() => null);
 

@@ -2,14 +2,14 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { WorkspacePageProps } from "@/types";
 import ShareButton from "@/components/share-button";
-import { getBot } from "@/app/(auth)/(workspace)/actions";
+import { retrieveBot } from "@/app/(auth)/(workspace)/actions";
 import { Bot } from "@prisma/client";
 
 export const revalidate = 10;
 export default async function BotPreviewPage(props: WorkspacePageProps) {
 	let bot: Bot | null = null;
 	try {
-		bot = await getBot(props.params.botId);
+		bot = await retrieveBot(props.params.botId);
 		if (!bot) {
 			notFound();
 		}

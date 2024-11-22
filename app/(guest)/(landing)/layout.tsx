@@ -1,6 +1,7 @@
+"use client";
+import { siteConfig } from "@/lib/site";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { siteConfig } from "@/lib/site";
 
 const LandingPageLayout = ({ children }: { children: React.ReactNode }) => {
 	const origin = typeof window !== "undefined" ? window.location.origin : siteConfig.domains.base;

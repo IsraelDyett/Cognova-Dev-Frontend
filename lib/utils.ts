@@ -62,9 +62,20 @@ export const toPascalCase = <T extends string>(string: T): string => {
 
 	return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
 };
-
-export const debug = (verbose: string) => {
+interface DebugOptions {
+	where: "SERVER" | "CLIENT" | "API";
+	functionName: string;
+	env: "STORE" | "PRISMA ACTIONS" | "CONTEXT" | "PAGE" | "UTILS-FUNC";
+}
+export const debug = (
+	where: DebugOptions["where"] = "CLIENT",
+	functionName: DebugOptions["functionName"],
+	env: DebugOptions["env"],
+	...args: any
+) => {
 	if (process.env.NODE_ENV === "development") {
-		console.count(`===========>> ${verbose}: ${new Date().getDate()}`);
+		console.count(
+			`DEBUG: [${where}] ${toKebabCase(functionName).replaceAll("-", " ").toUpperCase()} {${env}}: ${new Date().getTime()}`,
+		);
 	}
 };

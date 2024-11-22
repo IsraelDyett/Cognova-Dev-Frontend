@@ -14,7 +14,7 @@ export const streamChat = async ({
 	) => void;
 	botChatId: string;
 }) => {
-	debug("STREAM CHAT");
+	debug("CLIENT", "streamChat", "UTILS-FUNC");
 	let fullContent = "";
 	let sourceUrls: string[] | undefined;
 	let questionSuggestions: string[] | undefined;
@@ -58,7 +58,7 @@ export const handlePrompt = async ({
 	chat: string;
 	conversationId: string;
 }) => {
-	debug("HANDLE PROMPT");
+	debug("CLIENT", "handlePrompt", "UTILS-FUNC");
 	const backendAPI = process.env.NEXT_PUBLIC_FAST_API_HOST || "https://api.cognova.io";
 	const response = await fetch(`${backendAPI}/api/v1/bots/${botId}/chat/${conversationId}`, {
 		method: "POST",

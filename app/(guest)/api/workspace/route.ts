@@ -4,7 +4,7 @@ import { getDefaultWorkspace, isUserInWorkspace } from "@/app/(auth)/(workspace)
 import { debug } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
-	debug("[API] WORKSPACE");
+	debug("API", "GET", "PRISMA ACTIONS", "app/(guest)/api/workspace/route.ts");
 	const url = new URL(request.url);
 	const workspaceName = url.searchParams.get("name");
 	const sessionToken = url.searchParams.get("sessionToken");

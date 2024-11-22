@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { useWorkspaceStore } from "./store";
+import { debug } from "@/lib/utils";
 import { getRoles } from "../../actions";
+import { useWorkspaceStore } from "./store";
 import CreateWorkspaceDialog from "./components/create-workspace-dialog";
 
 export default function WorkspaceManager() {
@@ -9,6 +10,7 @@ export default function WorkspaceManager() {
 
 	React.useEffect(() => {
 		const loadRoles = async () => {
+			debug("CLIENT", "loadRoles", "PAGE");
 			const roles = await getRoles();
 			setRoles(roles);
 		};

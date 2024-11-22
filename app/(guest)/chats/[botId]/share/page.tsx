@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import PlaygroundPage from "@/app/(auth)/(workspace)/[workspaceId]/bots/[botId]/playground/page";
 import { WorkspacePageProps } from "@/types";
-import { getBot } from "@/app/(auth)/(workspace)/actions";
+import { retrieveBot } from "@/app/(auth)/(workspace)/actions";
 import { siteConfig } from "@/lib/site";
 
 export async function generateMetadata({
@@ -9,7 +9,7 @@ export async function generateMetadata({
 }: {
 	params: { botId: string };
 }): Promise<Metadata> {
-	const bot = await getBot(params.botId);
+	const bot = await retrieveBot(params.botId);
 
 	return {
 		title: bot

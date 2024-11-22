@@ -20,7 +20,7 @@ export const useSourcesStore = create<SourcesStore>((set) => ({
 	isLoading: true,
 	error: null,
 	fetchSources: async (botId, quiet) => {
-		debug("[STORE] {USE-SOURCES-STORE} FETCH-SOURCES");
+		debug("CLIENT", "fetchSources", "STORE");
 		let state: any = {
 			isLoading: true,
 			error: null,

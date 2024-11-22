@@ -43,7 +43,7 @@ export const useChatStore = create<ChatStore>((set) => ({
 	currentConversationId: null,
 	bot: null,
 	initializeConversation: async (botId: string) => {
-		debug("[STORE] {USE-CHAT-STORE} INITIALIZE CONVERSATION");
+		debug("CLIENT", "initializeConversation", "STORE");
 		const conversation = await getOrCreateConversation(botId);
 		console.log("Conv", conversation);
 		if (!conversation) {
@@ -56,7 +56,7 @@ export const useChatStore = create<ChatStore>((set) => ({
 		set({ chats: dbChats, bot: conversation.bot });
 	},
 	addChat: (chat) => {
-		debug("[STORE] {USE-CHAT-STORE} ADD-MESSAGE");
+		debug("CLIENT", "addChat", "STORE");
 		const id = createCuid();
 		set((state) => ({
 			chats: [

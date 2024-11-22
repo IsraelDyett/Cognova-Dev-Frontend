@@ -2,7 +2,7 @@
 import { Workspace, Plan } from "@prisma/client";
 import { useParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getWorkspace } from "../actions";
+import { retrieveWorkspace } from "../actions";
 import { debug } from "@/lib/utils";
 
 interface WorkspaceWithPlan extends Workspace {
@@ -26,8 +26,8 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
 	const fetchWorkspace = async () => {
 		if (workspaceId) {
-			debug("[A-SYNC-FUNC] {WORKSPACE-CONTEXT} FETCH WORKSPACE");
-			const retrievedWorkspace = await getWorkspace(`${workspaceId}`, true);
+			debug("CLIENT", "fetchWorkspace", "CONTEXT");
+			const retrievedWorkspace = await retrieveWorkspace(`${workspaceId}`, true);
 			if (retrievedWorkspace) {
 				setWorkspace(retrievedWorkspace);
 			}

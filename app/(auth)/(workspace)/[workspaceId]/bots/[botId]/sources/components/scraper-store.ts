@@ -54,7 +54,12 @@ class ScraperError extends Error {
 
 export const scraperApi = {
 	async fetchUrls(url: string): Promise<string[]> {
-		debug("[API-STORE] {SCRAPER-API} FETCH URLS");
+		debug(
+			"CLIENT",
+			"fetchUrls",
+			"STORE",
+			"app/(auth)/(workspace)/[workspaceId]/bots/[botId]/sources/components/scraper-store.ts",
+		);
 		try {
 			const data = await fastApi.sources.scrapeUrls(url);
 			if (data.status !== "success") {
@@ -71,7 +76,12 @@ export const scraperApi = {
 	},
 
 	async scrapeURLs(urls: string[], workspaceId?: string, botId?: string) {
-		debug("[API-STORE] {SCRAPER-API} SCRAPE URL");
+		debug(
+			"CLIENT",
+			"scrapeURLs",
+			"STORE",
+			"app/(auth)/(workspace)/[workspaceId]/bots/[botId]/sources/components/scraper-store.ts",
+		);
 		try {
 			if (!workspaceId) {
 				throw new ScraperError("Workspace ID is required");

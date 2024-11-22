@@ -108,4 +108,3 @@
 //   const [modelName] = args;
 //   generateStoreActions(modelName);
 // }
-

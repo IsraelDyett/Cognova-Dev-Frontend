@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Bot, BotConfiguration } from "@prisma/client";
-import { getBot } from "@/app/(auth)/(workspace)/actions";
+import { retrieveBot } from "@/app/(auth)/(workspace)/actions";
 import { debug } from "@/lib/utils";
 
 export interface cBot extends Bot {
@@ -16,10 +16,10 @@ export const useCustomizeStore = create<CustomizeStore>((set) => ({
 	bot: null,
 	isLoading: true,
 	fetchBot: async (botId) => {
-		debug("[STORE] {USE-CUSTOMIZE-STORE} FETCH-BOT");
+		debug("CLIENT", "fetchBot", "STORE");
 		set({ isLoading: true });
 		try {
-			const bot = await getBot(botId);
+			const bot = await retrieveBot(botId);
 			// @ts-ignore
 			set({ bot, isLoading: false });
 		} catch (error) {
