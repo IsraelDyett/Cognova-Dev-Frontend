@@ -7,18 +7,20 @@ import { debug } from "@/lib/utils";
 
 interface ExtendedWorkspace extends Workspace {
 	plan?: Plan | null;
-	bots: Bot[] | null
-	businesses: Business[] | null
+	bots: Bot[] | null;
+	businesses: Business[] | null;
 }
 
 const DefaultProps = {
 	workspace: null as ExtendedWorkspace | null,
-	isLoading: false
+	isLoading: false,
+	refreshCurrentWorkspace: () => Promise.resolve(),
 };
 
 export interface WorkspaceContextType {
 	workspace: ExtendedWorkspace | null;
 	isLoading: boolean;
+	refreshCurrentWorkspace: () => Promise<void>;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType>(DefaultProps);
@@ -35,7 +37,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 			const retrievedWorkspace = await retrieveWorkspace(`${workspaceId}`, true);
 			if (retrievedWorkspace) {
 				setWorkspace(retrievedWorkspace);
-				setIsLoading(false)
+				setIsLoading(false);
 			}
 		}
 	};
@@ -49,7 +51,11 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 		}
 	}, [workspaceId]);
 
-	return <WorkspaceContext.Provider value={{ workspace, isLoading }}>{children}</WorkspaceContext.Provider>;
+	return (
+		<WorkspaceContext.Provider value={{ workspace, isLoading, refreshCurrentWorkspace: fetchWorkspace }}>
+			{children}
+		</WorkspaceContext.Provider>
+	);
 };
 
 export const useWorkspace = (): WorkspaceContextType => {

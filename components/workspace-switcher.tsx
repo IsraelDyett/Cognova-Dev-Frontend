@@ -32,14 +32,17 @@ export function WorkspaceSwitcher() {
 	const { workspace, isLoading } = useWorkspace();
 	const { workspaces, fetchWorkspaces } = useSidebarStore();
 
-	const alreadyMounted = React.useRef(false)
+	const alreadyMounted = React.useRef(false);
 	React.useEffect(() => {
 		if (!alreadyMounted.current) {
 			fetchWorkspaces(user.id);
 			alreadyMounted.current = true;
 		}
 	}, []);
-	const CreateWorkspaceDialog = dynamic(() => import("@/app/(auth)/workspaces/components/create-workspace-dialog"), { ssr: false});
+	const CreateWorkspaceDialog = dynamic(
+		() => import("@/app/(auth)/onboarding/components/create-workspace-dialog"),
+		{ ssr: false },
+	);
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -94,7 +97,7 @@ export function WorkspaceSwitcher() {
 						{workspaces.map((ws) => (
 							<DropdownMenuItem
 								key={ws.name}
-								onClick={() => router.push(`/${ws.id}`)}
+								onClick={() => router.push(`/${ws.name}`)}
 								className="gap-2 p-2"
 							>
 								<div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
@@ -110,7 +113,9 @@ export function WorkspaceSwitcher() {
 							</DropdownMenuItem>
 						))}
 						<DropdownMenuSeparator />
-						<React.Suspense fallback={<DropdownMenuItem disabled>Loading...</DropdownMenuItem>}>
+						<React.Suspense
+							fallback={<DropdownMenuItem disabled>Loading...</DropdownMenuItem>}
+						>
 							<CreateWorkspaceDialog
 								customTrigger={
 									<DropdownMenuItem

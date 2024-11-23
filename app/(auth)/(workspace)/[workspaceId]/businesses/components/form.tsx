@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useBusinessStore } from "../store";
-import type { Business } from "@prisma/client";
+import { useWorkspace } from "../../../contexts/workspace-context";
 
 const formSchema = z.object({
 	workspaceId: z.string().min(1, "Required"),
@@ -55,6 +55,7 @@ const defaultValues = {
 export function BusinessForm() {
 	const { createBusiness, updateBusiness, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useBusinessStore();
+	const { refreshCurrentWorkspace } = useWorkspace()
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -66,10 +67,13 @@ export function BusinessForm() {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			if (initialCrudFormData) {
-				await updateBusiness(initialCrudFormData.id, values);
+				await updateBusiness(initialCrudFormData.id, values)
+					.then(() => refreshCurrentWorkspace());
 			} else {
 				// @ts-ignore
-				await createBusiness(values);
+				await createBusiness(values)
+					.then(() => refreshCurrentWorkspace());
+
 			}
 			onCloseCrudForm();
 		} catch (error) {

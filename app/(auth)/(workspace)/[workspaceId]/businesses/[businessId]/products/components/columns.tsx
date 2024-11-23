@@ -11,9 +11,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
-import type { BusinessProduct as Product } from "@prisma/client";
 import { format } from "date-fns";
-import { useProductStore } from "../store";
+import { ProductsStoreState, useProductStore } from "../store";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -27,7 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<ProductsStoreState['products']['0']>[] = [
 	{
 		accessorKey: "categoryId",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="CategoryId" />,
@@ -41,15 +40,18 @@ export const columns: ColumnDef<Product>[] = [
 	{
 		accessorKey: "price",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
-		cell: ({ row }) => (
-			<div className="font-medium">
-				$
-				{Number(row.getValue("price")).toLocaleString(undefined, {
-					minimumFractionDigits: 2,
-					maximumFractionDigits: 2,
-				})}
-			</div>
-		),
+		cell: ({ row }) => {
+			const configuration = row.original.business.configurations
+			return (
+				<div className="font-medium">
+					{configuration?.currency || "$"}
+					{Number(row.getValue("price")).toLocaleString(undefined, {
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2,
+					})}
+				</div>
+			)
+		},
 	},
 	{
 		accessorKey: "stock",

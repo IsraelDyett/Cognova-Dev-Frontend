@@ -75,8 +75,8 @@ export const debug = (
 	...args: any
 ) => {
 	// if (process.env.NODE_ENV === "development") {
-		console.info(
-			`[🌍] DEBUG: [${where}] ${toKebabCase(`${functionName}`).replaceAll("-", " ").toUpperCase()} {${env}}: ${format(new Date(), "HH:mm:s")}`,
-		);
+	console.info(
+		`[🌍] DEBUG: [${where}] ${toKebabCase(`${functionName}`).replaceAll("-", " ").toUpperCase()} {${env}}: ${format(new Date(), "HH:mm:s")}`,
+	);
 	// }
 };

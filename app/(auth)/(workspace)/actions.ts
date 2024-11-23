@@ -165,7 +165,7 @@ export const retrieveWorkspace = async (workspaceId: string, withPlan = false) =
 				},
 			},
 			bots: true,
-			businesses: true
+			businesses: true,
 		},
 	});
 

@@ -29,7 +29,9 @@ export default function ProductDashboard() {
 
 	return (
 		<div className="container mx-auto p-4">
-			{(products.length === 0 && !loading) ? <NoStateComponent /> : (
+			{products.length === 0 && !loading ? (
+				<NoStateComponent />
+			) : (
 				<DataTable
 					columns={columns}
 					data={products}
@@ -40,7 +42,6 @@ export default function ProductDashboard() {
 						</Button>
 					}
 				/>
-
 			)}
 			<ProductForm />
 		</div>

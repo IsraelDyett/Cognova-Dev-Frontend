@@ -2,8 +2,11 @@
 
 import { prisma } from "@/services/prisma";
 
-export async function getConversations() {
+export async function getConversations({ botId }: { botId: string }) {
 	return await prisma.conversation.findMany({
+		where: {
+			botId: botId,
+		},
 		orderBy: { updatedAt: "desc" },
 		include: {
 			chats: {

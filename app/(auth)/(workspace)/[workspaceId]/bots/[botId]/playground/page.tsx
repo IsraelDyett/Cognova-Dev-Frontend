@@ -199,7 +199,7 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 								<Logo size="xxs" />
 								<a
 									className="underline text-foreground font-medium pl-1 underline-offset-2"
-									href={siteConfig.applicationBaseUrl}
+									href={siteConfig.domains.base}
 								>
 									{siteConfig.applicationName}
 								</a>

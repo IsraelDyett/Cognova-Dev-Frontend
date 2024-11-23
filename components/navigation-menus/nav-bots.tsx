@@ -25,7 +25,7 @@ import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 export function NavBots() {
 	const { isMobile } = useSidebar();
 	const { workspace, isLoading } = useWorkspace();
-	if((workspace?.bots || []).length == 0 && !isLoading) return null;
+	if ((workspace?.bots || []).length == 0 && !isLoading) return null;
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Bots</SidebarGroupLabel>
@@ -48,9 +48,7 @@ export function NavBots() {
 						{workspace?.bots?.slice(0, 3).map((bot) => (
 							<SidebarMenuItem key={bot.name}>
 								<SidebarMenuButton asChild className="w-full">
-									<WorkspaceLink
-										href={`/bots/${bot.id}`}
-									>
+									<WorkspaceLink href={`/bots/${bot.id}`}>
 										<BotIcon />
 										<span>{bot.name}</span>
 									</WorkspaceLink>

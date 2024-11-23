@@ -74,7 +74,7 @@ export default function HeroSection() {
 						role="img"
 						className="mx-auto max-h-[70dvh] w-[22.875rem] max-w-full drop-shadow-xl"
 					>
-						<title>App screenshot</title>
+						<title>Whatsapp AI Chat Support</title>
 						<defs>
 							<clipPath id="2ade4387-9c63-4fc4-b754-10e687a0d332">
 								<rect width={316} height={684} rx={36} />
@@ -94,7 +94,17 @@ export default function HeroSection() {
 							transform="translate(24 24)"
 							clipPath="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)"
 						>
-							<video id="wa-demo-video" preload="true" autoPlay muted>
+							<video
+								className="pointer-events-none"
+								id="wa-demo-video"
+								preload="true"
+								autoPlay
+								muted
+								playsInline
+								disablePictureInPicture
+								controlsList="nodownload nofullscreen noremoteplayback"
+								controls={false}
+							>
 								<source src={siteConfig.r2.waDemoVideo} type="video/mp4" />
 							</video>
 						</foreignObject>

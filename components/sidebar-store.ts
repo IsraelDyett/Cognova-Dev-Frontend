@@ -7,9 +7,14 @@ import {
 	Settings2,
 	SquareMousePointer,
 	SquareTerminal,
-	Building, BarChartIcon as ChartBar, ShoppingBag, MapPin, Clock, Settings,
+	Building,
+	BarChartIcon as ChartBar,
+	ShoppingBag,
+	MapPin,
+	Clock,
+	Settings,
 	Bot,
-	Stars
+	Stars,
 } from "lucide-react";
 import { Workspace } from "@prisma/client";
 import { getWorkspaces } from "@/app/(auth)/(workspace)/actions";
@@ -128,31 +133,32 @@ export const sidebarData = {
 		{
 			title: "Overview",
 			icon: Building,
-			url: "businesses/{businessId}/"
+			url: "businesses/{businessId}/",
 		},
 		{
 			title: "Analytics",
 			icon: ChartBar,
-			url: "businesses/{businessId}/analytics"
+			url: "businesses/{businessId}/analytics",
 		},
 		{
 			title: "Products",
 			icon: ShoppingBag,
-			url: "businesses/{businessId}/products"
+			url: "businesses/{businessId}/products",
 		},
 		{
 			title: "Locations",
 			icon: MapPin,
-			url: "businesses/{businessId}/locations"
+			url: "businesses/{businessId}/locations",
 		},
 		{
-			title: "Operating Hours", icon: Clock,
-			url: "businesses/{businessId}/hours"
+			title: "Operating Hours",
+			icon: Clock,
+			url: "businesses/{businessId}/hours",
 		},
 		{
 			title: "Settings",
 			icon: Settings,
-			url: "businesses/{businessId}/settings"
+			url: "businesses/{businessId}/settings",
 		},
 	],
 	botNavigationMenus: [

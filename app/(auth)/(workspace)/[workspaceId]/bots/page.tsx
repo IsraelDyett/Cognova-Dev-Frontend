@@ -29,7 +29,9 @@ export default function BotDashboard() {
 	return (
 		<>
 			<div className="container mx-auto p-4">
-				{(bots.length === 0 && !loading) ? <NoStateComponent /> : (
+				{bots.length === 0 && !loading ? (
+					<NoStateComponent />
+				) : (
 					<DataTable
 						columns={columns}
 						data={bots}

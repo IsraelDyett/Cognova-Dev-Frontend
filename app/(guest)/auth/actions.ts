@@ -10,6 +10,7 @@ import { userAgent } from "next/server";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { comparePassword, hashPassword } from "@/lib/actions/server/prisma";
 import { redis } from "@/lib/services/redis";
+import { ROOT_DOMAIN } from "@/lib/config";
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
 	debug("SERVER", "signInAction", "PRISMA ACTIONS");
@@ -80,13 +81,7 @@ const authenticate = async (action: "USER_SIGNED_UP" | "USER_SIGNED_IN", user: U
 	debug("SERVER", "authenticate", "PRISMA ACTIONS");
 	try {
 		const sessionToken = await createSession(user);
-		cookies().set("auth.session.token", sessionToken.sessionToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			path: "/",
-			sameSite: "lax",
-			expires: sessionToken.expiresAt,
-		});
+		setSessionTokenCookie(sessionToken.sessionToken);
 		await prisma.user.update({
 			where: {
 				id: user.id,
@@ -207,13 +202,7 @@ export async function validateSession(defaultSessionToken?: string, redirectTo =
 						),
 					},
 				});
-				cookies().set("auth.session.token", sessionToken, {
-					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-					path: "/",
-					sameSite: "lax",
-					expires: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
-				});
+				setSessionTokenCookie(sessionToken);
 			}
 
 			return foundSession;
@@ -233,7 +222,7 @@ export async function validateSession(defaultSessionToken?: string, redirectTo =
 	}
 }
 
-export async function authUser() {
+export async function authUser(redirectOnFail = true) {
 	debug("SERVER", "authUser", "PRISMA ACTIONS");
 	try {
 		const sessionToken = cookies().get("auth.session.token")?.value;
@@ -262,7 +251,9 @@ export async function authUser() {
 	} catch (error) {
 		const er = error as Error;
 		console.error(er.cause);
-		customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
+		if (redirectOnFail) {
+			customRedirect(`/auth/sign-in?error=AUTH_FAILED&reason=${er.cause}`);
+		}
 	}
 }
 export const hashToken = async (token: string) => {
@@ -274,6 +265,17 @@ export const hashToken = async (token: string) => {
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
 
 	return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+};
+export const setSessionTokenCookie = (sessionToken: string) => {
+	const rootDomain = process.env.NODE_ENV === "development" ? "app.localhost" : `.${ROOT_DOMAIN}`;
+	cookies().set("auth.session.token", sessionToken, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		path: "/",
+		domain: 'app.localhost',
+		sameSite: "lax",
+		expires: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
+	});
 };
 const customRedirect = (url: string) => {
 	debug("SERVER", "customRedirect", "PRISMA ACTIONS");

@@ -1,4 +1,15 @@
 import { cn } from "@/lib/utils";
+import { FiMonitor, FiSmartphone, FiTablet } from "react-icons/fi";
+import {
+	SiGooglechrome,
+	SiFirefox,
+	SiSafari,
+	SiOpera,
+	SiMicrosoftedge,
+	SiApple,
+	SiInstagram,
+} from "react-icons/si";
+import { FaWindows, FaApple, FaLinux, FaAndroid } from "react-icons/fa";
 
 export const Icons = {
 	IconSpinner: ({ className, ...props }: React.ComponentProps<"svg">) => {
@@ -22,4 +33,62 @@ export const Icons = {
 			</svg>
 		);
 	},
+};
+export const showBrowserIcon = (browser?: string | null) => {
+	let icon;
+	if (browser?.toLowerCase().includes("chrome")) {
+		icon = <SiGooglechrome className="inline mr-2" />;
+	} else if (browser?.toLowerCase().includes("firefox")) {
+		icon = <SiFirefox className="inline mr-2" />;
+	} else if (browser?.toLowerCase().includes("safari")) {
+		icon = <SiSafari className="inline mr-2" />;
+	} else if (browser?.toLowerCase().includes("opera")) {
+		icon = <SiOpera className="inline mr-2" />;
+	} else if (browser?.toLowerCase().includes("instagram")) {
+		icon = <SiInstagram className="inline mr-2" />;
+	} else if (browser?.toLowerCase().includes("edge")) {
+		icon = <SiMicrosoftedge className="inline mr-2" />;
+	}
+	return (
+		<div>
+			{icon}
+			{browser}
+		</div>
+	);
+};
+export const showOsIcon = (os?: string | null) => {
+	let icon;
+	if (os?.toLowerCase().includes("windows")) {
+		icon = <FaWindows className="inline mr-2" />;
+	} else if (os?.toLowerCase().includes("mac")) {
+		icon = <FaApple className="inline mr-2" />;
+	} else if (os?.toLowerCase().includes("linux")) {
+		icon = <FaLinux className="inline mr-2" />;
+	} else if (os?.toLowerCase().includes("ios")) {
+		icon = <SiApple className="inline mr-2" />;
+	} else if (os?.toLowerCase().includes("android")) {
+		icon = <FaAndroid className="inline mr-2" />;
+	}
+	return (
+		<div>
+			{icon}
+			{os}
+		</div>
+	);
+};
+export const showDeviceIcon = (device?: string | null) => {
+	let icon;
+	if (device?.toLowerCase().includes("mobile")) {
+		icon = <FiSmartphone className="inline mr-2" />;
+	} else if (device?.toLowerCase().includes("tablet")) {
+		icon = <FiTablet className="inline mr-2" />;
+	} else {
+		icon = <FiMonitor className="inline mr-2" />;
+	}
+	return (
+		<div>
+			{icon}
+			{device}
+		</div>
+	);
 };

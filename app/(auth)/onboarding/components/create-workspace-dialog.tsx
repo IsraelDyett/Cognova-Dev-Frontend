@@ -18,9 +18,22 @@ import InviteToWorkspaceForm from "./invite-to-workspace-form";
 import { useWorkspaceStore } from "../store";
 import { getRoles } from "@/app/actions";
 
-export default function CreateWorkspaceDialog({ customTrigger }: { customTrigger?: React.ReactNode }) {
-	const { isOpen, isLoading, formData, setOpen, setLoading, removeTeamMember, roles, reset, setRoles } =
-		useWorkspaceStore();
+export default function CreateWorkspaceDialog({
+	customTrigger,
+}: {
+	customTrigger?: React.ReactNode;
+}) {
+	const {
+		isOpen,
+		isLoading,
+		formData,
+		setOpen,
+		setLoading,
+		removeTeamMember,
+		roles,
+		reset,
+		setRoles,
+	} = useWorkspaceStore();
 
 	const router = useRouter();
 	const [error, setError] = React.useState("");
@@ -70,7 +83,7 @@ export default function CreateWorkspaceDialog({ customTrigger }: { customTrigger
 			const roles = await getRoles();
 			setRoles(roles);
 		};
-		if(roles.length  === 0) {
+		if (roles.length === 0) {
 			loadRoles();
 		}
 	}, [setRoles]);
@@ -78,7 +91,9 @@ export default function CreateWorkspaceDialog({ customTrigger }: { customTrigger
 	return (
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				{customTrigger ? customTrigger : (
+				{customTrigger ? (
+					customTrigger
+				) : (
 					<Button type="button">
 						<Building2 className="mr-2 h-4 w-4" />
 						Create Workspace

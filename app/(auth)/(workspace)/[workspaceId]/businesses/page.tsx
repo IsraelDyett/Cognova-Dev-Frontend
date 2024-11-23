@@ -13,8 +13,7 @@ import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 
 export default function BusinessDashboard() {
 	const { workspace } = useWorkspace();
-	const { businesses, loading, error, fetchBusinesses, onOpenCreateForm } =
-		useBusinessStore();
+	const { businesses, loading, error, fetchBusinesses, onOpenCreateForm } = useBusinessStore();
 
 	useEffect(() => {
 		if (workspace) {
@@ -25,11 +24,12 @@ export default function BusinessDashboard() {
 	if (loading) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;
 
-
 	return (
 		<>
 			<div className="container mx-auto p-4">
-				{(businesses.length === 0 && !loading) ? <NoStateComponent /> : (
+				{businesses.length === 0 && !loading ? (
+					<NoStateComponent />
+				) : (
 					<DataTable
 						columns={columns}
 						data={businesses}

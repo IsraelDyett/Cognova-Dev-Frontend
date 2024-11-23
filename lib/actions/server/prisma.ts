@@ -1,4 +1,4 @@
-'use server';
+"use server";
 import slugify from "slugify";
 import * as bcrypt from "bcryptjs";
 import { prisma } from "@/lib/services/prisma";
@@ -40,7 +40,12 @@ async function generateUniqueName(baseName: string, model: string): Promise<stri
 	const { maxNameGenerationAttempts } = WORKSPACE_CONFIG;
 	let attempts = 0;
 	let isUnique = false;
-	let name = slugify(baseName, { lower: true, trim: true, strict:true, remove: /[*+~.()'"!:@]/g });
+	let name = slugify(baseName, {
+		lower: true,
+		trim: true,
+		strict: true,
+		remove: /[*+~.()'"!:@]/g,
+	});
 
 	while (!isUnique && attempts < maxNameGenerationAttempts) {
 		// @ts-ignore

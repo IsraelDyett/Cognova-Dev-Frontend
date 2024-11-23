@@ -6,7 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.js --fix",
+		"lint": "next lint",
 		"env": "dotenv -e .env.local",
 		"postinstall": "prisma generate",
 		"prisma:migrate:dev": "prisma migrate dev",

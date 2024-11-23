@@ -28,6 +28,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useBotStore } from "../store";
 import type { Bot } from "@prisma/client";
+import { useWorkspace } from "../../../contexts/workspace-context";
 
 const formSchema = z.object({
 	workspaceId: z.string().min(1, "Required"),
@@ -61,7 +62,7 @@ const defaultValues = {
 export function BotForm() {
 	const { createBot, updateBot, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useBotStore();
-
+	const { refreshCurrentWorkspace } = useWorkspace()
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues,
@@ -72,10 +73,12 @@ export function BotForm() {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			if (initialCrudFormData) {
-				await updateBot(initialCrudFormData.id, values);
+				await updateBot(initialCrudFormData.id, values)
+					.then(() => refreshCurrentWorkspace());;
 			} else {
 				// @ts-ignore
-				await createBot(values);
+				await createBot(values)
+					.then(() => refreshCurrentWorkspace());;
 			}
 			onCloseCrudForm();
 		} catch (error) {

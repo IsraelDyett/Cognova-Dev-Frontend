@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@/lib/services/prisma";
-import type { BusinessProduct as Product } from "@prisma/client";
+import type { BusinessConfig, BusinessProduct as Product } from "@prisma/client";
 
 interface ApiResponse<T> {
 	success: boolean;
@@ -10,10 +10,17 @@ interface ApiResponse<T> {
 
 export async function createProduct(
 	data: Omit<Product, "id" | "createdAt" | "updatedAt">,
-): Promise<ApiResponse<Product>> {
+): Promise<ApiResponse<(Product & { business: { configurations: BusinessConfig | null } })>> {
 	try {
 		const result = await prisma.businessProduct.create({
 			data,
+			include: {
+				business: {
+					select: {
+						configurations: true,
+					}
+				}
+			}
 		});
 		return { success: true, data: result };
 	} catch (err: any) {
@@ -25,11 +32,18 @@ export async function createProduct(
 export async function updateProduct(
 	id: string,
 	data: Partial<Product>,
-): Promise<ApiResponse<Product>> {
+): Promise<ApiResponse<(Product & { business: { configurations: BusinessConfig | null } })>> {
 	try {
 		const result = await prisma.businessProduct.update({
 			where: { id },
 			data,
+			include: {
+				business: {
+					select: {
+						configurations: true,
+					}
+				}
+			}
 		});
 		return { success: true, data: result };
 	} catch (err: any) {
@@ -50,7 +64,7 @@ export async function deleteProduct(id: string): Promise<ApiResponse<Product>> {
 	}
 }
 
-export async function getProduct(id: string): Promise<ApiResponse<Product>> {
+export async function retrieveProduct(id: string): Promise<ApiResponse<Product>> {
 	try {
 		const result = await prisma.businessProduct.findUnique({
 			where: { id },
@@ -65,14 +79,24 @@ export async function getProduct(id: string): Promise<ApiResponse<Product>> {
 	}
 }
 
-export async function listProducts(
+export async function getProducts(
 	whereInput: { where?: any } = {},
-): Promise<ApiResponse<Product[]>> {
+): Promise<ApiResponse<(Product & { business: { configurations: BusinessConfig | null } })[]>> {
 	try {
-		const results = await prisma.businessProduct.findMany(whereInput);
+		const results = await prisma.businessProduct.findMany({
+			...whereInput,
+			include: {
+				business: {
+					select: {
+						configurations: true,
+					}
+				}
+			}
+		});
 		return { success: true, data: results };
 	} catch (err: any) {
 		const error: Error = err;
 		return { success: false, error: error.message };
 	}
 }
+

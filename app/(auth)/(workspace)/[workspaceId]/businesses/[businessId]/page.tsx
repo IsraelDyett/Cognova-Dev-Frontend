@@ -7,13 +7,7 @@ import { useBusinessStore } from "../store";
 import DataTable from "@/components/ui/data-table";
 import { botsColumns } from "../components/columns/bots";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Store,
-	Truck,
-	ShoppingBag,
-	AlertTriangle,
-	Settings,
-} from "lucide-react";
+import { Store, Truck, ShoppingBag, AlertTriangle, Settings } from "lucide-react";
 import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 import { retrieveBusiness } from "../actions";

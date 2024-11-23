@@ -18,10 +18,12 @@ import dynamic from "next/dynamic";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
 	const { botId, businessId } = useParams();
-	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">("default");
+	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">(
+		"default",
+	);
 	React.useEffect(() => {
 		if (businessId) {
-			setCurrentNavbar("business")
+			setCurrentNavbar("business");
 		} else if (botId) {
 			setCurrentNavbar("bot");
 		} else {
@@ -35,9 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarHeader>
 				<WorkspaceSwitcher />
 				{currentNavbar !== "default" && (
-					<WorkspaceLink
-						className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center"
-					>
+					<WorkspaceLink className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center">
 						<ChevronLeft
 							className="h-4 w-4 transition-transform duration-100 hover:-translate-x-0.5"
 							strokeWidth={2}
@@ -60,7 +60,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							<NavMain items={sidebarData.mainNavigationMenus} />
 							<NavBusinesses />
 							<NavBots />
-							<NavMain title="Workspace" items={sidebarData.workspaceNavigationMenus} />
+							<NavMain
+								title="Workspace"
+								items={sidebarData.workspaceNavigationMenus}
+							/>
 						</motion.div>
 					)}
 					{currentNavbar == "business" && (

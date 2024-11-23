@@ -1,3 +1,5 @@
+import { R2_URL } from "./config";
+
 const appDescription = "AI-Driven Chat For Smarter Decisions";
 export const siteConfig = {
 	title: {
@@ -9,7 +11,6 @@ export const siteConfig = {
 	},
 	description: appDescription,
 	applicationName: "Cognova",
-	applicationBaseUrl: "https://app.cognova.io",
 	keywords: [
 		"cognova",
 		"cognova ai",
@@ -31,7 +32,7 @@ export const siteConfig = {
 	openGraph: {
 		title: "Cognova",
 		description: appDescription,
-		url: "https://app.cognova.io/",
+		url: "https://cognova.io/",
 		siteName: "Cognova",
 		locale: "en_US",
 		type: "website",
@@ -43,13 +44,12 @@ export const siteConfig = {
 		creator: "@cognovaio",
 	},
 	r2: {
-		baseUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/",
-		arrowUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/vercel-arrow.png",
-		logoUrl: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/logo.png",
-		waDemoVideo: "https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/wa-demo-video.mp4",
+		arrowUrl: `${R2_URL}/vercel-arrow.png`,
+		logoUrl: `${R2_URL}/logo.png`,
+		waDemoVideo: `${R2_URL}/wa-demo-video.mp4`,
 	},
 	domains: {
 		auth: "https://app.cognova.io",
-		base: "https://app.cognova.io",
+		base: "https://cognova.io",
 	},
 };

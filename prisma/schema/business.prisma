@@ -13,9 +13,9 @@ model Business {
 
     products       BusinessProduct[]
     locations      BusinessLocation[]
-    categories     BusinessCategory[]
+    categories     BusinessProductsCategory[]
     operatingHours BusinessOperatingHours[]
-    workspace      Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    workspace      Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     configurations BusinessConfig?
     bots           Bot[]
 
@@ -40,7 +40,7 @@ model BusinessConfig {
     @@map("business_configs")
 }
 
-model BusinessCategory {
+model BusinessProductsCategory {
     id          String   @id @default(cuid())
     businessId  String
     name        String
@@ -51,7 +51,7 @@ model BusinessCategory {
     business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
     products BusinessProduct[]
 
-    @@map("business_categories")
+    @@map("business_products_categories")
 }
 
 model BusinessProduct {
@@ -68,8 +68,8 @@ model BusinessProduct {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now()) @updatedAt
 
-    business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    category BusinessCategory? @relation(fields: [categoryId], references: [id])
+    business Business                 @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    category BusinessProductsCategory? @relation(fields: [categoryId], references: [id])
 
     @@map("business_products")
 }

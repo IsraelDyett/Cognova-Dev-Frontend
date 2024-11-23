@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createProduct, updateProduct, deleteProduct, getProduct, listProducts } from "./actions";
-import type { BusinessProduct as Product } from "@prisma/client";
+import { createProduct, updateProduct, deleteProduct, getProducts } from "./actions";
+import type { BusinessConfig, BusinessProduct as Product } from "@prisma/client";
 
-interface ProductState {
-	products: Product[];
+export interface ProductsStoreState {
+	products: (Product & { business: { configurations: BusinessConfig | null } })[];
 	loading: boolean;
 	error: string | null;
 
@@ -21,7 +21,7 @@ interface ProductState {
 	onCloseCrudForm: () => void;
 }
 
-export const useProductStore = create<ProductState>((set) => ({
+export const useProductStore = create<ProductsStoreState>((set) => ({
 	products: [],
 	loading: false,
 	error: null,
@@ -32,7 +32,7 @@ export const useProductStore = create<ProductState>((set) => ({
 	fetchProducts: async (businessId: string) => {
 		set({ loading: true, error: null });
 		try {
-			const response = await listProducts({ where: { businessId: businessId } });
+			const response = await getProducts({ where: { businessId: businessId } });
 			if (response.success) {
 				set({ products: response.data });
 				toast.success("Products loaded successfully");
@@ -54,7 +54,7 @@ export const useProductStore = create<ProductState>((set) => ({
 			const response = await createProduct(data);
 			if (response.success) {
 				set((state) => ({
-					products: [...state.products, response?.data ?? ({} as Product)],
+					products: [...state.products, response?.data ?? ({} as ProductsStoreState['products']['0'])],
 				}));
 				toast.success("Product created successfully");
 			} else {
@@ -75,7 +75,7 @@ export const useProductStore = create<ProductState>((set) => ({
 			if (response.success) {
 				set((state) => ({
 					products: state.products.map((item) =>
-						item.id === id ? (response.data ?? ({} as Product)) : item,
+						item.id === id ? (response.data ?? ({} as ProductsStoreState['products']['0'])) : item,
 					),
 				}));
 				toast.success("Product updated successfully");

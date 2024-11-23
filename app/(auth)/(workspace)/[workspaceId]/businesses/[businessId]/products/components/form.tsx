@@ -71,7 +71,7 @@ export function ProductForm() {
 				// @ts-ignore
 				await createProduct(values);
 			}
-			// onCloseCrudForm();
+			onCloseCrudForm();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}

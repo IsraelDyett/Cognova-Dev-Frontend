@@ -17,7 +17,7 @@ import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 
 export function NavMain({
 	items,
-	title = "Platform"
+	title = "Platform",
 }: {
 	items: {
 		title: string;
@@ -29,7 +29,7 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
-	title?: string
+	title?: string;
 }) {
 	return (
 		<SidebarGroup>
@@ -53,9 +53,7 @@ export function NavMain({
 								</CollapsibleTrigger>
 							) : (
 								<SidebarMenuButton tooltip={item.title} asChild>
-									<WorkspaceLink
-										href={item.url}
-									>
+									<WorkspaceLink href={item.url}>
 										{item.icon && <item.icon />}
 										<span>{item.title}</span>
 										{item.items && (
@@ -69,9 +67,7 @@ export function NavMain({
 									{item.items?.map((subItem) => (
 										<SidebarMenuSubItem key={subItem.title}>
 											<SidebarMenuSubButton asChild>
-												<WorkspaceLink
-													href={subItem.url}
-												>
+												<WorkspaceLink href={subItem.url}>
 													<span>{subItem.title}</span>
 												</WorkspaceLink>
 											</SidebarMenuSubButton>

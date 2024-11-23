@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Bot } from "lucide-react";
-import { siteConfig } from "@/lib/site";
-import Image from "next/image";
 import Logo from "@/components/logo";
+import { siteConfig } from "@/lib/site";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
 	return (
