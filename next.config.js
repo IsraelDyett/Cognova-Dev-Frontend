@@ -12,15 +12,11 @@ const nextConfig = {
 		],
 		dangerouslyAllowSVG: true,
 	},
-	// logging: {
-	// 	fetches: {
-	// 		fullUrl: true,
-	// 		hmrRefreshes: true,
-	// 	},
-	// },
-	logging: false,
-	experimental: {
-		instrumentationHook: true,
+	logging: {
+		fetches: {
+			fullUrl: true,
+			hmrRefreshes: true,
+		},
 	},
 };
 
