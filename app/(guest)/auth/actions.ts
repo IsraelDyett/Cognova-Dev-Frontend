@@ -6,11 +6,13 @@ import { debug, exclude } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/services/prisma";
 import { cookies, headers } from "next/headers";
-import { userAgent } from "next/server";
+import { NextResponse, userAgent } from "next/server";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { comparePassword, hashPassword } from "@/lib/actions/server/prisma";
 import { redis } from "@/lib/services/redis";
-import { ROOT_DOMAIN } from "@/lib/config";
+import { DOMAIN } from "@/lib/config";
+import { siteConfig } from "@/lib/site";
+import { NextURL } from 'next/dist/server/web/next-url';
 
 export async function signInAction(data: z.infer<typeof SignInSchema>) {
 	debug("SERVER", "signInAction", "PRISMA ACTIONS");
@@ -267,12 +269,12 @@ export const hashToken = async (token: string) => {
 	return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
 export const setSessionTokenCookie = (sessionToken: string) => {
-	const rootDomain = process.env.NODE_ENV === "development" ? "app.localhost" : `.${ROOT_DOMAIN}`;
+	const rootDomain = process.env.NODE_ENV === "development" ? "app.localhost" : `.${DOMAIN}`;
 	cookies().set("auth.session.token", sessionToken, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
 		path: "/",
-		domain: 'app.localhost',
+		domain: rootDomain,
 		sameSite: "lax",
 		expires: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
 	});
@@ -285,3 +287,20 @@ const customRedirect = (url: string) => {
 		redirect(url);
 	}
 };
+
+export async function signOut(returnTo = siteConfig.domains.root, nextResponse?: NextResponse, nextUrl?: NextURL) {
+	const cookiesManager = nextResponse ? nextResponse.cookies : cookies();
+	const redirector: () => void = nextResponse
+	  ? () => {
+		  NextResponse.redirect(new URL(returnTo, nextUrl));
+		}
+	  : () => {
+		  redirect(returnTo);
+		};
+	try {
+	  cookiesManager.delete("auth.session.token");
+	} catch (error: any) {
+	} finally {
+	  redirector();
+	}
+  }

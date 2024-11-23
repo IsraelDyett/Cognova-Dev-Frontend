@@ -298,7 +298,7 @@ export function BusinessLocationForm() {
 								</FormItem>
 							)}
 						/>
-						<DialogFooter className="col-span-full">
+						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button
 								disabled={isLoading}
 								variant="outline"

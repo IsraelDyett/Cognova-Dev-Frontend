@@ -19,6 +19,7 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
+import Link from "next/link";
 
 export default function NavUser() {
 	const { user } = useAuth();
@@ -96,9 +97,11 @@ export default function NavUser() {
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
-							<LogOut />
-							Log out
+						<DropdownMenuItem asChild>
+							<Link href={"/auth/sign-out"}>
+								<LogOut />
+								Log out
+							</Link>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

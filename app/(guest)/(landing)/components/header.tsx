@@ -14,12 +14,12 @@ export default function Header() {
 					</span>
 				</Link>
 				<nav className="flex items-center space-x-4 w-full pt-2 sm:pt-0 sm:w-fit ">
-					<Button className="grow sm:grow-0" variant="outline" asChild>
-						<Link href={siteConfig.domains.auth + "/auth/sign-up"}>Sign Up</Link>
+					<Button className="grow sm:grow-0" variant="ghost" asChild>
+						<Link href={siteConfig.domains.app + "/auth/sign-in"}>Login</Link>
 					</Button>
 					<Button className="grow sm:grow-0" asChild>
-						<Link href={siteConfig.domains.auth + "/auth/sign-up"}>
-							Create a Free Bot
+						<Link href={siteConfig.domains.app + "/auth/sign-up"}>
+							Sign Up
 						</Link>
 					</Button>
 				</nav>

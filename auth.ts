@@ -1,8 +1,6 @@
 import { setSessionTokenCookie, SignUpOrInAction } from "./app/(guest)/auth/actions";
 import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { type NextAuthConfig } from "next-auth";
-import { cookies } from "next/headers";
-import { ROOT_DOMAIN } from "./lib/config";
 
 // Define the expected response type
 interface AuthResponse {

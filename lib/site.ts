@@ -1,4 +1,4 @@
-import { R2_URL } from "./config";
+import { APP_ORIGIN, R2_URL, ROOT_ORIGIN } from "./config";
 
 const appDescription = "AI-Driven Chat For Smarter Decisions";
 export const siteConfig = {
@@ -32,7 +32,7 @@ export const siteConfig = {
 	openGraph: {
 		title: "Cognova",
 		description: appDescription,
-		url: "https://cognova.io/",
+		url: process.env.NEXT_PUBLIC_ROOT_URL,
 		siteName: "Cognova",
 		locale: "en_US",
 		type: "website",
@@ -44,12 +44,12 @@ export const siteConfig = {
 		creator: "@cognovaio",
 	},
 	r2: {
-		arrowUrl: `${R2_URL}/vercel-arrow.png`,
 		logoUrl: `${R2_URL}/logo.png`,
+		arrowUrl: `${R2_URL}/vercel-arrow.png`,
 		waDemoVideo: `${R2_URL}/wa-demo-video.mp4`,
 	},
 	domains: {
-		auth: "https://app.cognova.io",
-		base: "https://cognova.io",
+		app: APP_ORIGIN,
+		root: ROOT_ORIGIN,
 	},
 };

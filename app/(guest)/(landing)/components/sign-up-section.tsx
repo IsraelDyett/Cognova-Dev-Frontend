@@ -13,7 +13,7 @@ export default function SignUpSection() {
 			</p>
 			<div className="mx-auto mt-10 flex max-w-md flex-col gap-4">
 				<Button variant={"secondary"} asChild>
-					<a href={siteConfig.domains.auth + "/auth/sign-up"}>Sign Up</a>
+					<a href={siteConfig.domains.app + "/auth/sign-up"}>Sign Up</a>
 				</Button>
 			</div>
 			<svg

@@ -56,14 +56,14 @@ export default function ChatsPage() {
 			<div className="w-full md:w-[27%] border-r">
 				<ScrollArea className="h-full pr-3">
 					{conversations.map((conversation) => (
-						<ConversationCard conversation={conversation} handleConversationClick={handleConversationClick} selectedConversation={selectedConversation} />
+						<ConversationCard key={conversation.id} conversation={conversation} handleConversationClick={handleConversationClick} selectedConversation={selectedConversation} />
 					))}
 				</ScrollArea>
 			</div>
 			<div className="w-full md:w-[73%]">
 				<ScrollArea className="h-full pl-2 pr-4">
 					{chats.map((chat) => (
-						<ChatBubbleCard chat={chat} />
+						<ChatBubbleCard key={chat.id} chat={chat} />
 					))}
 				</ScrollArea>
 			</div>

@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useBotStore } from "../store";
 import type { Bot } from "@prisma/client";
 import { useWorkspace } from "../../../contexts/workspace-context";
+import DynamicSelector from "@/components/ui/dynamic-selector";
 
 const formSchema = z.object({
 	workspaceId: z.string().min(1, "Required"),
@@ -85,10 +86,11 @@ export function BotForm() {
 			toast.error("Something went wrong");
 		}
 	};
+	const { workspace } = useWorkspace()
 	useEffect(() => {
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
-				workspaceId: initialCrudFormData?.workspaceId || "",
+				workspaceId: initialCrudFormData?.workspaceId || workspace?.id || "",
 				businessId: initialCrudFormData?.businessId || "",
 				name: initialCrudFormData?.name || "",
 				description: initialCrudFormData?.description || "",
@@ -107,7 +109,7 @@ export function BotForm() {
 
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
-			<DialogContent size={"3xl"}>
+			<DialogContent size={"4xl"}>
 				<DialogHeader>
 					<DialogTitle>{initialCrudFormData ? "Edit" : "Create"} Bot</DialogTitle>
 					<DialogDescription>
@@ -117,42 +119,15 @@ export function BotForm() {
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:grid-cols-4"
+						className="grid grid-cols-1 sm:grid-cols-4 gap-4"
 					>
-						<FormField
-							control={form.control}
-							name="workspaceId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>WorkspaceId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter workspaceId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="businessId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>BusinessId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter businessId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Business"
+							form={form}
+							items={workspace?.businesses || []}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="businessId"
 						/>
 
 						<FormField
@@ -230,7 +205,7 @@ export function BotForm() {
 							control={form.control}
 							name="placeholderMessage"
 							render={({ field }) => (
-								<FormItem className="md:col-span-2 col-span-full">
+								<FormItem className="md:col-span-1 col-span-full">
 									<FormLabel>PlaceholderMessage</FormLabel>
 									<FormControl>
 										<Input
@@ -248,7 +223,7 @@ export function BotForm() {
 							control={form.control}
 							name="welcomeMessage"
 							render={({ field }) => (
-								<FormItem className="md:col-span-2 col-span-full">
+								<FormItem className="md:col-span-1 col-span-full">
 									<FormLabel>WelcomeMessage</FormLabel>
 									<FormControl>
 										<Input
@@ -261,7 +236,41 @@ export function BotForm() {
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={form.control}
+							name="modelId"
+							render={({ field }) => (
+								<FormItem className="md:col-span-1 col-span-full">
+									<FormLabel>ModelId</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isLoading}
+											placeholder="Enter modelId"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
+						<FormField
+							control={form.control}
+							name="waPhoneNumber"
+							render={({ field }) => (
+								<FormItem className="md:col-span-1 col-span-full">
+									<FormLabel>WaPhoneNumber</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isLoading}
+											placeholder="Enter waPhoneNumber"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={form.control}
 							name="systemMessage"
@@ -280,42 +289,8 @@ export function BotForm() {
 							)}
 						/>
 
-						<FormField
-							control={form.control}
-							name="modelId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>ModelId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter modelId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
-						<FormField
-							control={form.control}
-							name="waPhoneNumber"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>WaPhoneNumber</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter waPhoneNumber"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<DialogFooter className="col-span-full">
+						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button
 								disabled={isLoading}
 								variant="outline"

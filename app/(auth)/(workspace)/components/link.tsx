@@ -16,7 +16,6 @@ export function WorkspaceLink({
 }: PropsWithChildren<WorkspaceLinkProps>) {
 	const { botId, workspaceId, businessId } = useParams();
 	const cleanedHref = href.startsWith("/") ? href.slice(1) : href;
-	const origin = typeof window !== "undefined" ? window.location.origin : "";
 	const formattedHref = cleanedHref
 		.replaceAll("{botId}", `${botId}`)
 		.replaceAll("{businessId}", `${businessId}`);
@@ -24,7 +23,7 @@ export function WorkspaceLink({
 	return (
 		<NextLink
 			className={className}
-			href={`${origin}/${workspaceId}/${formattedHref}`}
+			href={`/${workspaceId}/${formattedHref}`}
 			{...props}
 		>
 			{children}

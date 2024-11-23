@@ -25,7 +25,7 @@ interface BusinessState {
 
 export const useBusinessStore = create<BusinessState>((set) => ({
 	businesses: [],
-	loading: false,
+	loading: true,
 	error: null,
 
 	initialCrudFormData: null,
