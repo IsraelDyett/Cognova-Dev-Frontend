@@ -272,7 +272,7 @@ class ChatWidget {
 
 	createButtonIcon(iconUrl) {
 		const img = document.createElement("img");
-		img.src = iconUrl || `https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/chat-icon.png`;
+		img.src = iconUrl || `https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/transparent-chat-icon.png`;
 		img.style.width = "100%";
 		img.style.height = "100%";
 		img.style.transition = "transform 150ms ease";
