@@ -29,7 +29,7 @@ export default function DynamicSelector({
     form: UseFormReturn | any,
     idKey: string,
     items: any[],
-    itemKey?: string,
+    itemKey?: string | number,
     itemLabelKey: string,
     label: string,
     description?: string,
@@ -42,7 +42,7 @@ export default function DynamicSelector({
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => field.onChange(isNaN(parseInt(value)) ? value : parseInt(value))}
                         defaultValue={field.value}
                     >
                         <FormControl>
@@ -52,7 +52,7 @@ export default function DynamicSelector({
                         </FormControl>
                         <SelectContent>
                             {items.map((item, idx) => (
-                                <SelectItem key={item?.[itemKey] ?? idx} value={item?.[itemKey]}>
+                                <SelectItem key={item?.[itemKey] ?? idx} value={isNaN(parseInt(item?.[itemKey])) ? item?.[itemKey] : parseInt(item?.[itemKey])}>
                                     {item?.[itemLabelKey]}
                                 </SelectItem>
                             ))}

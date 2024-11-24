@@ -32,8 +32,8 @@ import { useWorkspace } from "../../../contexts/workspace-context";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 
 const formSchema = z.object({
-	workspaceId: z.string().min(1, "Required"),
-	businessId: z.string().optional(),
+	workspaceId:  z.string().cuid(),
+	businessId: z.string().cuid().optional().or(z.literal('')),
 	name: z.string().min(1, "Required"),
 	description: z.string().optional(),
 	language: z.string().optional(),
@@ -41,7 +41,7 @@ const formSchema = z.object({
 	placeholderMessage: z.string().optional(),
 	welcomeMessage: z.string().optional(),
 	starterQuestions: z.array(z.string()),
-	modelId: z.string().optional(),
+	modelId: z.string().cuid(),
 	waPhoneNumber: z.string().optional(),
 });
 
@@ -52,16 +52,16 @@ const defaultValues = {
 	businessId: "",
 	name: "",
 	description: "",
-	language: "",
-	systemMessage: "",
-	placeholderMessage: "",
-	welcomeMessage: "",
+	language: "en",
+	systemMessage: "You're helpfully assistant",
+	placeholderMessage: "Ask me anything",
+	welcomeMessage: "Hey how can i assist you today",
 	starterQuestions: [],
 	modelId: "",
 	waPhoneNumber: "",
 };
 export function BotForm() {
-	const { createBot, updateBot, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
+	const { createBot, updateBot, onCloseCrudForm, initialCrudFormData, isOpenCrudForm, fetchModels, models } =
 		useBotStore();
 	const { refreshCurrentWorkspace } = useWorkspace()
 	const form = useForm<FormValues>({
@@ -87,10 +87,15 @@ export function BotForm() {
 		}
 	};
 	const { workspace } = useWorkspace()
+
+
 	useEffect(() => {
+		if (models.length == 0) {
+			fetchModels()
+		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
-				workspaceId: initialCrudFormData?.workspaceId || workspace?.id || "",
+				workspaceId: initialCrudFormData?.workspaceId || "",
 				businessId: initialCrudFormData?.businessId || "",
 				name: initialCrudFormData?.name || "",
 				description: initialCrudFormData?.description || "",
@@ -104,6 +109,7 @@ export function BotForm() {
 			});
 		} else if (isOpenCrudForm) {
 			form.reset(defaultValues);
+			form.setValue("workspaceId", workspace?.id || "");
 		}
 	}, [initialCrudFormData, isOpenCrudForm, form]);
 
@@ -117,9 +123,11 @@ export function BotForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
+
+				{JSON.stringify(form.formState.errors, null, 2)}
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="grid grid-cols-1 sm:grid-cols-4 gap-4"
+						className="grid grid-cols-1 sm:grid-cols-2 gap-4"
 					>
 						<DynamicSelector
 							label="Business"
@@ -147,7 +155,7 @@ export function BotForm() {
 								</FormItem>
 							)}
 						/>
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="language"
 							render={({ field }) => (
@@ -163,7 +171,7 @@ export function BotForm() {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<FormField
 							control={form.control}
@@ -183,7 +191,7 @@ export function BotForm() {
 							)}
 						/>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="starterQuestions"
 							render={({ field }) => (
@@ -199,14 +207,14 @@ export function BotForm() {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="placeholderMessage"
 							render={({ field }) => (
 								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel>PlaceholderMessage</FormLabel>
+									<FormLabel helpText="Placeholder text are shown in the chat input box">Placeholder Message</FormLabel>
 									<FormControl>
 										<Input
 											disabled={isLoading}
@@ -217,14 +225,14 @@ export function BotForm() {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<FormField
 							control={form.control}
 							name="welcomeMessage"
 							render={({ field }) => (
 								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel>WelcomeMessage</FormLabel>
+									<FormLabel>Welcome Message</FormLabel>
 									<FormControl>
 										<Input
 											disabled={isLoading}
@@ -236,51 +244,43 @@ export function BotForm() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="modelId"
-							render={({ field }) => (
-								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel>ModelId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter modelId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="LLM Model"
+							form={form}
+							items={models || []}
+							itemKey="id"
+							itemLabelKey="displayName"
+							idKey="modelId"
 						/>
 
-						<FormField
-							control={form.control}
-							name="waPhoneNumber"
-							render={({ field }) => (
-								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel>WaPhoneNumber</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter waPhoneNumber"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+
 						<FormField
 							control={form.control}
 							name="systemMessage"
 							render={({ field }) => (
 								<FormItem className="col-span-full">
-									<FormLabel>SystemMessage</FormLabel>
+									<FormLabel helpText="Give bot the rules to follow or guidelines">System Message</FormLabel>
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
 											placeholder="Enter systemMessage"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="waPhoneNumber"
+							render={({ field }) => (
+								<FormItem className="md:col-span-1 col-span-full">
+									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">Wa Phone Number</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isLoading}
+											placeholder="Enter waPhoneNumber"
 											{...field}
 										/>
 									</FormControl>

@@ -511,7 +511,7 @@ function generateFormComponent(model: Model) {
 	let dialogSize = "lg";
 	if (formFields.length > 4) {
 		// For more than 4 fields, use grid layout
-		gridClassName = "grid gap-4";
+		gridClassName = "grid gap-4 ";
 		dialogSize = "xl";
 		if (formFields.length <= 6) {
 			gridClassName += "grid-cols-1 sm:grid-cols-2";

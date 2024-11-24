@@ -26,7 +26,6 @@ import { Skeleton } from "./ui/skeleton";
 import dynamic from "next/dynamic";
 
 export function WorkspaceSwitcher() {
-	const router = useRouter();
 	const { user } = useAuth();
 	const { isMobile } = useSidebar();
 	const { workspace, isLoading } = useWorkspace();
@@ -96,20 +95,22 @@ export function WorkspaceSwitcher() {
 						</DropdownMenuLabel>
 						{workspaces.map((ws) => (
 							<DropdownMenuItem
-								key={ws.name}
-								onClick={() => router.push(`/${ws.name}`)}
+								key={ws.id}
 								className="gap-2 p-2"
+								asChild
 							>
-								<div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
-									<Image
-										alt="Workspace Logo"
-										src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(ws?.name || "loading")}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`}
-										width={24}
-										height={24}
-										className="size-6"
-									/>
-								</div>
-								{ws.displayName}
+								<a href={`/${ws.name}`}>
+									<div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
+										<Image
+											alt="Workspace Logo"
+											src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(ws?.name || "loading")}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`}
+											width={24}
+											height={24}
+											className="size-6"
+										/>
+									</div>
+									{ws.displayName}
+								</a>
 							</DropdownMenuItem>
 						))}
 						<DropdownMenuSeparator />

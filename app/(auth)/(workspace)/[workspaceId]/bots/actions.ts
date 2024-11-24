@@ -1,5 +1,5 @@
 "use server";
-import { debug } from "@/lib/utils";
+import { debug, removeEmptyKeys } from "@/lib/utils";
 import type { Bot } from "@prisma/client";
 import { prisma } from "@/lib/services/prisma";
 
@@ -10,26 +10,29 @@ interface ApiResponse<T> {
 }
 
 export async function createBot(
-	data: Omit<Bot, "id" | "createdAt" | "updatedAt">,
+    data: Omit<Bot, "id" | "createdAt" | "updatedAt">,
 ): Promise<ApiResponse<Bot>> {
-	debug("SERVER", "createBot", "PRISMA ACTIONS");
-	try {
-		const result = await prisma.bot.create({
-			data,
-		});
-		return { success: true, data: result };
-	} catch (err: any) {
-		const error: Error = err;
-		return { success: false, error: error.message };
-	}
+    debug("SERVER", "createBot", "PRISMA ACTIONS");
+    try {
+        const cleanData = removeEmptyKeys(data);
+        const result = await prisma.bot.create({
+            data: cleanData,
+        });
+        return { success: true, data: result };
+    } catch (err: any) {
+        const error: Error = err;
+        return { success: false, error: error.message };
+    }
 }
+
 
 export async function updateBot(id: string, data: Partial<Bot>): Promise<ApiResponse<Bot>> {
 	debug("SERVER", "updateBot", "PRISMA ACTIONS");
 	try {
+		const cleanData = removeEmptyKeys(data);
 		const result = await prisma.bot.update({
 			where: { id },
-			data,
+			data: cleanData,
 		});
 		return { success: true, data: result };
 	} catch (err: any) {

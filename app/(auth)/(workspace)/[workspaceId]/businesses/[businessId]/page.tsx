@@ -73,18 +73,6 @@ export default function BusinessDetail() {
 						</div>
 					</CardContent>
 				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between pb-2">
-						<CardTitle className="text-sm font-medium">Pickup</CardTitle>
-						<ShoppingBag className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							{currentBusiness.hasPickup ? "Available" : "Not Available"}
-						</div>
-					</CardContent>
-				</Card>
 			</div>
 
 			{/* Business Configuration */}
@@ -142,9 +130,9 @@ export default function BusinessDetail() {
 				<CardContent>
 					<AlertDialog>
 						<AlertDialogTrigger asChild>
-							<Button variant="destructive" className="w-full justify-start p-0">
+							<Button variant="destructive">
 								<Trash2 className="mr-2 h-4 w-4 text-destructive" />
-								<span className="text-destructive">Delete Business</span>
+								Delete Business
 							</Button>
 						</AlertDialogTrigger>
 						<AlertDialogContent>

@@ -30,15 +30,6 @@ import {
 
 export const columns: ColumnDef<Bot>[] = [
 	{
-		accessorKey: "businessId",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="BusinessId" />;
-		},
-		cell: ({ row }) => {
-			return <div className="font-medium">{row.getValue("businessId")}</div>;
-		},
-	},
-	{
 		accessorKey: "name",
 		header: ({ column }) => {
 			return <DataTableColumnHeader column={column} title="Name" />;
@@ -57,18 +48,9 @@ export const columns: ColumnDef<Bot>[] = [
 		},
 	},
 	{
-		accessorKey: "modelId",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="ModelId" />;
-		},
-		cell: ({ row }) => {
-			return <div className="font-medium">{row.getValue("modelId")}</div>;
-		},
-	},
-	{
 		accessorKey: "waPhoneNumber",
 		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="WaPhoneNumber" />;
+			return <DataTableColumnHeader column={column} title="Wa Phone Number" />;
 		},
 		cell: ({ row }) => {
 			return <div className="font-medium">{row.getValue("waPhoneNumber")}</div>;

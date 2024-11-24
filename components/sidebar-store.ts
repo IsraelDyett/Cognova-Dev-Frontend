@@ -162,11 +162,11 @@ export const sidebarData = {
 		},
 	],
 	botNavigationMenus: [
-		{
-			title: "Sources",
-			url: "bots/{botId}/sources",
-			icon: Brain,
-		},
+		// {
+		// 	title: "Sources",
+		// 	url: "bots/{botId}/sources",
+		// 	icon: Brain,
+		// },
 		{
 			title: "Analytics",
 			url: "bots/{botId}/analytics",
@@ -187,11 +187,11 @@ export const sidebarData = {
 			url: "bots/{botId}/chats",
 			icon: MessageSquareText,
 		},
-		{
-			title: "Embed",
-			url: "bots/{botId}/customize",
-			icon: SquareMousePointer,
-		},
+		// {
+		// 	title: "Embed",
+		// 	url: "bots/{botId}/customize",
+		// 	icon: SquareMousePointer,
+		// },
 	],
 	workspaceNavigationMenus: [
 		{

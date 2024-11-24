@@ -28,9 +28,11 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useBusinessLocationStore } from "../store";
 import type { BusinessLocation } from "@prisma/client";
+import DynamicSelector from "@/components/ui/dynamic-selector";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 
 const formSchema = z.object({
-	businessId: z.string().min(1, "Required"),
+	businessId: z.string().cuid(),
 	name: z.string().min(1, "Required"),
 	address: z.string().min(1, "Required"),
 	city: z.string().min(1, "Required"),
@@ -85,6 +87,9 @@ export function BusinessLocationForm() {
 			toast.error("Something went wrong");
 		}
 	};
+
+	const { workspace} =useWorkspace()
+
 	useEffect(() => {
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
@@ -109,34 +114,25 @@ export function BusinessLocationForm() {
 			<DialogContent size={"3xl"}>
 				<DialogHeader>
 					<DialogTitle>
-						{initialCrudFormData ? "Edit" : "Create"} BusinessLocation
+						{initialCrudFormData ? "Edit" : "Create"} Business Location
 					</DialogTitle>
 					<DialogDescription>
 						{initialCrudFormData ? "Make changes to the" : "Add a new"}{" "}
-						businesslocation.
+						Business location.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="grid gap-4grid-cols-1 sm:grid-cols-3 md:grid-cols-4"
+						className="grid grid-cols-1 sm:grid-cols-3 gap-4"
 					>
-						<FormField
-							control={form.control}
-							name="businessId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>BusinessId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter businessId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Business"
+							form={form}
+							items={workspace?.businesses || []}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="businessId"
 						/>
 
 						<FormField

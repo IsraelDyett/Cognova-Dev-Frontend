@@ -27,10 +27,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useProductStore } from "../store";
+import DynamicSelector from "@/components/ui/dynamic-selector";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 
 const formSchema = z.object({
-	businessId: z.string().min(1, "Required"),
-	categoryId: z.string().optional(),
+	businessId: z.string().cuid(),
+	categoryId: z.string().cuid().optional().or(z.literal('')),
 	name: z.string().min(1, "Required"),
 	description: z.string().optional(),
 	price: z.number(),
@@ -76,6 +78,9 @@ export function ProductForm() {
 			toast.error("Something went wrong");
 		}
 	};
+
+	const { workspace } = useWorkspace()
+
 	useEffect(() => {
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
@@ -104,26 +109,17 @@ export function ProductForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="gap-4 grid grid-cols-3">
-						<FormField
-							control={form.control}
-							name="businessId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>BusinessId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter businessId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+					<form onSubmit={form.handleSubmit(onSubmit)} className="gap-4 grid grid-cols-1 sm:grid-cols-2">
+						<DynamicSelector
+							label="Business"
+							form={form}
+							items={workspace?.businesses || []}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="businessId"
 						/>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="categoryId"
 							render={({ field }) => (
@@ -139,7 +135,7 @@ export function ProductForm() {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<FormField
 							control={form.control}
@@ -163,7 +159,7 @@ export function ProductForm() {
 							control={form.control}
 							name="description"
 							render={({ field }) => (
-								<FormItem className="col-span-2">
+								<FormItem className="col-span-full">
 									<FormLabel>Description</FormLabel>
 									<FormControl>
 										<Textarea
@@ -204,7 +200,7 @@ export function ProductForm() {
 							name="stock"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Stock</FormLabel>
+									<FormLabel helpText="How many in stock you can provide">Stock</FormLabel>
 									<FormControl>
 										<Input
 											type="number"
@@ -239,7 +235,7 @@ export function ProductForm() {
 							)}
 						/>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="images"
 							render={({ field }) => (
@@ -255,14 +251,14 @@ export function ProductForm() {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<FormField
 							control={form.control}
 							name="isActive"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
-									<FormLabel className="text-base">IsActive</FormLabel>
+									<FormLabel className="text-base">Is Active</FormLabel>
 									<FormControl>
 										<Switch
 											checked={field.value}
@@ -272,7 +268,7 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
-						<DialogFooter className="col-span-3 w-full">
+						<DialogFooter className="col-span-full w-full">
 							<Button
 								disabled={isLoading}
 								variant="outline"

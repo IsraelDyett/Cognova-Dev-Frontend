@@ -30,8 +30,12 @@ export const getWorkspaces = async (userId: string, withPlan = true) => {
 
 export const getModels = async () => {
 	debug("SERVER", "getModels", "PRISMA ACTIONS");
-	const models = await prisma.model.findMany();
-	return models;
+	try {
+		const models = await prisma.model.findMany();
+		return { success: true, data: models };
+	} catch (error) {
+		return { success: false, error: "Failed to fetch models" };
+	}
 };
 
 export const getWorkspaceBots = async (workspaceId: string) => {

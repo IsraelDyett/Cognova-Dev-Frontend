@@ -14,7 +14,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { IoIosAlert } from "react-icons/io";
-import { Label } from "@/components/ui/label";
+import { Label, LabelProps } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -86,7 +86,7 @@ FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
 	React.ElementRef<typeof LabelPrimitive.Root>,
-	React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+	React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & LabelProps
 >(({ className, ...props }, ref) => {
 	const { formItemId } = useFormField();
 

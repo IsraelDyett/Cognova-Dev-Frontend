@@ -40,7 +40,7 @@ export default function BusinessLocationDashboard() {
 						searchField="name"
 						toolBarChildren={
 							<Button onClick={onOpenCreateForm}>
-								<PlusIcon className="mr-2 h-4 w-4" /> Add New BusinessLocation
+								<PlusIcon className="mr-2 h-4 w-4" /> Add New Business Location
 							</Button>
 						}
 					/>

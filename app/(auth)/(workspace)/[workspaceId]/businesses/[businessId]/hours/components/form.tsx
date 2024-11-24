@@ -27,9 +27,13 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useHourStore } from "../store";
 import type { BusinessOperatingHours as Hour } from "@prisma/client";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
+import DynamicSelector from "@/components/ui/dynamic-selector";
+import { useBusinessLocationStore } from "../../locations/store";
+import { useParams } from "next/navigation";
 
 const formSchema = z.object({
-	businessId: z.string().min(1, "Required"),
+	businessId: z.string().cuid(),
 	locationId: z.string().optional(),
 	dayOfWeek: z.number(),
 	openTime: z.string().min(1, "Required"),
@@ -51,6 +55,8 @@ export function HourForm() {
 	const { createHour, updateHour, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useHourStore();
 
+	const { fetchBusinessLocations, businesslocations } = useBusinessLocationStore()
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues,
@@ -71,7 +77,12 @@ export function HourForm() {
 			toast.error("Something went wrong");
 		}
 	};
+	const { workspace } = useWorkspace()
+	const { businessId } = useParams()
 	useEffect(() => {
+		if (businesslocations.length == 0) {
+			fetchBusinessLocations(`${businessId}`)
+		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
 				businessId: initialCrudFormData?.businessId || "",
@@ -96,66 +107,43 @@ export function HourForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
+					{JSON.stringify(form.getValues(), null, 2)}
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="grid gap-4grid-cols-1 sm:grid-cols-2"
+						className="grid gap-4 grid-cols-1 sm:grid-cols-2"
 					>
-						<FormField
-							control={form.control}
-							name="businessId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>BusinessId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter businessId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Business"
+							form={form}
+							items={workspace?.businesses || []}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="businessId"
 						/>
 
-						<FormField
-							control={form.control}
-							name="locationId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>LocationId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter locationId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Location"
+							form={form}
+							items={businesslocations || []}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="locationId"
 						/>
-
-						<FormField
-							control={form.control}
-							name="dayOfWeek"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>DayOfWeek</FormLabel>
-									<FormControl>
-										<Input
-											type="number"
-											disabled={isLoading}
-											placeholder="Enter dayOfWeek"
-											{...field}
-											onChange={(e) =>
-												field.onChange(parseInt(e.target.value))
-											}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Day Of Week"
+							form={form}
+							items={[
+								{ id: 0, name: "Sunday" },
+								{ id: 1, name: "Monday" },
+								{ id: 2, name: "Tuesday" },
+								{ id: 3, name: "Wednesday" },
+								{ id: 4, name: "Thursday" },
+								{ id: 5, name: "Friday" },
+								{ id: 6, name: "Saturday" },
+							]}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="dayOfWeek"
 						/>
 
 						<FormField
@@ -163,7 +151,7 @@ export function HourForm() {
 							name="openTime"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>OpenTime</FormLabel>
+									<FormLabel>Open Time</FormLabel>
 									<FormControl>
 										<Input
 											disabled={isLoading}
@@ -181,7 +169,7 @@ export function HourForm() {
 							name="closeTime"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>CloseTime</FormLabel>
+									<FormLabel>Close Time</FormLabel>
 									<FormControl>
 										<Input
 											disabled={isLoading}
@@ -199,7 +187,7 @@ export function HourForm() {
 							name="isClosed"
 							render={({ field }) => (
 								<FormItem className="flex flex-col col-span-full">
-									<FormLabel className="text-base">IsClosed</FormLabel>
+									<FormLabel className="text-base">Is Closed</FormLabel>
 									<FormControl>
 										<Switch
 											checked={field.value}

@@ -35,7 +35,6 @@ export const useProductStore = create<ProductsStoreState>((set) => ({
 			const response = await getProducts({ where: { businessId: businessId } });
 			if (response.success) {
 				set({ products: response.data });
-				toast.success("Products loaded successfully");
 			} else {
 				throw new Error(response.error);
 			}

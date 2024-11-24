@@ -39,18 +39,9 @@ export const columns: ColumnDef<Business>[] = [
 		},
 	},
 	{
-		accessorKey: "type",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="Type" />;
-		},
-		cell: ({ row }) => {
-			return <div className="font-medium">{row.getValue("type")}</div>;
-		},
-	},
-	{
 		accessorKey: "hasDelivery",
 		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="HasDelivery" />;
+			return <DataTableColumnHeader column={column} title="We Do Delivery" />;
 		},
 		cell: ({ row }) => {
 			return (
@@ -61,22 +52,9 @@ export const columns: ColumnDef<Business>[] = [
 		},
 	},
 	{
-		accessorKey: "hasPickup",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="HasPickup" />;
-		},
-		cell: ({ row }) => {
-			return (
-				<Badge variant={row.getValue("hasPickup") ? "success" : "secondary"}>
-					{row.getValue("hasPickup") ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
 		accessorKey: "acceptsReturns",
 		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="AcceptsReturns" />;
+			return <DataTableColumnHeader column={column} title="Accept Returns" />;
 		},
 		cell: ({ row }) => {
 			return (
@@ -89,7 +67,7 @@ export const columns: ColumnDef<Business>[] = [
 	{
 		accessorKey: "hasWarranty",
 		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="HasWarranty" />;
+			return <DataTableColumnHeader column={column} title="Provide Warranty" />;
 		},
 		cell: ({ row }) => {
 			return (

@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import { createBot, updateBot, deleteBot, listBots } from "./actions";
 import { debug } from "@/lib/utils";
-import type { Bot } from "@prisma/client";
+import type { Bot, Model } from "@prisma/client";
+import { getModels } from "../../actions";
 
 interface BotState {
 	bots: Bot[];
+	models: Model[];
 	loading: boolean;
 	error: string | null;
 
@@ -13,6 +15,7 @@ interface BotState {
 	initialCrudFormData?: Bot | null;
 	isOpenCrudForm: boolean;
 
+	fetchModels: () => Promise<void>;
 	fetchBots: (workspaceId: string) => Promise<void>;
 	createBot: (data: Omit<Bot, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 	updateBot: (id: string, data: Partial<Bot>) => Promise<void>;
@@ -26,6 +29,7 @@ interface BotState {
 
 export const useBotStore = create<BotState>((set) => ({
 	bots: [],
+	models: [],
 	loading: true,
 	error: null,
 
@@ -48,6 +52,19 @@ export const useBotStore = create<BotState>((set) => ({
 			toast.error("Failed to load Bots");
 		} finally {
 			set({ loading: false });
+		}
+	},
+	fetchModels: async () => {
+		debug("CLIENT", "fetchModels", "CONTEXT");
+		try {
+			const response = await getModels();
+			if (response.success) {
+				set({ models: response.data });
+			} else {
+				throw new Error(response.error);
+			}
+		} catch (err: any) {
+			toast.error("Failed to load models");
 		}
 	},
 	createBot: async (data) => {

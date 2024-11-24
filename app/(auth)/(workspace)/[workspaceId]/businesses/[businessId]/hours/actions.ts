@@ -1,5 +1,5 @@
 "use server";
-import { debug } from "@/lib/utils";
+import { debug, removeEmptyKeys } from "@/lib/utils";
 import { prisma } from "@/lib/services/prisma";
 import type { BusinessOperatingHours as Hour } from "@prisma/client";
 
@@ -14,8 +14,10 @@ export async function createHour(
 ): Promise<ApiResponse<Hour>> {
 	debug("SERVER", "createHour", "PRISMA ACTIONS");
 	try {
+
+		const cleanData = removeEmptyKeys(data);
 		const result = await prisma.businessOperatingHours.create({
-			data,
+			data: cleanData,
 			include: {
 				location: true,
 			}
@@ -30,9 +32,10 @@ export async function createHour(
 export async function updateHour(id: string, data: Partial<Hour>): Promise<ApiResponse<Hour>> {
 	debug("SERVER", "updateHour", "PRISMA ACTIONS");
 	try {
+		const cleanData = removeEmptyKeys(data);
 		const result = await prisma.businessOperatingHours.update({
 			where: { id },
-			data,
+			data: cleanData,
 		});
 		return { success: true, data: result };
 	} catch (err: any) {

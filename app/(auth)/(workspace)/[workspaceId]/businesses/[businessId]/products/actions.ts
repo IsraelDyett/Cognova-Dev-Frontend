@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/services/prisma";
+import { removeEmptyKeys } from "@/lib/utils";
 import type { BusinessConfig, BusinessProduct as Product } from "@prisma/client";
 
 interface ApiResponse<T> {
@@ -12,8 +13,9 @@ export async function createProduct(
 	data: Omit<Product, "id" | "createdAt" | "updatedAt">,
 ): Promise<ApiResponse<(Product & { business: { configurations: BusinessConfig | null } })>> {
 	try {
+		const cleanData = removeEmptyKeys(data);
 		const result = await prisma.businessProduct.create({
-			data,
+			data: cleanData,
 			include: {
 				business: {
 					select: {
@@ -34,9 +36,10 @@ export async function updateProduct(
 	data: Partial<Product>,
 ): Promise<ApiResponse<(Product & { business: { configurations: BusinessConfig | null } })>> {
 	try {
+		const cleanData = removeEmptyKeys(data);
 		const result = await prisma.businessProduct.update({
 			where: { id },
-			data,
+			data: cleanData,
 			include: {
 				business: {
 					select: {

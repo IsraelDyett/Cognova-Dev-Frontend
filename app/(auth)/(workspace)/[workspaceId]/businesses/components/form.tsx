@@ -22,12 +22,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useBusinessStore } from "../store";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "../../../contexts/workspace-context";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
 	workspaceId: z.string().min(1, "Required"),
@@ -35,7 +36,6 @@ const formSchema = z.object({
 	type: z.string().min(1, "Required"),
 	description: z.string().optional(),
 	hasDelivery: z.boolean(),
-	hasPickup: z.boolean(),
 	acceptsReturns: z.boolean(),
 	hasWarranty: z.boolean(),
 });
@@ -48,14 +48,13 @@ const defaultValues = {
 	type: "",
 	description: "",
 	hasDelivery: false,
-	hasPickup: false,
 	acceptsReturns: false,
 	hasWarranty: false,
 };
 export function BusinessForm() {
 	const { createBusiness, updateBusiness, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useBusinessStore();
-	const { refreshCurrentWorkspace } = useWorkspace()
+	const { refreshCurrentWorkspace, workspace } = useWorkspace()
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -88,12 +87,12 @@ export function BusinessForm() {
 				type: initialCrudFormData?.type || "",
 				description: initialCrudFormData?.description || "",
 				hasDelivery: initialCrudFormData?.hasDelivery || false,
-				hasPickup: initialCrudFormData?.hasPickup || false,
 				acceptsReturns: initialCrudFormData?.acceptsReturns || false,
 				hasWarranty: initialCrudFormData?.hasWarranty || false,
 			});
 		} else if (isOpenCrudForm) {
 			form.reset(defaultValues);
+			form.setValue("workspaceId", workspace?.id || "");
 		}
 	}, [initialCrudFormData, isOpenCrudForm, form]);
 
@@ -107,25 +106,7 @@ export function BusinessForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 grid-cols-3">
-						<FormField
-							control={form.control}
-							name="workspaceId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>WorkspaceId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter workspaceId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
+					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 grid-cols-2">
 						<FormField
 							control={form.control}
 							name="name"
@@ -186,9 +167,9 @@ export function BusinessForm() {
 								name="hasDelivery"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">HasDelivery</FormLabel>
+										<FormLabel className="text-base">We do Delivery</FormLabel>
 										<FormControl>
-											<Switch
+											<Checkbox
 												checked={field.value}
 												onCheckedChange={field.onChange}
 											/>
@@ -196,31 +177,14 @@ export function BusinessForm() {
 									</FormItem>
 								)}
 							/>
-
-							<FormField
-								control={form.control}
-								name="hasPickup"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">HasPickup</FormLabel>
-										<FormControl>
-											<Switch
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
 							<FormField
 								control={form.control}
 								name="acceptsReturns"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">AcceptsReturns</FormLabel>
+										<FormLabel className="text-base">Accept Returns</FormLabel>
 										<FormControl>
-											<Switch
+											<Checkbox
 												checked={field.value}
 												onCheckedChange={field.onChange}
 											/>
@@ -234,9 +198,9 @@ export function BusinessForm() {
 								name="hasWarranty"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">HasWarranty</FormLabel>
+										<FormLabel className="text-base">Provide Warranty</FormLabel>
 										<FormControl>
-											<Switch
+											<Checkbox
 												checked={field.value}
 												onCheckedChange={field.onChange}
 											/>
