@@ -6,38 +6,8 @@ const config: Config = {
 	content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
 	theme: {
 		extend: {
-			// fontFamily: {
-			// 	sans: ["var(--font-sans)", ...fontFamily.sans],
-			// },
 			fontFamily: {
-				base: [
-					"var(--font-inter)",
-					"Inter",
-					"BlinkMacSystemFont",
-					"-apple-system",
-					"Segoe UI",
-					"Roboto",
-					"Oxygen",
-					"Ubuntu",
-					"Cantarell",
-					"Fira Sans",
-					"Droid Sans",
-					"Helvetica Neue",
-					"Helvetica",
-					"Arial",
-					"sans-serif",
-				],
-				monospace: [
-					"var(--font-roboto-mono)",
-					"Roboto Mono",
-					"SFMono-Regular",
-					"Menlo",
-					"Monaco",
-					"Consolas",
-					"Liberation Mono",
-					"Courier New",
-					"monospace",
-				],
+				sans: ["var(--font-sans)", ...fontFamily.sans],
 			},
 			colors: {
 				background: "hsl(var(--background))",
