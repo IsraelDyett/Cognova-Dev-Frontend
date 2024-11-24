@@ -140,15 +140,9 @@ export default function BusinessDetail() {
 					</div>
 				</CardHeader>
 				<CardContent>
-					<div className="mb-1 font-medium leading-none tracking-tight">
-						<p className="text-sm [&_p]:leading-relaxed">
-							Deleting this business will permanently remove all associated data. This
-							action cannot be undone.
-						</p>
-					</div>
 					<AlertDialog>
 						<AlertDialogTrigger asChild>
-							<Button variant="ghost" className="w-full justify-start p-0">
+							<Button variant="destructive" className="w-full justify-start p-0">
 								<Trash2 className="mr-2 h-4 w-4 text-destructive" />
 								<span className="text-destructive">Delete Business</span>
 							</Button>
