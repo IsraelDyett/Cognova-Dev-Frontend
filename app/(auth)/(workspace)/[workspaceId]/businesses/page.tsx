@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
 import { useBusinessStore } from "./store";
-import { columns } from "./components/columns/business";
+import { columns } from "./components/columns";
 import { BusinessForm } from "./components/form";
 import DataTable from "@/components/ui/data-table";
 import { NoStateComponent } from "./components/no-state";

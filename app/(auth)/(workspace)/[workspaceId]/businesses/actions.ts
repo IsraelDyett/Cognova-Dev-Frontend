@@ -55,9 +55,7 @@ export async function retrieveBusiness(id: string): Promise<ApiResponse<Business
 		const result = await prisma.business.findUnique({
 			where: { id },
 			include: {
-				configurations: true,
 				categories: true,
-				bots: true,
 			},
 		});
 		if (!result) {

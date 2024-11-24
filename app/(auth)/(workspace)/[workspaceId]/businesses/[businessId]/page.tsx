@@ -1,17 +1,25 @@
 "use client";
 
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { useBusinessStore } from "../store";
-import DataTable from "@/components/ui/data-table";
-import { botsColumns } from "../components/columns/bots";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Store, Truck, ShoppingBag, AlertTriangle, Settings } from "lucide-react";
-import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
 import { retrieveBusiness } from "../actions";
+import { Button } from "@/components/ui/button";
+import { useParams, useRouter } from "next/navigation";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
+import { Store, Truck, ShoppingBag, AlertTriangle, Settings, Trash2 } from "lucide-react";
 
 export default function BusinessDetail() {
 	const router = useRouter();
@@ -31,27 +39,17 @@ export default function BusinessDetail() {
 	if (!currentBusiness) return <LoadingPageSpinner />;
 
 	const handleDeleteBusiness = async () => {
-		if (
-			confirm("Are you sure you want to delete this business? This action cannot be undone.")
-		) {
-			await deleteBusiness(currentBusiness.id);
-			router.push(`/${workspace?.name}/business`);
-		}
+		await deleteBusiness(currentBusiness.id);
+		router.push(`/${workspace?.name}/businesses`);
 	};
 
 	return (
 		<div className="container mx-auto p-4 space-y-8">
-			{/* Header Section */}
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<Store className="w-8 h-8" />
 					<h1 className="text-3xl font-bold">{currentBusiness.name}</h1>
 				</div>
-				<Button variant="outline" asChild>
-					<WorkspaceLink href={`/businesses/${currentBusiness.id}/edit`}>
-						Edit Business
-					</WorkspaceLink>
-				</Button>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
 				<Card>
@@ -133,16 +131,6 @@ export default function BusinessDetail() {
 				</CardContent>
 			</Card>
 
-			{/* Bots Section */}
-			<div className="space-y-4">
-				<h2 className="text-xl font-bold">Bots</h2>
-				<DataTable
-					columns={botsColumns}
-					data={currentBusiness.bots ?? []}
-					searchField="name"
-				/>
-			</div>
-
 			{/* Danger Zone */}
 			<Card className="border-red-200 bg-red-50">
 				<CardHeader>
@@ -158,9 +146,31 @@ export default function BusinessDetail() {
 							action cannot be undone.
 						</p>
 					</div>
-					<Button variant="destructive" className="mt-4" onClick={handleDeleteBusiness}>
-						Delete Business
-					</Button>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant="ghost" className="w-full justify-start p-0">
+								<Trash2 className="mr-2 h-4 w-4 text-destructive" />
+								<span className="text-destructive">Delete Business</span>
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Delete Business</AlertDialogTitle>
+								<AlertDialogDescription>
+									Are you sure you want to delete this business? This action cannot be undone.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={() => handleDeleteBusiness()}
+									className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+								>
+									Delete
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 				</CardContent>
 			</Card>
 		</div>
