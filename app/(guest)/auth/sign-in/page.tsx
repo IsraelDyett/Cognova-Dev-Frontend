@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SignUpForm from "./form";
 import { Metadata } from "next";
-import OauthButtons from "@/components/ui/oauth-buttons";
 import { siteConfig } from "@/lib/site";
+import OauthButtons from "@/components/ui/oauth-buttons";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
 	title: "Sign In",

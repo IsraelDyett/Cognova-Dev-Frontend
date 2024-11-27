@@ -1,15 +1,17 @@
 import { z } from "zod";
 
 const botBaseSchema = z.object({
-	name: z.string(),
-	workspaceId: z.string().cuid2("Invalid workspace id"),
-	description: z.string().nullable().optional(),
-	language: z.string().nullable().optional(),
-	systemMessage: z.string().nullable().optional(),
-	placeholderMessage: z.string().nullable().optional(),
-	welcomeMessage: z.string().nullable().optional(),
+	workspaceId:  z.string().cuid("Invalid selected workspace"),
+	businessId: z.string().cuid("Invalid selected business").optional().or(z.literal('')),
+	name: z.string().min(1, "Bot name is required"),
+	description: z.string().optional(),
+	language: z.string().optional(),
+	systemMessage: z.string().optional(),
+	placeholderMessage: z.string().optional(),
+	welcomeMessage: z.string().optional(),
 	starterQuestions: z.array(z.string()),
-	modelId: z.string().cuid2("Invalid model id"),
+	modelId: z.string().cuid("Invalid selected model"),
+	waPhoneNumber: z.string().optional(),
 });
 
 export const createBotSchema = botBaseSchema;
@@ -41,6 +43,5 @@ export const botConfigurationBaseSchema = z.object({
 	embedAutoOpen: z.boolean().optional(),
 	embedPingMessage: z.string().optional(),
 });
-export type BotConfig = z.infer<typeof botConfigurationBaseSchema>;
 export const createBotConfigurationSchema = botConfigurationBaseSchema;
 export const updateBotConfigurationSchema = botConfigurationBaseSchema.partial();

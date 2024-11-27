@@ -1,7 +1,7 @@
 import { debug } from "@/lib/utils";
-import { validateSession } from "@/app/(guest)/auth/actions";
 import { NextRequest, NextResponse } from "next/server";
-import { isUserInWorkspace } from "@/app/(auth)/(workspace)/actions";
+import SessionServerActions from "@/lib/actions/server/session";
+import WorkspaceServerActions from "@/lib/actions/server/workspace";
 
 export async function GET(request: NextRequest) {
 	debug("API", "GET", "PRISMA ACTIONS", "app/(guest)/api/workspace/route.ts");
@@ -17,9 +17,9 @@ export async function GET(request: NextRequest) {
 		});
 	}
 
-	const session = await validateSession(sessionToken, workspaceName ? `/${workspaceName}` : "/");
+	const session = await SessionServerActions.checkSession({ defaultSessionToken: sessionToken });
 
-	if (!session) {
+	if (!session.success) {
 		return NextResponse.json({
 			success: false,
 			redirect: `/auth/sign-in?redirect=/${workspaceName || ""}`,
@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
 				});
 			}
 
-			const workspace = await isUserInWorkspace(session.user.id, workspaceName);
+			const workspace = await WorkspaceServerActions.checkWorkspaceMembership({
+				workspaceId: workspaceName,
+				userId: session.data.user.id,
+			});
 
 			if (!workspace.success) {
 				return NextResponse.json({
@@ -49,7 +52,7 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({
 				success: true,
 				cache: true,
-				redirect: `/${workspace.workspace?.name}`,
+				redirect: `/${workspace.data.workspace?.name}`,
 			});
 		} catch (error) {
 			return NextResponse.json({

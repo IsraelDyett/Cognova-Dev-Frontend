@@ -1,10 +1,10 @@
 "use client";
-import { getPlans } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Plan, PlanFeature } from "@prisma/client";
-import { Check, MessageSquare, Database } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { Check, MessageSquare, Database } from "lucide-react";
+import PricingServerActions from "@/lib/actions/server/pricing";
 
 const extraFeatures = [
 	{
@@ -30,7 +30,7 @@ export default function PricingSection() {
 	const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 	const [pricingPlans, setPricingPlans] = useState<(Plan & { features: PlanFeature[] })[]>([]);
 	useEffect(() => {
-		getPlans().then((plans) => setPricingPlans(plans));
+		PricingServerActions.getPlans({ features: true }).then((data) => setPricingPlans(data.data));
 	}, []);
 	return (
 		<section id="pricing">

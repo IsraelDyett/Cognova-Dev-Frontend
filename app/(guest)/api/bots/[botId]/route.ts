@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { prisma } from "@/lib/services/prisma";
-import { NextRequest, NextResponse } from "next/server";
 import { debug } from "@/lib/utils";
+import { NextRequest, NextResponse } from "next/server";
+import BotServerActions from "@/lib/actions/server/bot";
 
 const ParamsSchema = z.object({
-	botId: z.string().cuid2(),
+	botId: z.string().cuid(),
 });
 export async function GET(request: NextRequest, { params }: { params: { botId: string } }) {
 	debug("API", "GET", "PRISMA ACTIONS", "app/(guest)/api/bots/[botId]/route.ts");
@@ -14,15 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: { botId: s
 		if (!result.success) {
 			return NextResponse.json({ error: "Invalid bot ID format" }, { status: 400 });
 		}
-
-		const bot = await prisma.bot.findUnique({
-			where: {
-				id: params.botId,
-			},
-			include: {
-				configurations: true,
-			},
-		});
+		const { data: bot} = await BotServerActions.retrieveBot({ botId: params.botId, include: { configurations: true}})
 
 		if (!bot) {
 			return NextResponse.json({ error: "Bot not found" }, { status: 404 });

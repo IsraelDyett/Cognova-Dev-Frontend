@@ -315,7 +315,7 @@ import {
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import type { ${model.name} } from "@prisma/client";
 import { toast } from "sonner";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { format } from "date-fns";
 import { ${model.name}sStoreState, use${model.name}Store } from "../store";
 import {
@@ -448,7 +448,7 @@ function generatePage(model: Model) {
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import { use${model.name}Store } from "./store";
 import { columns } from "./components/columns";
 import { ${model.name}Form } from "./components/form";
@@ -787,7 +787,7 @@ function generateNoState(model: Model): string {
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { use${model.name}Store } from "../store";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 
 
 export function NoStateComponent() {

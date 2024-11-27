@@ -19,8 +19,8 @@ import {
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
 import { shareBot } from "../share-button";
-import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 
 export function NavBots() {
 	const { isMobile } = useSidebar();

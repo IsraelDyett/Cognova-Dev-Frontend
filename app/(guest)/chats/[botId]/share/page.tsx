@@ -1,15 +1,18 @@
 import { Metadata } from "next";
-import PlaygroundPage from "@/app/(auth)/(workspace)/[workspaceId]/bots/[botId]/playground/page";
-import { WorkspacePageProps } from "@/types";
-import { retrieveBot } from "@/app/(auth)/(workspace)/actions";
 import { siteConfig } from "@/lib/site";
+import { notFound } from "next/navigation";
+import { WorkspacePageProps } from "@/types";
+import BotServerActions from "@/lib/actions/server/bot";
+import PlaygroundPage from "@/app/(workspace)/[workspaceId]/bots/[botId]/playground/page";
 
 export async function generateMetadata({
 	params,
 }: {
 	params: { botId: string };
 }): Promise<Metadata> {
-	const bot = await retrieveBot(params.botId);
+	const { data: bot, success } = await BotServerActions.retrieveBot({ botId: params.botId });
+
+	if (!success) return notFound()
 
 	return {
 		title: bot

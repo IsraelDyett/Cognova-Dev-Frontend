@@ -16,10 +16,10 @@ import {
 import Link from "next/link";
 import { getMessage } from "@/lib/lang";
 import { SignUpSchema } from "@/lib/zod";
-import { signUpAction } from "../actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRightIcon } from "lucide-react";
+import AuthServerActions from "@/lib/actions/server/auth";
 
 export default function SignUpForm() {
 	const router = useRouter();
@@ -34,15 +34,15 @@ export default function SignUpForm() {
 
 	const submitButtonRef = useRef<HTMLButtonElement>(null);
 	const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
-		const result = await signUpAction(data);
+		const result = await AuthServerActions.signUp(data);
 		if (result.success) {
-			toast.success(getMessage(result.message));
+			toast.success(getMessage(result.data.action));
 			router.push(searchParams.get("redirect") ?? "/workspaces");
 		} else {
-			console.error(result.message);
+			console.error(result.data);
 			form.setError("email", {
 				type: "custom",
-				message: getMessage(result.message),
+				message: getMessage(`${result.data}`),
 			});
 		}
 	};

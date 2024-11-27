@@ -17,11 +17,11 @@ import {
 import Link from "next/link";
 import { getMessage } from "@/lib/lang";
 import { SignInSchema } from "@/lib/zod";
-import { signInAction } from "../actions";
 import { ArrowRightIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { validateEmail } from "@/lib/utils";
+import AuthServerActions from "@/lib/actions/server/auth";
 
 export default function SignInForm() {
 	const router = useRouter();
@@ -43,15 +43,15 @@ export default function SignInForm() {
 
 	const submitButtonRef = useRef<HTMLButtonElement>(null);
 	const onSubmit = async (data: z.infer<typeof SignInSchema>) => {
-		const result = await signInAction(data);
+		const result = await AuthServerActions.signIn(data);
 		if (result.success) {
-			toast.success(getMessage(result.message));
+			toast.success(getMessage(result.data.action));
 			router.push(searchParams.get("redirect") ?? "/");
 		} else {
-			console.error(result.message);
+			console.error(result.data);
 			form.setError("email", {
-				type: "auth-error",
-				message: getMessage(result.message),
+				type: "custom",
+				message: getMessage(`${result.data}`),
 			});
 		}
 	};

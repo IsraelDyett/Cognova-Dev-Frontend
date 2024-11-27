@@ -11,7 +11,7 @@ import { sidebarData } from "./sidebar-store";
 import { useParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavBusinesses } from "./navigation-menus/nav-business";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { Skeleton } from "./ui/skeleton";
 import dynamic from "next/dynamic";
 

@@ -1,7 +1,7 @@
 import { debug } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
-import { validateSession } from "@/app/(guest)/auth/actions";
-import { getDefaultWorkspace } from "@/app/(auth)/(workspace)/actions";
+import SessionServerActions from "@/lib/actions/server/session";
+import WorkspaceServerActions from "@/lib/actions/server/workspace";
 
 export async function GET(request: NextRequest) {
 	debug("API", "GET", "PRISMA ACTIONS", "app/(guest)/api/workspace/route.ts");
@@ -16,20 +16,22 @@ export async function GET(request: NextRequest) {
 		});
 	}
 
-	const session = await validateSession(sessionToken, "/");
+	const session = await SessionServerActions.checkSession({ defaultSessionToken: sessionToken });
 
-	if (!session) {
+	if (!session.success) {
 		return NextResponse.json({
 			success: false,
 			redirect: `/auth/sign-in?redirect=/`,
 		});
 	}
-	const defaultWorkspace = await getDefaultWorkspace(session.user.id);
-	if (defaultWorkspace) {
+	const defaultWorkspace = await WorkspaceServerActions.getDefaultWorkspace({
+		userId: session.data.user.id,
+	});
+	if (defaultWorkspace.success) {
 		return NextResponse.json({
 			success: true,
 			cache: true,
-			redirect: `/${defaultWorkspace.name}`,
+			redirect: `/${defaultWorkspace.data?.name}`,
 		});
 	}
 	return NextResponse.json({

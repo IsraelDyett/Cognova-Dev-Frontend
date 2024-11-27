@@ -17,7 +17,7 @@ import {
 	Stars,
 } from "lucide-react";
 import { Workspace } from "@prisma/client";
-import { getWorkspaces } from "@/app/(auth)/(workspace)/actions";
+import { getWorkspaces } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
 
 type LoadingState = "idle" | "loading" | "error" | "success";

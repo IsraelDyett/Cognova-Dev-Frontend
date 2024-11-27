@@ -20,8 +20,8 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSidebarStore } from "./sidebar-store";
-import { useAuth } from "@/app/(auth)/(workspace)/contexts/auth-context";
-import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
+import { useAuth } from "@/app/(workspace)/contexts/auth-context";
+import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 import { Skeleton } from "./ui/skeleton";
 import dynamic from "next/dynamic";
 
@@ -39,7 +39,7 @@ export function WorkspaceSwitcher() {
 		}
 	}, []);
 	const CreateWorkspaceDialog = dynamic(
-		() => import("@/app/(auth)/onboarding/components/create-workspace-dialog"),
+		() => import("@/app/onboarding/components/create-workspace-dialog"),
 		{ ssr: false },
 	);
 	return (
