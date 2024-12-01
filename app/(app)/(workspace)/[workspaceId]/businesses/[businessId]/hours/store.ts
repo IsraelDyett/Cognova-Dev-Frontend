@@ -1,7 +1,7 @@
 import { debug } from "@/lib/utils";
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createHour, updateHour, deleteHour, getHours } from "./actions";
+import { createHour, updateHour, deleteHour, getHours } from "@/lib/actions/server/business";
 import type { BusinessOperatingHours as Hour } from "@prisma/client";
 
 interface HourState {
@@ -36,7 +36,7 @@ export const useHourStore = create<HourState>((set) => ({
 		debug("CLIENT", "fetchHours", "STORE");
 		set({ loading: true, error: null });
 		try {
-			const response = await getHours({ where: { businessId } });
+			const response = await getHours({ businessId, include: { location: true} });
 			if (response.success) {
 				set({ hours: response.data });
 			} else {
@@ -53,7 +53,7 @@ export const useHourStore = create<HourState>((set) => ({
 	createHour: async (data) => {
 		debug("CLIENT", "createHour", "STORE");
 		try {
-			const response = await createHour(data);
+			const response = await createHour({ data: data});
 			if (response.success) {
 				set((state) => ({
 					hours: [...state.hours, response?.data ?? ({} as Hour)],
@@ -72,7 +72,7 @@ export const useHourStore = create<HourState>((set) => ({
 	updateHour: async (id, data) => {
 		debug("CLIENT", " updateHour", "STORE");
 		try {
-			const response = await updateHour(id, data);
+			const response = await updateHour({id, data});
 			if (response.success) {
 				set((state) => ({
 					hours: state.hours.map((item) =>
@@ -94,7 +94,7 @@ export const useHourStore = create<HourState>((set) => ({
 		debug("CLIENT", " deleteHour", "STORE");
 		set({ loading: true, error: null });
 		try {
-			const response = await deleteHour(id);
+			const response = await deleteHour({id});
 			if (response.success) {
 				set((state) => ({
 					hours: state.hours.filter((item) => item.id !== id),

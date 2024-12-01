@@ -1,17 +1,19 @@
 import { toast } from "sonner";
 import { create } from "zustand";
 import { debug } from "@/lib/utils";
-import type { Bot } from "@prisma/client";
-import BotServerActions from "@/lib/actions/server/bot";
+import type { Bot, Model } from "@prisma/client";
+import { createBot, deleteBot, getBots, getModels, updateBot } from "@/lib/actions/server/bot";
 
 interface BotState {
 	bots: Bot[];
+	models: Model[];
 	loading: "bots" | "none" | "initial";
 	error: string | null;
 
 	isOpenCrudForm: boolean;
 	initialCrudFormData?: Bot | null;
 
+	fetchModels: () => Promise<void>;
 	deleteBot: (id: string) => Promise<void>;
 	fetchBots: (workspaceId: string) => Promise<void>;
 	updateBot: (id: string, data: Partial<Bot>) => Promise<void>;
@@ -24,6 +26,7 @@ interface BotState {
 
 export const useBotStore = create<BotState>((set) => ({
 	bots: [],
+	models: [],
 	loading: "initial",
 	error: null,
 
@@ -37,7 +40,7 @@ export const useBotStore = create<BotState>((set) => ({
 			data: bots,
 			success,
 			error,
-		} = await BotServerActions.getBots({ workspaceId: workspaceId });
+		} = await getBots({ workspaceId: workspaceId });
 		if (success) {
 			set({ bots: bots });
 		} else {
@@ -46,9 +49,23 @@ export const useBotStore = create<BotState>((set) => ({
 		}
 		set({ loading: "none" });
 	},
+	fetchModels: async () => {
+		debug("CLIENT", "fetchModels", "STORE");
+		const {
+			data: models,
+			success,
+			error,
+		} = await  getModels({});
+		if (success) {
+			set({ models: models });
+		} else {
+			set({ error: error });
+			toast.error("Failed to load models");
+		}
+	},
 	createBot: async (data) => {
 		debug("CLIENT", "createBot", "CONTEXT");
-		const { data: createdBotData, success, error } = await BotServerActions.createBot({ data });
+		const { data: createdBotData, success, error } = await createBot({ data });
 		if (success) {
 			set((state) => ({
 				bots: [...state.bots, createdBotData.bot],
@@ -65,7 +82,7 @@ export const useBotStore = create<BotState>((set) => ({
 			data: updatedBotData,
 			success,
 			error,
-		} = await BotServerActions.updateBot({ botId: id, data });
+		} = await updateBot({ botId: id, data });
 		if (success) {
 			set((state) => ({
 				bots: state.bots.map((item) => (item.id === id ? updatedBotData : item)),
@@ -78,7 +95,7 @@ export const useBotStore = create<BotState>((set) => ({
 
 	deleteBot: async (id) => {
 		debug("CLIENT", "deleteBot", "CONTEXT");
-		const { success, error } = await BotServerActions.deleteBot({ botId: id });
+		const { success, error } = await deleteBot({ botId: id });
 		if (success) {
 			set((state) => ({
 				bots: state.bots.filter((item) => item.id !== id),

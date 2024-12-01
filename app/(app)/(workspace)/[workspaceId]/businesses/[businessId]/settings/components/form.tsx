@@ -28,10 +28,9 @@ import type { BusinessConfig } from "@prisma/client";
 const businessConfigSchema = z.object({
 	deliveryFee: z.number().min(0).optional(),
 	estimatedDeliveryArrival: z.string().optional(),
-	minOrderAmount: z.number().min(0).optional(),
-	taxRate: z.number().min(0).max(100).optional(),
-	returnPeriodDays: z.number().int().min(0).optional(),
-	warrantyPeriodDays: z.number().int().min(0).optional(),
+	minDeliveryOrderAmount: z.number().min(0).optional(),
+	returnPeriod: z.string().optional(),
+	warrantyPeriod: z.string().optional(),
 	currency: z.string().default("USD"),
 });
 
@@ -43,10 +42,9 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 		defaultValues: {
 			deliveryFee: businessConfig?.deliveryFee || 0,
 			estimatedDeliveryArrival: businessConfig?.estimatedDeliveryArrival || "",
-			minOrderAmount: businessConfig?.minOrderAmount || 0,
-			taxRate: businessConfig?.taxRate || 0,
-			returnPeriodDays: businessConfig?.returnPeriodDays || 0,
-			warrantyPeriodDays: businessConfig?.warrantyPeriodDays || 0,
+			minDeliveryOrderAmount: businessConfig?.minDeliveryOrderAmount || 0,
+			returnPeriod: businessConfig?.returnPeriod || "1 Day",
+			warrantyPeriod: businessConfig?.warrantyPeriod || "12 Months",
 			currency: businessConfig?.currency || "",
 		},
 	});
@@ -104,7 +102,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 					/>
 					<FormField
 						control={form.control}
-						name="minOrderAmount"
+						name="minDeliveryOrderAmount"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Minimum Order Amount</FormLabel>
@@ -128,33 +126,10 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 							</FormItem>
 						)}
 					/>
+					
 					<FormField
 						control={form.control}
-						name="taxRate"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Tax Rate (%)</FormLabel>
-								<FormControl>
-									<div className="relative">
-										<Percent className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input
-											type="number"
-											step="0.01"
-											className="pl-8"
-											{...field}
-											value={field.value || ""}
-											onChange={(e) => field.onChange(e.target.valueAsNumber)}
-										/>
-									</div>
-								</FormControl>
-								<FormDescription>The tax rate as a percentage.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="returnPeriodDays"
+						name="returnPeriod"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Return Period (Days)</FormLabel>
@@ -162,7 +137,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 									<div className="relative">
 										<Box className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
-											type="number"
+											type="text"
 											className="pl-8"
 											{...field}
 											value={field.value || ""}
@@ -171,7 +146,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 									</div>
 								</FormControl>
 								<FormDescription>
-									The number of days allowed for returns.
+									The period allowed for returns.
 								</FormDescription>
 								<FormMessage />
 							</FormItem>
@@ -179,7 +154,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 					/>
 					<FormField
 						control={form.control}
-						name="warrantyPeriodDays"
+						name="warrantyPeriod"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Warranty Period (Days)</FormLabel>
@@ -196,7 +171,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 									</div>
 								</FormControl>
 								<FormDescription>
-									The number of days the warranty is valid for.
+									The period the warranty is valid for.
 								</FormDescription>
 								<FormMessage />
 							</FormItem>

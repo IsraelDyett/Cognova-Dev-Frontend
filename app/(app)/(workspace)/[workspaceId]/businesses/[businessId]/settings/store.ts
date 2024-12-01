@@ -1,8 +1,8 @@
 import { debug } from "@/lib/utils";
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createBusinessConfig, retrieveBusinessConfig, updateBusinessConfig } from "./actions";
-import type { BusinessConfig } from "@prisma/client";
+import { retrieveBusinessConfig, updateOrCreateBusinessConfig } from "@/lib/actions/server/business";
+import type { BusinessConfig, Prisma } from "@prisma/client";
 
 interface BusinessConfigState {
 	settings: BusinessConfig | null;
@@ -13,10 +13,7 @@ interface BusinessConfigState {
 	initialCrudFormData?: BusinessConfig | null;
 	isOpenCrudForm: boolean;
 
-	createBusinessConfig: (
-		data: Omit<BusinessConfig, "id" | "createdAt" | "updatedAt">,
-	) => Promise<void>;
-	updateBusinessConfig: (id: string, data: Partial<BusinessConfig>) => Promise<void>;
+	updateOrCreateBusinessConfig: (businessId: string, data: Prisma.BusinessConfigUncheckedCreateInput) => Promise<void>;
 	// CRUD Form Actions
 	onOpenCreateForm: () => void;
 	onOpenEditForm: (data: BusinessConfig) => void;
@@ -35,7 +32,7 @@ export const useBusinessConfigStore = create<BusinessConfigState>((set) => ({
 		debug("CLIENT", "fetchBusinessConfigs", "STORE");
 		set({ loading: true, error: null });
 		try {
-			const response = await retrieveBusinessConfig(businessId);
+			const response = await retrieveBusinessConfig({businessId});
 			if (response.success) {
 				set({ settings: response.data });
 			} else {
@@ -49,10 +46,10 @@ export const useBusinessConfigStore = create<BusinessConfigState>((set) => ({
 			set({ loading: false });
 		}
 	},
-	createBusinessConfig: async (data) => {
+	updateOrCreateBusinessConfig: async (businessId, data) => {
 		debug("CLIENT", "createBusinessConfig", "STORE");
 		try {
-			const response = await createBusinessConfig(data);
+			const response = await updateOrCreateBusinessConfig({businessId, data});
 			if (response.success) {
 				set({ settings: response?.data });
 				toast.success("BusinessConfig created successfully");
@@ -63,23 +60,6 @@ export const useBusinessConfigStore = create<BusinessConfigState>((set) => ({
 			const error: Error = err;
 			set({ error: error.message });
 			toast.error("Failed to create BusinessConfig");
-		}
-	},
-
-	updateBusinessConfig: async (id, data) => {
-		debug("CLIENT", " updateBusinessConfig", "STORE");
-		try {
-			const response = await updateBusinessConfig(id, data);
-			if (response.success) {
-				set({ settings: response?.data });
-				toast.success("BusinessConfig updated successfully");
-			} else {
-				throw new Error(response.error);
-			}
-		} catch (err: any) {
-			const error: Error = err;
-			set({ error: error.message });
-			toast.error("Failed to update BusinessConfig");
 		}
 	},
 	onOpenCreateForm: () => {

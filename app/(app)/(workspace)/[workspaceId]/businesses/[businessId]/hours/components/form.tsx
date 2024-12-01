@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useHourStore } from "../store";
-import type { BusinessOperatingHours as Hour } from "@prisma/client";
+import { WeekDays, type BusinessOperatingHours as Hour } from "@prisma/client";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useBusinessLocationStore } from "../../locations/store";
@@ -35,7 +35,7 @@ import { useParams } from "next/navigation";
 const formSchema = z.object({
 	businessId: z.string().cuid(),
 	locationId: z.string().optional(),
-	dayOfWeek: z.number(),
+	dayOfWeek: z.string(),
 	openTime: z.string().min(1, "Required"),
 	closeTime: z.string().min(1, "Required"),
 	isClosed: z.boolean(),
@@ -46,7 +46,7 @@ type FormValues = z.infer<typeof formSchema>;
 const defaultValues = {
 	businessId: "",
 	locationId: "",
-	dayOfWeek: 0,
+	dayOfWeek: WeekDays.MONDAY as WeekDays,
 	openTime: "",
 	closeTime: "",
 	isClosed: false,
@@ -64,7 +64,7 @@ export function HourForm() {
 
 	const isLoading = form.formState.isSubmitting;
 
-	const onSubmit = async (values: FormValues) => {
+	const onSubmit = async (values: any) => {
 		try {
 			if (initialCrudFormData) {
 				await updateHour(initialCrudFormData.id, values);
@@ -87,7 +87,7 @@ export function HourForm() {
 			form.reset({
 				businessId: initialCrudFormData?.businessId || "",
 				locationId: initialCrudFormData?.locationId || "",
-				dayOfWeek: initialCrudFormData?.dayOfWeek || 0,
+				dayOfWeek: initialCrudFormData?.dayOfWeek || WeekDays.MONDAY,
 				openTime: initialCrudFormData?.openTime || "",
 				closeTime: initialCrudFormData?.closeTime || "",
 				isClosed: initialCrudFormData?.isClosed || false,

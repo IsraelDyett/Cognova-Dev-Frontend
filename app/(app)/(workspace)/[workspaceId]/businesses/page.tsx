@@ -8,8 +8,8 @@ import { useBusinessStore } from "./store";
 import { columns } from "./components/columns";
 import { BusinessForm } from "./components/form";
 import DataTable from "@/components/ui/data-table";
-import { NoStateComponent } from "./components/no-state";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
+import { NoStateComponent } from "../../components/no-state";
 
 export default function BusinessDashboard() {
 	const { workspace } = useWorkspace();
@@ -28,7 +28,7 @@ export default function BusinessDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{businesses.length === 0 && !loading ? (
-					<NoStateComponent />
+					<NoStateComponent  title="Business" onOpenCreateForm={onOpenCreateForm}  />
 				) : (
 					<DataTable
 						columns={columns}

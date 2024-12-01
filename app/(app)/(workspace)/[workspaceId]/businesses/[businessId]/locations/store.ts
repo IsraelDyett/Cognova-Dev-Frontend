@@ -2,11 +2,11 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { debug } from "@/lib/utils";
 import {
-	createBusinessLocation,
-	updateBusinessLocation,
-	deleteBusinessLocation,
-	getBusinessLocations,
-} from "./actions";
+	createLocation,
+	updateLocation,
+	deleteLocation,
+	getLocations,
+} from "@/lib/actions/server/business";
 import type { BusinessLocation } from "@prisma/client";
 
 interface BusinessLocationState {
@@ -43,7 +43,7 @@ export const useBusinessLocationStore = create<BusinessLocationState>((set) => (
 		debug("CLIENT", "fetchBusinessLocations", "STORE");
 		set({ loading: true, error: null });
 		try {
-			const response = await getBusinessLocations({ where: { businessId } });
+			const response = await getLocations({ businessId });
 			if (response.success) {
 				set({ businesslocations: response.data });
 			} else {
@@ -60,7 +60,7 @@ export const useBusinessLocationStore = create<BusinessLocationState>((set) => (
 	createBusinessLocation: async (data) => {
 		debug("CLIENT", "createBusinessLocation", "STORE");
 		try {
-			const response = await createBusinessLocation(data);
+			const response = await createLocation({ data });
 			if (response.success) {
 				set((state) => ({
 					businesslocations: [
@@ -82,7 +82,7 @@ export const useBusinessLocationStore = create<BusinessLocationState>((set) => (
 	updateBusinessLocation: async (id, data) => {
 		debug("CLIENT", "updateBusinessLocation", "STORE");
 		try {
-			const response = await updateBusinessLocation(id, data);
+			const response = await updateLocation({ id, data });
 			if (response.success) {
 				set((state) => ({
 					businesslocations: state.businesslocations.map((item) =>
@@ -104,7 +104,7 @@ export const useBusinessLocationStore = create<BusinessLocationState>((set) => (
 		debug("CLIENT", "deleteBusinessLocation", "STORE");
 		set({ loading: true, error: null });
 		try {
-			const response = await deleteBusinessLocation(id);
+			const response = await deleteLocation({ id });
 			if (response.success) {
 				set((state) => ({
 					businesslocations: state.businesslocations.filter((item) => item.id !== id),

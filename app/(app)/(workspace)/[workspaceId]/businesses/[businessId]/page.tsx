@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
 import { useBusinessStore } from "../store";
-import { retrieveBusiness } from "../actions";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { Store, Truck, ShoppingBag, AlertTriangle, Settings, Trash2 } from "lucide-react";
+import { retrieveBusiness } from "@/lib/actions/server/business";
 
 export default function BusinessDetail() {
 	const router = useRouter();
@@ -30,7 +30,7 @@ export default function BusinessDetail() {
 
 	useEffect(() => {
 		if (params.businessId) {
-			retrieveBusiness(params.businessId as string).then((res) => {
+			retrieveBusiness({ businessId: params.businessId as string}).then((res) => {
 				setCurrentBusiness(res.data);
 			});
 		}

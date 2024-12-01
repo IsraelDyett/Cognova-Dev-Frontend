@@ -17,17 +17,6 @@ export interface PrismaCountryDistribution extends PrismaDistributionCount {
 	countryCode: string;
 }
 
-export interface PrismaDeviceDistribution extends PrismaDistributionCount {
-	device: string | null;
-}
-
-export interface PrismaBrowserDistribution extends PrismaDistributionCount {
-	browser: string | null;
-}
-
-export interface PrismaOsDistribution extends PrismaDistributionCount {
-	os: string | null;
-}
 
 // Processed types for frontend
 export interface QueryPerDay {
@@ -57,9 +46,6 @@ export interface AnalyticsResponse {
 	chatMetrics: ChatMetrics;
 	queriesPerDay: QueryPerDay[];
 	countryDistribution: DistributionItem[];
-	deviceDistribution: DistributionItem[];
-	browserDistribution: DistributionItem[];
-	osDistribution: DistributionItem[];
 }
 
 export interface MetricCardProps {

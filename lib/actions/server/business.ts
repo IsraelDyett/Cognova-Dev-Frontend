@@ -22,6 +22,13 @@ class BusinessServerActions extends BaseServerActionActions {
 		);
 	}
 
+	public static async retrieveBusiness({ businessId }: { businessId: string }) {
+		return this.executeAction(
+			() => this.prisma.business.findUnique({ where: { id: businessId } }),
+			"Failed to retrieve business",
+		);
+	}
+
 	public static async createBusiness({ data }: { data: Prisma.BusinessUncheckedCreateInput }) {
 		return this.executeAction(
 			() => this.prisma.business.create({ data }),
@@ -71,6 +78,22 @@ class BusinessServerActions extends BaseServerActionActions {
 					include,
 				}),
 			"Failed to get business locations",
+		);
+	}
+	public static async retrieveLocation({
+		locationId,
+		include = {},
+	}: {
+		locationId: string;
+		include?: Prisma.BusinessLocationInclude;
+	}) {
+		return this.executeAction(
+			() =>
+				this.prisma.businessLocation.findFirst({
+					where: { id: locationId },
+					include,
+				}),
+			"Failed to retrieve business location",
 		);
 	}
 
@@ -132,11 +155,13 @@ class BusinessServerActions extends BaseServerActionActions {
 
 	public static async createProduct({
 		data,
+		include = {},
 	}: {
 		data: Prisma.BusinessProductUncheckedCreateInput;
+		include?: Prisma.BusinessProductInclude;
 	}) {
 		return this.executeAction(
-			() => this.prisma.businessProduct.create({ data }),
+			() => this.prisma.businessProduct.create({ data, include }),
 			"Failed to create business product",
 		);
 	}
@@ -144,15 +169,18 @@ class BusinessServerActions extends BaseServerActionActions {
 	public static async updateProduct({
 		id,
 		data,
+		include = {},
 	}: {
 		id: string;
 		data: Prisma.BusinessProductUncheckedUpdateInput;
+		include?: Prisma.BusinessProductInclude;
 	}) {
 		return this.executeAction(
 			() =>
 				this.prisma.businessProduct.update({
 					where: { id },
 					data,
+					include
 				}),
 			"Failed to update business product",
 		);
@@ -174,12 +202,102 @@ class BusinessServerActions extends BaseServerActionActions {
 			"Failed to retrieve business config",
 		);
 	}
+	public static async updateOrCreateBusinessConfig({ businessId, data }: { businessId: string, data: Prisma.BusinessConfigUncheckedCreateInput }) {
+		return this.executeAction(
+			() => this.prisma.businessConfig.upsert({
+				where: {
+					businessId,
+				},
+				create: data,
+				update: data,
+			}),
+			"Failed to retrieve business config",
+		);
+	}
+
+	// Hours
+	public static async getHours({
+		businessId,
+		include = {},
+	}: {
+		businessId: string;
+		include?: Prisma.BusinessOperatingHoursInclude;
+	}) {
+		return this.executeAction(
+			() =>
+				this.prisma.businessOperatingHours.findMany({
+					where: { businessId },
+					include,
+				}),
+			"Failed to get business operating hours",
+		);
+	}
+	public static async retrieveHour({
+		hourId,
+		include = {},
+	}: {
+		hourId: string;
+		include?: Prisma.BusinessOperatingHoursInclude;
+	}) {
+		return this.executeAction(
+			() =>
+				this.prisma.businessOperatingHours.findFirst({
+					where: { id: hourId },
+					include,
+				}),
+			"Failed to retrieve business operating hour",
+		);
+	}
+
+	public static async createHour({
+		data,
+	}: {
+		data: Prisma.BusinessOperatingHoursUncheckedCreateInput;
+	}) {
+		return this.executeAction(
+			() => this.prisma.businessOperatingHours.create({ data }),
+			"Failed to create business operating hour",
+		);
+	}
+
+	public static async updateHour({
+		id,
+		data,
+	}: {
+		id: string;
+		data: Prisma.BusinessOperatingHoursUncheckedUpdateInput;
+	}) {
+		return this.executeAction(
+			() =>
+				this.prisma.businessOperatingHours.update({
+					where: { id },
+					data,
+				}),
+			"Failed to update business operating hour",
+		);
+	}
+
+	public static async deleteHour({ id }: { id: string }) {
+		return this.executeAction(
+			() =>
+				this.prisma.businessOperatingHours.delete({
+					where: { id },
+				}),
+			"Failed to delete business operating hour",
+		);
+	}
+
 }
 
 export async function getBusinesses(
 	...args: Parameters<typeof BusinessServerActions.getBusinesses>
 ) {
 	return BusinessServerActions.getBusinesses(...args);
+}
+export async function retrieveBusiness(
+	...args: Parameters<typeof BusinessServerActions.retrieveBusiness>
+) {
+	return BusinessServerActions.retrieveBusiness(...args);
 }
 export async function createBusiness(
 	...args: Parameters<typeof BusinessServerActions.createBusiness>
@@ -232,9 +350,29 @@ export async function deleteProduct(
 ) {
 	return BusinessServerActions.deleteProduct(...args);
 }
+
+export async function getHours(...args: Parameters<typeof BusinessServerActions.getHours>) {
+	return BusinessServerActions.getHours(...args);
+}
+export async function retrieveHour(...args: Parameters<typeof BusinessServerActions.retrieveHour>) {
+	return BusinessServerActions.retrieveHour(...args);
+}
+export async function createHour(...args: Parameters<typeof BusinessServerActions.createHour>) {
+	return BusinessServerActions.createHour(...args);
+}
+export async function updateHour(...args: Parameters<typeof BusinessServerActions.updateHour>) {
+	return BusinessServerActions.updateHour(...args);
+}
+export async function deleteHour(...args: Parameters<typeof BusinessServerActions.deleteHour>) {
+	return BusinessServerActions.deleteHour(...args);
+}
 export async function retrieveBusinessConfig(
 	...args: Parameters<typeof BusinessServerActions.retrieveBusinessConfig>
 ) {
 	return BusinessServerActions.retrieveBusinessConfig(...args);
+}
+export async function updateOrCreateBusinessConfig(...args: Parameters<typeof BusinessServerActions.updateOrCreateBusinessConfig>
+) {
+	return BusinessServerActions.updateOrCreateBusinessConfig(...args);
 }
 export default BusinessServerActions;

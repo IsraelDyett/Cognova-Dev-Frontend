@@ -8,8 +8,8 @@ import { columns } from "./components/columns";
 import { HourForm } from "./components/form";
 import DataTable from "@/components/ui/data-table";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
-import { NoStateComponent } from "./components/no-state";
 import { useParams } from "next/navigation";
+import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 
 export default function HourDashboard() {
 	const { businessId } = useParams();
@@ -29,7 +29,7 @@ export default function HourDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{hours.length === 0 && !loading ? (
-					<NoStateComponent />
+					<NoStateComponent  title="Hour" onOpenCreateForm={onOpenCreateForm}  />
 				) : (
 					<DataTable
 						columns={columns}

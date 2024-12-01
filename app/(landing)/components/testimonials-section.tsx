@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import React from "react";
 
 const featuredTestimonial = {
@@ -133,7 +134,9 @@ export default function TestimonialsSection() {
 							<p>{`“${featuredTestimonial.body}”`}</p>
 						</blockquote>
 						<figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 px-6 py-4">
-							<img
+							<Image
+								height={40}
+								width={40}
 								className="h-10 w-10 flex-none rounded-full bg-gray-50"
 								src={featuredTestimonial.author.imageUrl}
 								alt=""
@@ -144,7 +147,9 @@ export default function TestimonialsSection() {
 								</div>
 								<div className="text-gray-600">{`@${featuredTestimonial.author.handle}`}</div>
 							</div>
-							<img
+							<Image
+								height={40}
+								width={40}
 								className="h-10 w-auto flex-none rounded-sm shadow-sm"
 								src={featuredTestimonial.author.logoUrl}
 								alt=""
@@ -174,7 +179,9 @@ export default function TestimonialsSection() {
 												<p>{`“${testimonial.body}”`}</p>
 											</blockquote>
 											<figcaption className="mt-6 flex items-center gap-x-4">
-												<img
+												<Image
+													height={40}
+													width={40}
 													className="h-10 w-10 rounded-full bg-gray-50"
 													src={testimonial.author.imageUrl}
 													alt=""

@@ -1,14 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, MessageSquare, ThumbsDown } from "lucide-react";
 import { getAnalytics } from "./actions";
 import { AnalyticsResponse } from "./types";
 import QueryTrendsChart from "./_charts/query-trends-bar-chart";
 import { WorkspacePageProps } from "@/types";
-import DistributionChart from "./_charts/distribution-chat";
 import MetricCard from "./_charts/metric-card";
-import BrowsersChart from "./_charts/browsers-charts";
 
 const formatNumber = (num: number): string => {
 	const lookup = [
@@ -55,9 +52,6 @@ const AnalyticsDashboard: React.FC<WorkspacePageProps> = (props) => {
 		chatMetrics,
 		queriesPerDay,
 		countryDistribution,
-		deviceDistribution,
-		browserDistribution,
-		osDistribution,
 	} = analytics;
 
 	return (
@@ -86,41 +80,6 @@ const AnalyticsDashboard: React.FC<WorkspacePageProps> = (props) => {
 			<div className="grid grid-cols-1">
 				<QueryTrendsChart data={queriesPerDay} />
 			</div>
-			<Tabs defaultValue="geography" className="w-full">
-				<TabsList>
-					<TabsTrigger value="geography">Geography</TabsTrigger>
-					<TabsTrigger value="devices">Devices</TabsTrigger>
-					<TabsTrigger value="platforms">Platforms</TabsTrigger>
-				</TabsList>
-
-				<TabsContent value="geography">
-					<DistributionChart
-						title="Geographic Distribution"
-						data={countryDistribution}
-						description="User distribution by country"
-					/>
-				</TabsContent>
-
-				<TabsContent value="devices">
-					<div className="grid md:grid-cols-2 gap-6">
-						<DistributionChart
-							title="Device Types"
-							data={deviceDistribution}
-							description="Distribution by device category"
-						/>
-						<DistributionChart
-							title="Operating Systems"
-							data={osDistribution}
-							description="Distribution by OS"
-						/>
-					</div>
-				</TabsContent>
-
-				<TabsContent value="platforms">
-					{/* <DistributionChart title="Browser Distribution" data={browserDistribution} description="Most used web browsers" /> */}
-					<BrowsersChart data={browserDistribution} />
-				</TabsContent>
-			</Tabs>
 		</div>
 	);
 };

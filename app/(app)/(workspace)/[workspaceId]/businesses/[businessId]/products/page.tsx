@@ -7,15 +7,15 @@ import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { useProductStore } from "./store";
 import { columns } from "./components/columns";
 import DataTable from "@/components/ui/data-table";
-import { NoStateComponent } from "./components/no-state";
 import { useParams } from "next/navigation";
 import { ProductForm } from "./components/form";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
+import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 
 export default function ProductDashboard() {
 	const { businessId } = useParams();
 	const { workspace } = useWorkspace();
-	const { products, loading, error, fetchProducts, onOpenCreateForm, isOpenCrudForm } =
+	const { products, loading, error, fetchProducts, onOpenCreateForm } =
 		useProductStore();
 
 	useEffect(() => {
@@ -30,7 +30,7 @@ export default function ProductDashboard() {
 	return (
 		<div className="container mx-auto p-4">
 			{products.length === 0 && !loading ? (
-				<NoStateComponent />
+				<NoStateComponent title="Product" onOpenCreateForm={onOpenCreateForm} />
 			) : (
 				<DataTable
 					columns={columns}

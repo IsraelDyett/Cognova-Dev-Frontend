@@ -35,9 +35,6 @@ const formSchema = z.object({
 	name: z.string().min(1, "Required"),
 	type: z.string().min(1, "Required"),
 	description: z.string().optional(),
-	hasDelivery: z.boolean(),
-	acceptsReturns: z.boolean(),
-	hasWarranty: z.boolean(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -85,9 +82,6 @@ export function BusinessForm() {
 				name: initialCrudFormData?.name || "",
 				type: initialCrudFormData?.type || "",
 				description: initialCrudFormData?.description || "",
-				hasDelivery: initialCrudFormData?.hasDelivery || false,
-				acceptsReturns: initialCrudFormData?.acceptsReturns || false,
-				hasWarranty: initialCrudFormData?.hasWarranty || false,
 			});
 		} else if (isOpenCrudForm) {
 			form.reset(defaultValues);
@@ -159,57 +153,6 @@ export function BusinessForm() {
 								</FormItem>
 							)}
 						/>
-
-						<div className="grid-cols-2 grid col-span-full">
-							<FormField
-								control={form.control}
-								name="hasDelivery"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">We do Delivery</FormLabel>
-										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="acceptsReturns"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">Accept Returns</FormLabel>
-										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="hasWarranty"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">
-											Provide Warranty
-										</FormLabel>
-										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-						</div>
 						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button
 								disabled={isLoading}

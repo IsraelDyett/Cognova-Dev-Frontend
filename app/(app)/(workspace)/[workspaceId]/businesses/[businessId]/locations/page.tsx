@@ -8,9 +8,8 @@ import { columns } from "./components/columns";
 import { BusinessLocationForm } from "./components/form";
 import DataTable from "@/components/ui/data-table";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
-import { NoStateComponent } from "./components/no-state";
-import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { useParams } from "next/navigation";
+import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 
 export default function BusinessLocationDashboard() {
 	const { businessId } = useParams();
@@ -32,7 +31,7 @@ export default function BusinessLocationDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{businesslocations.length === 0 && !loading ? (
-					<NoStateComponent />
+					<NoStateComponent  title="Location" onOpenCreateForm={onOpenCreateForm}  />
 				) : (
 					<DataTable
 						columns={columns}

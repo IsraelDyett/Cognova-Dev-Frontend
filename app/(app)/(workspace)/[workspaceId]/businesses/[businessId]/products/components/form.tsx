@@ -90,7 +90,6 @@ export function ProductForm() {
 				description: initialCrudFormData?.description || "",
 				price: initialCrudFormData.price,
 				stock: initialCrudFormData.stock,
-				sku: initialCrudFormData?.sku || "",
 				images: initialCrudFormData.images,
 				isActive: initialCrudFormData.isActive,
 			});
