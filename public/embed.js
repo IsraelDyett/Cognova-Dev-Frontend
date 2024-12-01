@@ -580,7 +580,7 @@ class ChatWidget {
 const botId = document.currentScript.id;
 const chatWidget = new ChatWidget({
 	botId: botId,
-	baseUrl: "https://cognova.io,
+	baseUrl: "https://cognova.io",
 	smallMode: false,
 });
 chatWidget.init();
