@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { WorkspaceLink } from "@/app/(workspace)/components/link";
 
-export const columns: ColumnDef<ProductsStoreState['products']['0']>[] = [
+export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 	{
 		accessorKey: "categoryId",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="CategoryId" />,
@@ -41,7 +41,7 @@ export const columns: ColumnDef<ProductsStoreState['products']['0']>[] = [
 		accessorKey: "price",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
 		cell: ({ row }) => {
-			const configuration = row.original.business.configurations
+			const configuration = row.original.business.configurations;
 			return (
 				<div className="font-medium">
 					{configuration?.currency || "$"}
@@ -50,7 +50,7 @@ export const columns: ColumnDef<ProductsStoreState['products']['0']>[] = [
 						maximumFractionDigits: 2,
 					})}
 				</div>
-			)
+			);
 		},
 	},
 	{
@@ -98,6 +98,7 @@ export const columns: ColumnDef<ProductsStoreState['products']['0']>[] = [
 		id: "actions",
 		cell: ({ row }) => {
 			const item = row.original;
+			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { deleteProduct, onOpenEditForm } = useProductStore();
 
 			return (

@@ -18,9 +18,7 @@ export default function Header() {
 						<Link href={siteConfig.domains.app + "/auth/sign-in"}>Login</Link>
 					</Button>
 					<Button className="grow sm:grow-0" asChild>
-						<Link href={siteConfig.domains.app + "/auth/sign-up"}>
-							Sign Up
-						</Link>
+						<Link href={siteConfig.domains.app + "/auth/sign-up"}>Sign Up</Link>
 					</Button>
 				</nav>
 			</div>

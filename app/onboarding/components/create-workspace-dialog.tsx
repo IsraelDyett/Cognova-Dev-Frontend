@@ -12,58 +12,70 @@ import { Input } from "@/components/ui/input";
 import { Building2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { debug } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { createWorkspaceWithTeam } from "../actions";
 import InviteToWorkspaceForm from "./invite-to-workspace-form";
-import { useWorkspaceStore } from "../store";
-import { getRoles } from "@/app/actions";
+import { Role } from "@prisma/client";
+import { getRoles } from "@/lib/actions/server/auth";
+import posthog from "posthog-js";
+
+interface FormData {
+	displayName: string;
+	team: Array<{ email: string; roleId: string }>;
+}
 
 export default function CreateWorkspaceDialog({
 	customTrigger,
 }: {
 	customTrigger?: React.ReactNode;
 }) {
-	const {
-		isOpen,
-		isLoading,
-		formData,
-		setOpen,
-		setLoading,
-		removeTeamMember,
-		roles,
-		reset,
-		setRoles,
-	} = useWorkspaceStore();
-
-	const router = useRouter();
+	const [isOpen, setIsOpen] = React.useState(false);
+	const [isLoading, setIsLoading] = React.useState(false);
+	const [roles, setRoles] = React.useState<Role[]>([]);
+	const [formData, setFormData] = React.useState<FormData>({
+		displayName: "",
+		team: [],
+	});
 	const [error, setError] = React.useState("");
-	const [workspaceName, setWorkspaceName] = React.useState("");
 
 	const handleOpenChange = (open: boolean) => {
 		if (!open) {
-			setWorkspaceName("");
+			setFormData({ displayName: "", team: [] });
 			setError("");
-			reset();
 		}
-		setOpen(open);
+		setIsOpen(open);
+	};
+
+	const addTeamMember = (email: string, roleId: string) => {
+		setFormData((prev) => ({
+			...prev,
+			team: [...prev.team, { email, roleId }],
+		}));
+	};
+
+	const removeTeamMember = (email: string) => {
+		setFormData((prev) => ({
+			...prev,
+			team: prev.team.filter((member) => member.email !== email),
+		}));
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!workspaceName.trim()) {
+		if (!formData.displayName.trim()) {
 			setError("Workspace name is required");
 			return;
 		}
 		try {
-			setLoading(true);
+			setIsLoading(true);
 			const result = await createWorkspaceWithTeam({
-				displayName: workspaceName.trim(),
+				displayName: formData.displayName.trim(),
 				team: formData.team,
 			});
 
 			if (result.success) {
 				handleOpenChange(false);
+				posthog.capture("Workspace Created", { workspaceId: result.workspaceId });
 				toast.success("Workspace created successfully");
 				window.location.assign(`/${result.workspaceId}`);
 			}
@@ -74,19 +86,19 @@ export default function CreateWorkspaceDialog({
 			console.error("Error creating workspace:", error);
 			setError("Failed to create workspace");
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 	React.useEffect(() => {
 		const loadRoles = async () => {
 			debug("CLIENT", "loadRoles", "PAGE");
-			const roles = await getRoles();
+			const { data: roles } = await getRoles();
 			setRoles(roles);
 		};
 		if (roles.length === 0) {
 			loadRoles();
 		}
-	}, [setRoles]);
+	}, [roles.length, setRoles]);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -110,9 +122,12 @@ export default function CreateWorkspaceDialog({
 						<label className="text-sm font-medium">Workspace Name</label>
 						<Input
 							placeholder="Enter workspace name"
-							value={workspaceName}
+							value={formData.displayName}
 							onChange={(e) => {
-								setWorkspaceName(e.target.value);
+								setFormData((prev) => ({
+									...prev,
+									displayName: e.target.value,
+								}));
 								setError("");
 							}}
 						/>
@@ -121,7 +136,7 @@ export default function CreateWorkspaceDialog({
 
 					<div className="space-y-4">
 						<label className="text-sm font-medium">Team Members</label>
-						<InviteToWorkspaceForm />
+						<InviteToWorkspaceForm roles={roles} onAddMember={addTeamMember} />
 						<div className="space-y-2">
 							{formData.team.map((member) => (
 								<div

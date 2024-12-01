@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,23 +10,27 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { useWorkspaceStore } from "../store";
-import { validateEmail } from "@/lib/utils";
+import { isEmailValid } from "@/lib/utils";
+import type { Role } from "@prisma/client";
 
-export default function InviteToWorkspaceForm() {
-	const { roles, addTeamMember } = useWorkspaceStore();
+interface InviteFormProps {
+	roles: Role[];
+	onAddMember: (email: string, roleId: string) => void;
+}
+
+export default function InviteToWorkspaceForm({ roles, onAddMember }: InviteFormProps) {
 	const [email, setEmail] = React.useState("");
 	const [roleId, setRoleId] = React.useState(roles[0]?.id || "");
 	const [error, setError] = React.useState("");
 
 	const handleAddMember = (e: React.MouseEvent) => {
 		e.preventDefault();
-		if (!validateEmail(email)) {
+		if (!isEmailValid(email)) {
 			setError("Invalid email address");
 			return;
 		}
 		if (email && roleId) {
-			addTeamMember(email.trim().toLowerCase(), roleId);
+			onAddMember(email.trim().toLowerCase(), roleId);
 			setEmail("");
 		}
 	};

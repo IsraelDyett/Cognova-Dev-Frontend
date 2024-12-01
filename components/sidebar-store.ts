@@ -17,8 +17,8 @@ import {
 	Stars,
 } from "lucide-react";
 import { Workspace } from "@prisma/client";
-import { getWorkspaces } from "@/app/(workspace)/actions";
 import { debug } from "@/lib/utils";
+import { getWorkspaces } from "@/lib/actions/server/workspace";
 
 type LoadingState = "idle" | "loading" | "error" | "success";
 
@@ -96,7 +96,10 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 		setLoading("workspaces");
 
 		try {
-			const workspaces = await getWorkspaces(userId, true);
+			const { data: workspaces } = await getWorkspaces({
+				userId,
+				include: { workspace: true },
+			});
 			set({ workspaces });
 			setSuccess("workspaces");
 		} catch (error) {

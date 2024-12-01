@@ -18,7 +18,6 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useSidebarStore } from "./sidebar-store";
 import { useAuth } from "@/app/(workspace)/contexts/auth-context";
 import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
@@ -37,7 +36,8 @@ export function WorkspaceSwitcher() {
 			fetchWorkspaces(user.id);
 			alreadyMounted.current = true;
 		}
-	}, []);
+	}, [user.id, fetchWorkspaces]);
+
 	const CreateWorkspaceDialog = dynamic(
 		() => import("@/app/onboarding/components/create-workspace-dialog"),
 		{ ssr: false },
@@ -76,7 +76,7 @@ export function WorkspaceSwitcher() {
 											{workspace?.displayName}
 										</span>
 										<span className="truncate text-xs">
-											{workspace?.plan?.displayName}
+											{workspace?.subscription?.plan?.displayName || "Free"}
 										</span>
 									</>
 								)}
@@ -94,11 +94,7 @@ export function WorkspaceSwitcher() {
 							Workspaces
 						</DropdownMenuLabel>
 						{workspaces.map((ws) => (
-							<DropdownMenuItem
-								key={ws.id}
-								className="gap-2 p-2"
-								asChild
-							>
+							<DropdownMenuItem key={ws.id} className="gap-2 p-2" asChild>
 								<a href={`/${ws.name}`}>
 									<div className="flex size-6 items-center justify-center rounded-sm overflow-hidden border">
 										<Image

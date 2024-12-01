@@ -16,22 +16,24 @@ export async function GET(request: NextRequest) {
 		});
 	}
 
-	const session = await SessionServerActions.checkSession({ defaultSessionToken: sessionToken });
+	const { data: session, success } = await SessionServerActions.checkSession({
+		defaultSessionToken: sessionToken,
+	});
 
-	if (!session.success) {
+	if (!success) {
 		return NextResponse.json({
 			success: false,
 			redirect: `/auth/sign-in?redirect=/`,
 		});
 	}
-	const defaultWorkspace = await WorkspaceServerActions.getDefaultWorkspace({
-		userId: session.data.user.id,
+	const { data: defaultWorkspace } = await WorkspaceServerActions.getDefaultWorkspace({
+		userId: session.user.id,
 	});
-	if (defaultWorkspace.success) {
+	if (defaultWorkspace) {
 		return NextResponse.json({
 			success: true,
 			cache: true,
-			redirect: `/${defaultWorkspace.data?.name}`,
+			redirect: `/${defaultWorkspace?.name}`,
 		});
 	}
 	return NextResponse.json({

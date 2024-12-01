@@ -94,6 +94,7 @@ export const columns: ColumnDef<Business>[] = [
 		id: "actions",
 		cell: ({ row }) => {
 			const item = row.original;
+			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { deleteBusiness, onOpenEditForm } = useBusinessStore();
 
 			return (

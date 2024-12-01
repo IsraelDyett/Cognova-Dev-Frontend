@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
@@ -64,9 +64,7 @@ const DialogContent = React.forwardRef<
 			)}
 			{...props}
 		>
-			<SimpleBar className="max-h-[80dvh] px-6 py-4">
-				{children}
-			</SimpleBar>
+			<SimpleBar className="max-h-[80dvh] px-6 py-4">{children}</SimpleBar>
 			<DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
 				<Cross2Icon className="w-4 h-4" />
 				<span className="sr-only">Close</span>

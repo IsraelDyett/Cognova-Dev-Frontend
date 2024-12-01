@@ -14,7 +14,10 @@ export async function GET(request: NextRequest, { params }: { params: { botId: s
 		if (!result.success) {
 			return NextResponse.json({ error: "Invalid bot ID format" }, { status: 400 });
 		}
-		const { data: bot} = await BotServerActions.retrieveBot({ botId: params.botId, include: { configurations: true}})
+		const { data: bot } = await BotServerActions.retrieveBot({
+			botId: params.botId,
+			include: { configurations: true },
+		});
 
 		if (!bot) {
 			return NextResponse.json({ error: "Bot not found" }, { status: 404 });

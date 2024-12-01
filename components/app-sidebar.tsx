@@ -1,19 +1,18 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "./ui/skeleton";
 import { ChevronLeft } from "lucide-react";
-
+import { sidebarData } from "./sidebar-store";
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams, usePathname } from "next/navigation";
+import { NavBusinesses } from "./navigation-menus/nav-business";
 import { NavMain } from "@/components/navigation-menus/nav-main";
 import { NavBots } from "@/components/navigation-menus/nav-bots";
+import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
-import { sidebarData } from "./sidebar-store";
-import { useParams, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { NavBusinesses } from "./navigation-menus/nav-business";
-import { WorkspaceLink } from "@/app/(workspace)/components/link";
-import { Skeleton } from "./ui/skeleton";
-import dynamic from "next/dynamic";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
@@ -29,7 +28,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		} else {
 			setCurrentNavbar("default");
 		}
-	}, [pathname]);
+	}, [botId, businessId, pathname]);
 
 	const NavUser = dynamic(() => import("@/components/navigation-menus/nav-user"), { ssr: false });
 	return (

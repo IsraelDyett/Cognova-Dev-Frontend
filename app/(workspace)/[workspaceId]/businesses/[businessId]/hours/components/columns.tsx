@@ -83,6 +83,7 @@ export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
 		id: "actions",
 		cell: ({ row }) => {
 			const item = row.original;
+			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { deleteHour, onOpenEditForm } = useHourStore();
 
 			return (

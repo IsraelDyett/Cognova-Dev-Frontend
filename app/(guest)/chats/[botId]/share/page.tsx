@@ -12,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 	const { data: bot, success } = await BotServerActions.retrieveBot({ botId: params.botId });
 
-	if (!success) return notFound()
+	if (!success) return notFound();
 
 	return {
 		title: bot

@@ -9,7 +9,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 	const { data: user, success } = await AuthServerActions.authUser();
-	if(!success) return AuthServerActions.signOut()
+	if (!success) return AuthServerActions.signOut();
 	return (
 		<AuthProvider user={user}>
 			<WorkspaceProvider>
@@ -23,7 +23,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
 								<Breadcrumbs />
 							</div>
 						</header>
-						<main style={{ WebkitOverflowScrolling: "touch" }} className="flex-1 overflow-y-auto">
+						<main
+							style={{ WebkitOverflowScrolling: "touch" }}
+							className="flex-1 overflow-y-auto"
+						>
 							<div className="container p-4">{children}</div>
 						</main>
 					</SidebarInset>

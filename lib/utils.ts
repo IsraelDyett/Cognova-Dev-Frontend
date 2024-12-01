@@ -1,9 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
+}
+export function cloneElement(element: React.ReactElement, classNames: string) {
+	return React.cloneElement(element, {
+		className: twMerge(element.props.className, classNames),
+	});
 }
 
 export function exclude(data: any, ...keys: string[]): typeof data {
@@ -22,7 +28,7 @@ export function includeOnly(data: any, keys: string[]): typeof data {
 export async function delay(ms: number) {
 	return await new Promise((resolve) => setTimeout(resolve, ms));
 }
-export const validateEmail = (email: string) => {
+export const isEmailValid = (email: string) => {
 	return String(email)
 		.toLowerCase()
 		.match(
@@ -82,10 +88,27 @@ export const debug = (
 };
 
 export function removeEmptyKeys<T extends object>(obj: T): T {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
-        if (value === '' || value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return acc;
-        }
-        return { ...acc, [key]: value };
-    }, {} as T);
+	return Object.entries(obj).reduce((acc, [key, value]) => {
+		if (
+			value === "" ||
+			value === null ||
+			value === undefined ||
+			(Array.isArray(value) && value.length === 0)
+		) {
+			return acc;
+		}
+		return { ...acc, [key]: value };
+	}, {} as T);
 }
+`utm_source: Identifies which site sent the traffic
+Example: utm_source=facebook
+utm_medium: Indicates the marketing medium
+Example: utm_medium=cpc (for paid search), utm_medium=email, utm_medium=social
+utm_campaign: Specifies your campaign name
+Example: utm_campaign=spring_sale
+utm_term: Tracks paid search keywords
+Example: utm_term=marketing+tools
+utm_content: Differentiates similar content or links
+Example: utm_content=headerlink or utm_content=sidebar
+`;
+// https://yourSaaS.com/landing-page?utm_source=twitter&utm_medium=social&utm_campaign=launch&utm_content=tweet1

@@ -7,13 +7,12 @@ import ChatBubbleCard from "./components/chat-bubble-card";
 import { useParams, useSearchParams } from "next/navigation";
 import ConversationCard from "./components/conversation-card";
 
-
 export default function ChatsPage() {
 	const { botId } = useParams();
 	const searchParams = useSearchParams();
 	const conversationIdParam = searchParams.get("conversationId");
-	const { fetchChats, fetchConversations, conversations, chats } = useChatStore()
-	const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
+	const { fetchChats, fetchConversations, conversations, chats } = useChatStore();
+	const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
 
 	useEffect(() => {
 		fetchConversations(`${botId}`);
@@ -28,7 +27,7 @@ export default function ChatsPage() {
 	useEffect(() => {
 		if (currentConversationId) {
 			fetchChats(currentConversationId);
-		};
+		}
 	}, [currentConversationId]);
 
 	const handleConversationClick = (id: string) => {
@@ -40,7 +39,12 @@ export default function ChatsPage() {
 			<div className="w-full md:w-[27%] border-r">
 				<ScrollArea className="h-full pr-3">
 					{conversations.map((conversation) => (
-						<ConversationCard key={conversation.id} conversation={conversation} handleConversationClick={handleConversationClick} selectedConversation={currentConversationId} />
+						<ConversationCard
+							key={conversation.id}
+							conversation={conversation}
+							handleConversationClick={handleConversationClick}
+							selectedConversation={currentConversationId}
+						/>
 					))}
 				</ScrollArea>
 			</div>

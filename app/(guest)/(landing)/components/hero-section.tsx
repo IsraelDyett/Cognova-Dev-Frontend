@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { RainbowButton } from "@/components/ui/rainbow-button";
 import { siteConfig } from "@/lib/site";
+import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "lucide-react";
 import React from "react";
 
@@ -62,9 +61,8 @@ export default function HeroSection() {
 						and web chat.
 					</p>
 					<div className="mt-10 flex items-center gap-x-6">
-						{/* <Button size={'lg'} >Create A Free Bot</Button> */}
 						<a href="/auth/sign-up">
-							<RainbowButton>Create A Free Bot</RainbowButton>
+							<Button size={"lg"}>Create A Free Bot</Button>
 						</a>
 					</div>
 				</div>

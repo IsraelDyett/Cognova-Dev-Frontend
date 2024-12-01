@@ -14,12 +14,14 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { getMessage } from "@/lib/lang";
 import { SignUpSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRightIcon } from "lucide-react";
-import AuthServerActions from "@/lib/actions/server/auth";
+import { signUp } from "@/lib/actions/server/auth";
+import { exclude } from "@/lib/utils";
 
 export default function SignUpForm() {
 	const router = useRouter();
@@ -34,15 +36,18 @@ export default function SignUpForm() {
 
 	const submitButtonRef = useRef<HTMLButtonElement>(null);
 	const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
-		const result = await AuthServerActions.signUp(data);
-		if (result.success) {
-			toast.success(getMessage(result.data.action));
-			router.push(searchParams.get("redirect") ?? "/workspaces");
+		const { success, data: result, error } = await signUp(data);
+		if (success) {
+			const user = exclude(result.user, "password");
+			posthog.people.set({ ...user });
+			posthog.capture("Signed Up", { ...user });
+			toast.success(getMessage(result.action));
+			router.push(searchParams.get("redirect") || "/onboarding");
 		} else {
-			console.error(result.data);
+			console.error(error);
 			form.setError("email", {
 				type: "custom",
-				message: getMessage(`${result.data}`),
+				message: getMessage(error),
 			});
 		}
 	};

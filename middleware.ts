@@ -5,7 +5,7 @@ import { parse } from "./lib/middlewares/utils";
 import { AppMiddleware } from "@/lib/middlewares/app";
 
 export async function middleware(request: NextRequest) {
-	const { domain, path, key, fullKey } = parse(request);
+	const { domain } = parse(request);
 
 	if (APP_HOSTNAMES.has(domain)) {
 		return AppMiddleware(request);

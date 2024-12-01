@@ -54,7 +54,7 @@ const defaultValues = {
 export function BusinessForm() {
 	const { createBusiness, updateBusiness, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useBusinessStore();
-	const { refreshCurrentWorkspace, workspace } = useWorkspace()
+	const { refreshCurrentWorkspace, workspace } = useWorkspace();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -66,13 +66,12 @@ export function BusinessForm() {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			if (initialCrudFormData) {
-				await updateBusiness(initialCrudFormData.id, values)
-					.then(() => refreshCurrentWorkspace());
+				await updateBusiness(initialCrudFormData.id, values).then(() =>
+					refreshCurrentWorkspace(),
+				);
 			} else {
 				// @ts-ignore
-				await createBusiness(values)
-					.then(() => refreshCurrentWorkspace());
-
+				await createBusiness(values).then(() => refreshCurrentWorkspace());
 			}
 			onCloseCrudForm();
 		} catch (error) {
@@ -94,7 +93,7 @@ export function BusinessForm() {
 			form.reset(defaultValues);
 			form.setValue("workspaceId", workspace?.id || "");
 		}
-	}, [initialCrudFormData, isOpenCrudForm, form]);
+	}, [initialCrudFormData, isOpenCrudForm, form, workspace?.id]);
 
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
@@ -198,7 +197,9 @@ export function BusinessForm() {
 								name="hasWarranty"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel className="text-base">Provide Warranty</FormLabel>
+										<FormLabel className="text-base">
+											Provide Warranty
+										</FormLabel>
 										<FormControl>
 											<Checkbox
 												checked={field.value}

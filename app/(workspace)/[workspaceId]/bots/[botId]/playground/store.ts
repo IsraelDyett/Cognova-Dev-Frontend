@@ -3,7 +3,7 @@ import { createCuid } from "@/lib/actions/server/session";
 import { Bot, ChatFeedback } from "@prisma/client";
 import { toast } from "sonner";
 import { create } from "zustand";
-import ChatServerActions from "@/lib/actions/server/chat";
+import { getChats, retrieveOrCreateConversation } from "@/lib/actions/server/chat";
 
 interface Chat {
 	id: string;
@@ -44,13 +44,13 @@ export const useChatStore = create<ChatStore>((set) => ({
 	bot: null,
 	initializeConversation: async (botId: string) => {
 		debug("CLIENT", "initializeConversation", "STORE");
-		const { data: conversation } = await ChatServerActions.retrieveOrCreateConversation({ botId });
+		const { data: conversation } = await retrieveOrCreateConversation({ botId });
 		if (!conversation) {
 			toast.error("You're accessing the invalid chatbot");
 			return;
 		}
 		set({ currentConversationId: conversation.id });
-		const { data: chats } = await ChatServerActions.getChats({ conversationId: conversation.id });
+		const { data: chats } = await getChats({ conversationId: conversation.id });
 		set({ chats: chats, bot: conversation.bot });
 	},
 	addChat: (chat) => {

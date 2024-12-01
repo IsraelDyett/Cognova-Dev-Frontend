@@ -12,10 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/ui/data-table/column-header";
 import type { Bot } from "@prisma/client";
-import { toast } from "sonner";
 import { WorkspaceLink } from "@/app/(workspace)/components/link";
 import { format } from "date-fns";
-import { useBotStore } from "../store";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -27,6 +25,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useBotStore } from "@/lib/stores/bot";
 
 export const columns: ColumnDef<Bot>[] = [
 	{
@@ -73,6 +72,7 @@ export const columns: ColumnDef<Bot>[] = [
 		id: "actions",
 		cell: ({ row }) => {
 			const item = row.original;
+			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { deleteBot, onOpenEditForm } = useBotStore();
 
 			return (

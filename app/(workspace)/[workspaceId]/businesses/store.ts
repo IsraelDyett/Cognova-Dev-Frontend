@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { createBusiness, updateBusiness, deleteBusiness, listBusinesses } from "./actions";
 import type { Business } from "@prisma/client";
+import { createBusiness, deleteBusiness, getBusinesses, updateBusiness } from "@/lib/actions/server/business";
 
 interface BusinessState {
 	businesses: Business[];
@@ -34,7 +34,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 	fetchBusinesses: async (workspaceId: string) => {
 		set({ loading: true, error: null });
 		try {
-			const response = await listBusinesses({ where: { workspaceId } });
+			const response = await getBusinesses({ workspaceId});
 			if (response.success) {
 				set({ businesses: response.data });
 			} else {
@@ -51,7 +51,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 
 	createBusiness: async (data) => {
 		try {
-			const response = await createBusiness(data);
+			const response = await createBusiness({data});
 			if (response.success) {
 				set((state) => ({
 					businesses: [...state.businesses, response?.data ?? ({} as Business)],
@@ -69,7 +69,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 
 	updateBusiness: async (id, data) => {
 		try {
-			const response = await updateBusiness(id, data);
+			const response = await updateBusiness({ id, data});
 			if (response.success) {
 				set((state) => ({
 					businesses: state.businesses.map((item) =>
@@ -90,7 +90,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 	deleteBusiness: async (id) => {
 		set({ loading: true, error: null });
 		try {
-			const response = await deleteBusiness(id);
+			const response = await deleteBusiness({ id });
 			if (response.success) {
 				set((state) => ({
 					businesses: state.businesses.filter((item) => item.id !== id),

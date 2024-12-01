@@ -1,6 +1,4 @@
-const bcrypt = require("bcryptjs");
-const { PrismaClient, Workspace } = require("@prisma/client");
-const BUSINESS_PLAN_ID = "cm3fq9f3c000208jo25xqesv2";
+const { PrismaClient } = require("@prisma/client");
 class BusinessSeeder {
 	constructor(workspace, sellerBotId) {
 		this.prisma = new PrismaClient();
@@ -98,7 +96,7 @@ class BusinessSeeder {
 		console.log("🧹 Cleaning up existing data...");
 		await this.prisma.businessOperatingHours.deleteMany();
 		await this.prisma.businessProduct.deleteMany();
-		await this.prisma.businessCategory.deleteMany();
+		await this.prisma.businessProductsCategory.deleteMany();
 		await this.prisma.businessLocation.deleteMany();
 		await this.prisma.businessConfig.deleteMany();
 		await this.prisma.business.deleteMany();
@@ -133,7 +131,7 @@ class BusinessSeeder {
 		console.log("📑 Creating categories...");
 		const categories = await Promise.all(
 			this.businessData.categories.map((category) =>
-				this.prisma.businessCategory.create({
+				this.prisma.businessProductsCategory.create({
 					data: {
 						...category,
 						businessId,

@@ -32,7 +32,7 @@ import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
-	categoryId: z.string().cuid().optional().or(z.literal('')),
+	categoryId: z.string().cuid().optional().or(z.literal("")),
 	name: z.string().min(1, "Required"),
 	description: z.string().optional(),
 	price: z.number(),
@@ -79,7 +79,7 @@ export function ProductForm() {
 		}
 	};
 
-	const { workspace } = useWorkspace()
+	const { workspace } = useWorkspace();
 
 	useEffect(() => {
 		if (isOpenCrudForm && initialCrudFormData) {
@@ -109,7 +109,10 @@ export function ProductForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="gap-4 grid grid-cols-1 sm:grid-cols-2">
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="gap-4 grid grid-cols-1 sm:grid-cols-2"
+					>
 						<DynamicSelector
 							label="Business"
 							form={form}
@@ -200,7 +203,9 @@ export function ProductForm() {
 							name="stock"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel helpText="How many in stock you can provide">Stock</FormLabel>
+									<FormLabel helpText="How many in stock you can provide">
+										Stock
+									</FormLabel>
 									<FormControl>
 										<Input
 											type="number"

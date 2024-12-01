@@ -36,12 +36,16 @@ export async function GET(request: NextRequest) {
 				});
 			}
 
-			const workspace = await WorkspaceServerActions.checkWorkspaceMembership({
+			const {
+				data: workspace,
+				success: success,
+				error,
+			} = await WorkspaceServerActions.checkWorkspaceMembership({
 				workspaceId: workspaceName,
 				userId: session.data.user.id,
 			});
 
-			if (!workspace.success) {
+			if (!success || !workspace.status) {
 				return NextResponse.json({
 					success: false,
 					cache: false,
@@ -52,7 +56,7 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({
 				success: true,
 				cache: true,
-				redirect: `/${workspace.data.workspace?.name}`,
+				redirect: `/${workspace.workspace?.name}`,
 			});
 		} catch (error) {
 			return NextResponse.json({

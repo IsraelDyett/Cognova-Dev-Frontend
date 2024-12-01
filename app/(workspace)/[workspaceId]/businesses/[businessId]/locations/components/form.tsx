@@ -88,7 +88,7 @@ export function BusinessLocationForm() {
 		}
 	};
 
-	const { workspace} =useWorkspace()
+	const { workspace } = useWorkspace();
 
 	useEffect(() => {
 		if (isOpenCrudForm && initialCrudFormData) {
@@ -117,8 +117,8 @@ export function BusinessLocationForm() {
 						{initialCrudFormData ? "Edit" : "Create"} Business Location
 					</DialogTitle>
 					<DialogDescription>
-						{initialCrudFormData ? "Make changes to the" : "Add a new"}{" "}
-						Business location.
+						{initialCrudFormData ? "Make changes to the" : "Add a new"} Business
+						location.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>

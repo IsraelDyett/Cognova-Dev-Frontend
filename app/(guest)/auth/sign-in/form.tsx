@@ -20,8 +20,9 @@ import { SignInSchema } from "@/lib/zod";
 import { ArrowRightIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { validateEmail } from "@/lib/utils";
-import AuthServerActions from "@/lib/actions/server/auth";
+import { exclude, isEmailValid } from "@/lib/utils";
+import { signIn } from "@/lib/actions/server/auth";
+import posthog from "posthog-js";
 
 export default function SignInForm() {
 	const router = useRouter();
@@ -39,19 +40,22 @@ export default function SignInForm() {
 		control: form.control,
 		name: "email",
 	});
-	const isEmailValid = validateEmail(form.getValues().email);
+	const emailIsValid = isEmailValid(form.getValues().email);
 
 	const submitButtonRef = useRef<HTMLButtonElement>(null);
 	const onSubmit = async (data: z.infer<typeof SignInSchema>) => {
-		const result = await AuthServerActions.signIn(data);
-		if (result.success) {
-			toast.success(getMessage(result.data.action));
+		const { success, error, data: resultData } = await signIn(data);
+		if (success) {
+			const user = exclude(resultData.user, "password");
+			posthog.people.set({ ...user });
+			posthog.capture("Signed In", { ...user });
+			toast.success(getMessage(resultData.action));
 			router.push(searchParams.get("redirect") ?? "/");
 		} else {
-			console.error(result.data);
+			console.error(error);
 			form.setError("email", {
 				type: "custom",
-				message: getMessage(`${result.data}`),
+				message: getMessage(error),
 			});
 		}
 	};
@@ -85,7 +89,7 @@ export default function SignInForm() {
 					)}
 				/>
 				<AnimatePresence>
-					{isEmailValid && (
+					{emailIsValid && (
 						<motion.div
 							initial={{ opacity: 0, height: 0 }}
 							animate={{ opacity: 1, height: "auto" }}

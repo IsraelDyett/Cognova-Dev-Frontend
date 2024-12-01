@@ -17,7 +17,6 @@ class SessionServerActions extends BaseServerActionActions {
 	public static authCookieKey = "auth.session.token";
 	public static headlessSessionCookieKey = "headless.session.id";
 
-
 	public static async createSession({ user }: { user: User }) {
 		const sessionToken = await this.generateToken();
 
@@ -38,12 +37,12 @@ class SessionServerActions extends BaseServerActionActions {
 				});
 			}
 
-			const metadata = this.getUserAgentMetadata()
+			const metadata = this.getUserAgentMetadata();
 			await tx.session.create({
 				data: {
 					userId: user.id,
 					sessionToken: sessionToken,
-					...metadata
+					...metadata,
 				},
 			});
 		});
@@ -58,7 +57,7 @@ class SessionServerActions extends BaseServerActionActions {
 			sessionToken,
 			expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
 		};
-	};
+	}
 
 	public static setSessionTokenCookie({ sessionToken }: { sessionToken: string }) {
 		const rootDomain = process.env.NODE_ENV === "development" ? "app.localhost" : `.${DOMAIN}`;
@@ -70,50 +69,54 @@ class SessionServerActions extends BaseServerActionActions {
 			sameSite: "lax",
 			expires: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
 		});
-	};
+	}
 
 	public static async checkSession({ defaultSessionToken }: { defaultSessionToken?: string }) {
-		return this.executeAction(
-			async () => {
-				const sessionToken = defaultSessionToken ?? cookies().get(this.authCookieKey)?.value ?? "";
+		return this.executeAction(async () => {
+			const sessionToken =
+				defaultSessionToken ?? cookies().get(this.authCookieKey)?.value ?? "";
 
-				if (process.env.USE_REDIS == "1") {
-					const cachedUser = await redis.get(`user:${sessionToken}`);
-					if (cachedUser) {
-						return {
-							user: JSON.parse(cachedUser) as User,
-						};
-					}
+			if (process.env.USE_REDIS == "1") {
+				const cachedUser = await redis.get(`user:${sessionToken}`);
+				if (cachedUser) {
+					return {
+						user: JSON.parse(cachedUser) as User,
+					};
 				}
+			}
 
-				if (!sessionToken) throw new Error("NO_SESSION_TOKEN");
+			if (!sessionToken) throw new Error("NO_SESSION_TOKEN");
 
-				const session = await this.prisma.$transaction(async (tx) => {
-					const currentSession = await tx.session.findFirst({
-						where: {
-							AND: [{ sessionToken }, { status: "ACTIVE" }],
-						},
-						select: {
-							id: true,
-							user: true,
-							expiresAt: true,
-						},
-					});
-
-					if (!currentSession) return null;
-					this.updateSession({ currentSession, sessionToken });
-					return currentSession;
+			const session = await this.prisma.$transaction(async (tx) => {
+				const currentSession = await tx.session.findFirst({
+					where: {
+						AND: [{ sessionToken }, { status: "ACTIVE" }],
+					},
+					select: {
+						id: true,
+						user: true,
+						expiresAt: true,
+					},
 				});
 
-				if (!session) throw new Error("SESSION_NOT_FOUND");
+				if (!currentSession) return null;
+				this.updateSession({ currentSession, sessionToken });
+				return currentSession;
+			});
 
-				return session
-			},
-			"SESSION_VALIDATION_FAILED"
-		);
-	};
+			if (!session) throw new Error("SESSION_NOT_FOUND");
 
-	private static updateSession = async ({ currentSession, sessionToken }: { currentSession: { id: string; expiresAt: Date }, sessionToken: string }) => {
+			return session;
+		}, "SESSION_VALIDATION_FAILED");
+	}
+
+	private static updateSession = async ({
+		currentSession,
+		sessionToken,
+	}: {
+		currentSession: { id: string; expiresAt: Date };
+		sessionToken: string;
+	}) => {
 		if (currentSession.expiresAt < new Date()) {
 			await this.prisma.session.update({
 				where: { id: currentSession.id },
@@ -134,7 +137,8 @@ class SessionServerActions extends BaseServerActionActions {
 			device: agent.device.type,
 			browser: agent.browser.name,
 			expiresAt: new Date(Date.now() + ms(process.env.SESSION_EXPIRATION ?? "5d")),
-			ipAddress: headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "Unknown",
+			ipAddress:
+				headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "Unknown",
 		};
 	};
 
@@ -145,7 +149,7 @@ class SessionServerActions extends BaseServerActionActions {
 		const hashBuffer = await crypto.subtle.digest("SHA-256", data);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
 		return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-	};
+	}
 
 	public static getOrCreateHeadlessSessionId = async () => {
 		const cookieStore = cookies();
@@ -166,4 +170,4 @@ class SessionServerActions extends BaseServerActionActions {
 	};
 }
 
-export default SessionServerActions
+export default SessionServerActions;

@@ -1,6 +1,5 @@
 "use server";
 import * as z from "zod";
-import { authUser } from "../../(guest)/auth/actions";
 import { prisma } from "@/lib/services/prisma";
 import { workspaceSchema } from "@/lib/zod";
 import { generateUniqueName } from "@/lib/actions/server/prisma";
@@ -8,6 +7,7 @@ import { User, WorkspaceInviteStatus } from "@prisma/client";
 import { InviteEmailTemplate } from "@/components/mails/team-invite";
 import resendClient, { RESEND_CONFIG } from "@/lib/services/resend";
 import { debug } from "@/lib/utils";
+import AuthServerActions from "@/lib/actions/server/auth";
 
 export type WorkspaceFormData = z.infer<typeof workspaceSchema>;
 
@@ -72,7 +72,7 @@ async function createWorkspaceInvitation(
 export async function createWorkspaceWithTeam(data: WorkspaceFormData) {
 	debug("SERVER", "createWorkspaceWithTeam", "PRISMA ACTIONS");
 	try {
-		const user = await authUser().catch(() => null);
+		const { data: user } = await AuthServerActions.authUser();
 		const ownerId = user?.id || WORKSPACE_CONFIG.defaultOwnerId;
 
 		const parsed = workspaceSchema.parse(data);

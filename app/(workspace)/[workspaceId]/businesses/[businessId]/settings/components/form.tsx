@@ -23,8 +23,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BusinessConfig } from "@prisma/client";
+import type { BusinessConfig } from "@prisma/client";
 
 const businessConfigSchema = z.object({
 	deliveryFee: z.number().min(0).optional(),
@@ -38,7 +37,7 @@ const businessConfigSchema = z.object({
 
 type BusinessConfigFormValues = z.infer<typeof businessConfigSchema>;
 
-export function BusinessConfigForm({ businessConfig }: { businessConfig?: BusinessConfig }) {
+export function BusinessConfigForm({ businessConfig }: { businessConfig: BusinessConfig }) {
 	const form = useForm<BusinessConfigFormValues>({
 		resolver: zodResolver(businessConfigSchema),
 		defaultValues: {

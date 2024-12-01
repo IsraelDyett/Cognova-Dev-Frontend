@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const botBaseSchema = z.object({
-	workspaceId:  z.string().cuid("Invalid selected workspace"),
-	businessId: z.string().cuid("Invalid selected business").optional().or(z.literal('')),
+	workspaceId: z.string().cuid("Invalid selected workspace"),
+	businessId: z.string().cuid("Invalid selected business").optional().or(z.literal("")),
 	name: z.string().min(1, "Bot name is required"),
 	description: z.string().optional(),
 	language: z.string().optional(),

@@ -5,8 +5,13 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		sourceType: "module",
 	},
+	extends: [
+		"next/core-web-vitals",
+		"plugin:@typescript-eslint/recommended",
+		// "plugin:prettier/recommended",
+		// "prettier",
+	],
 	plugins: ["@typescript-eslint/eslint-plugin", "complexity"],
-	// extends: ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier"],
 	root: true,
 	env: {
 		node: true,

@@ -1,12 +1,13 @@
 import { BusinessConfigForm } from "./components/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { retrieveBusinessConfig } from "@/lib/actions/server/business";
 import { WorkspacePageProps } from "@/types";
 import { Settings, Store, DollarSign } from "lucide-react";
-import { retrieveBusinessConfig } from "./actions";
 
 export default async function BusinessConfigPage(props: WorkspacePageProps) {
-	const businessConfig = await retrieveBusinessConfig(props.params.businessId);
+	const { data: businessConfig, error } = await retrieveBusinessConfig({ businessId: props.params.businessId });
+	if (error || !businessConfig) return <div>Error: {error}</div>;
 	return (
 		<div className="container mx-auto p-4">
 			<Tabs defaultValue="general" className="space-y-4">
@@ -29,11 +30,11 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 						<CardHeader>
 							<CardTitle>General Settings</CardTitle>
 							<CardDescription>
-								Manage your business's general configuration settings.
+								Manage your business&apos;s general configuration settings.
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<BusinessConfigForm businessConfig={businessConfig.data} />
+							<BusinessConfigForm businessConfig={businessConfig} />
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -42,7 +43,7 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 						<CardHeader>
 							<CardTitle>Financial Settings</CardTitle>
 							<CardDescription>
-								Manage your business's financial settings and integrations.
+								Manage your business&apos;s financial settings and integrations.
 							</CardDescription>
 						</CardHeader>
 						<CardContent>

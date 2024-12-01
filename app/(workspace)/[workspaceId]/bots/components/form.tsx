@@ -30,7 +30,6 @@ import { createBotSchema } from "@/lib/zod/schemas/bot";
 import { useBotStore } from "@/lib/stores/bot";
 import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
 
-
 type FormValues = z.infer<typeof createBotSchema>;
 
 const defaultValues = {
@@ -47,9 +46,16 @@ const defaultValues = {
 	waPhoneNumber: "",
 };
 export function BotForm() {
-	const { createBot, updateBot, onCloseCrudForm, initialCrudFormData, isOpenCrudForm, fetchModels, models } =
-		useBotStore();
-	const { refreshCurrentWorkspace } = useWorkspace()
+	const {
+		createBot,
+		updateBot,
+		onCloseCrudForm,
+		initialCrudFormData,
+		isOpenCrudForm,
+		fetchModels,
+		models,
+	} = useBotStore();
+	const { refreshCurrentWorkspace } = useWorkspace();
 	const form = useForm<FormValues>({
 		resolver: zodResolver(createBotSchema),
 		defaultValues,
@@ -60,24 +66,23 @@ export function BotForm() {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			if (initialCrudFormData) {
-				await updateBot(initialCrudFormData.id, values)
-					.then(() => refreshCurrentWorkspace());;
+				await updateBot(initialCrudFormData.id, values).then(() =>
+					refreshCurrentWorkspace(),
+				);
 			} else {
 				// @ts-ignore
-				await createBot(values)
-					.then(() => refreshCurrentWorkspace());;
+				await createBot(values).then(() => refreshCurrentWorkspace());
 			}
 			onCloseCrudForm();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}
 	};
-	const { workspace } = useWorkspace()
-
+	const { workspace } = useWorkspace();
 
 	useEffect(() => {
 		if (models.length == 0) {
-			fetchModels()
+			fetchModels();
 		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
@@ -109,8 +114,7 @@ export function BotForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-
-				{JSON.stringify(form.formState.errors, null, 2)}
+					{JSON.stringify(form.formState.errors, null, 2)}
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -239,13 +243,14 @@ export function BotForm() {
 							idKey="modelId"
 						/>
 
-
 						<FormField
 							control={form.control}
 							name="systemMessage"
 							render={({ field }) => (
 								<FormItem className="col-span-full">
-									<FormLabel helpText="Give bot the rules to follow or guidelines">System Message</FormLabel>
+									<FormLabel helpText="Give bot the rules to follow or guidelines">
+										System Message
+									</FormLabel>
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
@@ -262,7 +267,9 @@ export function BotForm() {
 							name="waPhoneNumber"
 							render={({ field }) => (
 								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">Wa Phone Number</FormLabel>
+									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">
+										Wa Phone Number
+									</FormLabel>
 									<FormControl>
 										<Input
 											disabled={isLoading}
@@ -274,7 +281,6 @@ export function BotForm() {
 								</FormItem>
 							)}
 						/>
-
 
 						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button

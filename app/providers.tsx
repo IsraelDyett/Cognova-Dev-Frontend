@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { PostHogProvider } from "@/components/posthog-provider";
 
 export interface ProvidersProps {
 	children: React.ReactNode;
@@ -16,7 +17,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 		<NextThemesProvider {...themeProps}>
 			<Toaster position="bottom-right" />
 			<TooltipProvider>
-			{children}
+				<PostHogProvider>{children}</PostHogProvider>
 			</TooltipProvider>
 		</NextThemesProvider>
 	);

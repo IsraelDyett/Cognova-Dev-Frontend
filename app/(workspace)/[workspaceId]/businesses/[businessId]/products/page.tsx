@@ -19,10 +19,10 @@ export default function ProductDashboard() {
 		useProductStore();
 
 	useEffect(() => {
-		if (workspace) {
+		if (workspace && businessId) {
 			fetchProducts(`${businessId}`);
 		}
-	}, [workspace, fetchProducts]);
+	}, [workspace, fetchProducts, businessId]);
 
 	if (loading) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;

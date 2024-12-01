@@ -1,12 +1,12 @@
 "use client";
 import { debug } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import WorkspaceServerActions from "@/lib/actions/server/workspace";
+import { retrieveWorkspace } from "@/lib/actions/server/workspace";
 import { Workspace, Plan, Bot, Business, Subscription } from "@prisma/client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 interface ExtendedWorkspace extends Workspace {
-	subscription: Subscription & { plan?: Plan | null; }
+	subscription: Subscription & { plan?: Plan | null };
 	bots: Bot[] | null;
 	businesses: Business[] | null;
 }
@@ -31,10 +31,10 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 	const [isLoading, setIsLoading] = useState(true);
 	const [workspace, setWorkspace] = useState<ExtendedWorkspace | null>(null);
 
-	const fetchWorkspace = async () => {
+	const fetchWorkspace = useCallback(async () => {
 		if (workspaceId) {
 			debug("CLIENT", "fetchWorkspace", "CONTEXT");
-			const { data: retrievedWorkspace } = await WorkspaceServerActions.retrieveWorkspace({
+			const { data: retrievedWorkspace } = await retrieveWorkspace({
 				workspaceId: `${workspaceId}`,
 				include: {
 					bots: true,
@@ -44,15 +44,15 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 							plan: true,
 						},
 					},
-				}
-
+				},
 			});
 			if (retrievedWorkspace) {
 				setWorkspace(retrievedWorkspace as ExtendedWorkspace);
 				setIsLoading(false);
 			}
 		}
-	};
+	}, [workspaceId]);
+
 	useEffect(() => {
 		if (!alreadyMounted.current && workspaceId) {
 			fetchWorkspace().catch((err) => {
@@ -61,10 +61,12 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 			});
 			alreadyMounted.current = true;
 		}
-	}, [workspaceId]);
+	}, [fetchWorkspace, workspaceId]);
 
 	return (
-		<WorkspaceContext.Provider value={{ workspace, isLoading, refreshCurrentWorkspace: fetchWorkspace }}>
+		<WorkspaceContext.Provider
+			value={{ workspace, isLoading, refreshCurrentWorkspace: fetchWorkspace }}
+		>
 			{children}
 		</WorkspaceContext.Provider>
 	);

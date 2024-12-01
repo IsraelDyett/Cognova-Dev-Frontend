@@ -6,7 +6,9 @@ import BotServerActions from "@/lib/actions/server/bot";
 
 export const revalidate = 10;
 export default async function BotPreviewPage(props: WorkspacePageProps) {
-	const { data: bot, success } = await BotServerActions.retrieveBot({ botId: props.params.botId });
+	const { data: bot, success } = await BotServerActions.retrieveBot({
+		botId: props.params.botId,
+	});
 	if (!bot || !success) {
 		notFound();
 	}

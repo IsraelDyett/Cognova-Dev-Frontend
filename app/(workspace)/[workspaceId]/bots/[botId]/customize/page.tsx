@@ -33,7 +33,7 @@ interface CustomizeFormValues {
 const CustomizePage = async ({ params }: WorkspacePageProps) => {
 	const { data: bot, success } = await BotServerActions.retrieveBot({ botId: params.botId });
 	if (!bot || !success) {
-		notFound()
+		notFound();
 	}
 	const methods = useForm<CustomizeFormValues>({
 		defaultValues: {

@@ -55,7 +55,7 @@ export function HourForm() {
 	const { createHour, updateHour, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useHourStore();
 
-	const { fetchBusinessLocations, businesslocations } = useBusinessLocationStore()
+	const { fetchBusinessLocations, businesslocations } = useBusinessLocationStore();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -77,11 +77,11 @@ export function HourForm() {
 			toast.error("Something went wrong");
 		}
 	};
-	const { workspace } = useWorkspace()
-	const { businessId } = useParams()
+	const { workspace } = useWorkspace();
+	const { businessId } = useParams();
 	useEffect(() => {
 		if (businesslocations.length == 0) {
-			fetchBusinessLocations(`${businessId}`)
+			fetchBusinessLocations(`${businessId}`);
 		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
@@ -95,7 +95,7 @@ export function HourForm() {
 		} else if (isOpenCrudForm) {
 			form.reset(defaultValues);
 		}
-	}, [initialCrudFormData, isOpenCrudForm, form]);
+	}, [initialCrudFormData, isOpenCrudForm, form, businesslocations.length, fetchBusinessLocations, businessId]);
 
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>

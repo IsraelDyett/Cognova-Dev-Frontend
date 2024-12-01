@@ -53,7 +53,10 @@ export const useProductStore = create<ProductsStoreState>((set) => ({
 			const response = await createProduct(data);
 			if (response.success) {
 				set((state) => ({
-					products: [...state.products, response?.data ?? ({} as ProductsStoreState['products']['0'])],
+					products: [
+						...state.products,
+						response?.data ?? ({} as ProductsStoreState["products"]["0"]),
+					],
 				}));
 				toast.success("Product created successfully");
 			} else {
@@ -74,7 +77,9 @@ export const useProductStore = create<ProductsStoreState>((set) => ({
 			if (response.success) {
 				set((state) => ({
 					products: state.products.map((item) =>
-						item.id === id ? (response.data ?? ({} as ProductsStoreState['products']['0'])) : item,
+						item.id === id
+							? (response.data ?? ({} as ProductsStoreState["products"]["0"]))
+							: item,
 					),
 				}));
 				toast.success("Product updated successfully");

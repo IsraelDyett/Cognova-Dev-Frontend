@@ -21,11 +21,7 @@ export function WorkspaceLink({
 		.replaceAll("{businessId}", `${businessId}`);
 
 	return (
-		<NextLink
-			className={className}
-			href={`/${workspaceId}/${formattedHref}`}
-			{...props}
-		>
+		<NextLink className={className} href={`/${workspaceId}/${formattedHref}`} {...props}>
 			{children}
 		</NextLink>
 	);

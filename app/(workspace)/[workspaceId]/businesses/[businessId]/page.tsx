@@ -139,7 +139,8 @@ export default function BusinessDetail() {
 							<AlertDialogHeader>
 								<AlertDialogTitle>Delete Business</AlertDialogTitle>
 								<AlertDialogDescription>
-									Are you sure you want to delete this business? This action cannot be undone.
+									Are you sure you want to delete this business? This action
+									cannot be undone.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>
