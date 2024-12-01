@@ -6,9 +6,9 @@ import ChatServerActions from "@/lib/actions/server/chat";
 
 interface ChatState {
 	chats: Chat[];
-	conversations: (Conversation & { chats: { id: string }[] })[];
-	loading: "chats" | "conversations" | "none" | "initial";
 	error: string | null;
+	loading: "chats" | "conversations" | "none" | "initial";
+	conversations: (Conversation & { chats: { id: string }[] })[];
 	fetchChats: (conversationId: string) => Promise<void>;
 	fetchConversations: (chatId: string, silently?: boolean) => Promise<void>;
 	set: {

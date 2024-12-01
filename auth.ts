@@ -1,4 +1,4 @@
-import { setSessionTokenCookie, SignUpOrInAction } from "./app/(guest)/auth/actions";
+import { setSessionTokenCookie, SignUpOrInAction } from "./app/auth/actions";
 import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 

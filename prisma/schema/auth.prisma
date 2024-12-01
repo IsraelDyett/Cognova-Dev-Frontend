@@ -1,18 +1,18 @@
 model User {
-  id              String          @id @default(cuid())
+  id              String                @id @default(cuid())
   name            String?
-  email           String          @unique
+  email           String                @unique
   password        String
   image           String?
-  emailVerified   Boolean         @default(false)
+  emailVerified   Boolean               @default(false)
   uplineId        String?
   lastLoggedAt    DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now()) @updatedAt
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @default(now()) @updatedAt
   sessions        Session[]
-  upline          User?           @relation("UserUpline", fields: [uplineId], references: [id])
-  downlines       User[]          @relation("UserUpline")
-  workspaces      WorkspaceUser[]
+  upline          User?                 @relation("UserUpline", fields: [uplineId], references: [id])
+  downlines       User[]                @relation("UserUpline")
+  workspaces      WorkspaceMembership[]
   ownedWorkspaces Workspace[]
 
   @@map("users")
@@ -35,14 +35,14 @@ model Session {
 }
 
 model Role {
-  id                  String                @id @default(cuid())
-  name                String                @unique
-  displayName         String
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @default(now()) @updatedAt
-  permissions         Permission[]
-  workspaces          WorkspaceUser[]
-  workspaceInvitation WorkspaceInvitation[]
+  id                   String                @id @default(cuid())
+  name                 String                @unique
+  displayName          String
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now()) @updatedAt
+  permissions          Permission[]
+  workspaceMemberships WorkspaceMembership[]
+  workspaceInvitations WorkspaceInvitation[]
 
   @@map("roles")
 }

@@ -95,23 +95,14 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 	},
 
 	onOpenCreateForm: () => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: null });
 	},
 
 	onOpenEditForm: (data) => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: data,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: data });
 	},
 
 	onCloseCrudForm: () => {
-		set({
-			isOpenCrudForm: false,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: false, initialCrudFormData: null });
 	},
 }));

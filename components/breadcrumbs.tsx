@@ -9,7 +9,7 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useParams, usePathname } from "next/navigation";
-import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
+import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 
 export default function Breadcrumbs() {
 	const pathName = usePathname();

@@ -8,10 +8,9 @@ model Workspace {
   bots         Bot[]
   businesses   Business[]
   payments     Payment[]
-  sources      Source[]
   subscription Subscription?
   vectors      Vector[]
-  users        WorkspaceUser[]
+  users        WorkspaceMembership[]
   invitations  WorkspaceInvitation[]
   owner        User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
@@ -19,7 +18,7 @@ model Workspace {
   @@map("workspaces")
 }
 
-model WorkspaceUser {
+model WorkspaceMembership {
   id          String    @id @default(cuid())
   workspaceId String
   userId      String
@@ -31,7 +30,7 @@ model WorkspaceUser {
   role        Role?     @relation(fields: [roleId], references: [id])
 
   @@index([id, userId])
-  @@map("workspace_users")
+  @@map("workspace_memberships")
 }
 
 model WorkspaceInvitation {

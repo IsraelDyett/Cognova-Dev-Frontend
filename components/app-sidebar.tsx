@@ -10,7 +10,7 @@ import { useParams, usePathname } from "next/navigation";
 import { NavBusinesses } from "./navigation-menus/nav-business";
 import { NavMain } from "@/components/navigation-menus/nav-main";
 import { NavBots } from "@/components/navigation-menus/nav-bots";
-import { WorkspaceLink } from "@/app/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 

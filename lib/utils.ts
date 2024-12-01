@@ -35,26 +35,6 @@ export const isEmailValid = (email: string) => {
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 		);
 };
-export const getCurrentWorkspace = () => {
-	if (typeof window !== "undefined") {
-		const workspace = window.location.href.split("/")[3];
-		return workspace;
-	}
-	return "";
-};
-export const getBaseUUIDPath = () => {
-	const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-	if (typeof window !== "undefined") {
-		const url = window.location.href;
-		const uuidMatch = url.match(uuidRegex);
-		if (uuidMatch) {
-			return url.split(uuidMatch?.[0] || "/")?.[0] + (uuidMatch?.[0] || "");
-		} else {
-			return url;
-		}
-	}
-	return "/";
-};
 
 export const toKebabCase = (text: string) =>
 	text.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();

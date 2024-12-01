@@ -18,7 +18,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/app/(workspace)/contexts/auth-context";
+import { useAuth } from "@/app/(app)/contexts/auth-context";
 import Link from "next/link";
 
 export default function NavUser() {

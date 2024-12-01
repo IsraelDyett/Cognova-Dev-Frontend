@@ -1,19 +1,18 @@
 "use client";
 import React from "react";
+import { toast } from "sonner";
+import { Bot } from "@prisma/client";
 import { Button } from "./ui/button";
 import { siteConfig } from "@/lib/site";
-import { Bot } from "@prisma/client";
-import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 
 export const shareBot = async (bot: Bot) => {
 	if (typeof window !== "undefined") {
-		const orgin = window.location.origin;
 		const shareData = {
 			title: bot
 				? `Try ${bot.name} - ${siteConfig.applicationName}`
 				: `${siteConfig.applicationName}`,
-			url: `${orgin}/chats/${bot?.id}/share`,
+			url: `${siteConfig.domains.root}/chats/${bot?.id}/share`,
 		};
 		try {
 			await window.navigator.share(shareData);

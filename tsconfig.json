@@ -33,7 +33,7 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"app/(workspace)/[workspaceId]/bots/[botId]/analytics/_charts/browser-charts"
+		"app/(app)/(workspace)/[workspaceId]/bots/[botId]/analytics/_charts/browser-charts"
 	],
 	"exclude": ["node_modules", "**/*.js"]
 }

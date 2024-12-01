@@ -116,92 +116,6 @@ class BotServerActions extends BaseServerActionActions {
 			"Failed deleting bot",
 		);
 	}
-
-	public static async getBotSources({
-		botId,
-		include = {
-			source: {
-				include: {
-					technique: true,
-					syncs: true,
-				},
-			},
-		},
-	}: {
-		botId: string;
-		include?: Prisma.BotSourcesInclude;
-	}) {
-		return this.executeAction(
-			() =>
-				this.prisma.botSources.findMany({
-					where: {
-						botId,
-					},
-					include,
-				}),
-			"Failed getting bot sources",
-		);
-	}
-
-	public static async associateSourceWithBot({
-		sourceId,
-		botId,
-	}: {
-		sourceId: string;
-		botId: string;
-	}) {
-		return this.executeAction(
-			() =>
-				this.prisma.botSources.create({
-					data: {
-						sourceId,
-						botId,
-					},
-				}),
-			"Failed associating sources to bot",
-		);
-	}
-
-	public static async dissociateSourceFromBot({
-		sourceId,
-		botId,
-	}: {
-		sourceId: string;
-		botId: string;
-	}) {
-		return this.executeAction(
-			() =>
-				this.prisma.botSources.deleteMany({
-					where: {
-						sourceId,
-						botId,
-					},
-				}),
-			"Failed to dissociate sources from the bot",
-		);
-	}
-
-	public static async updateOrCreateBotConfig({
-		botId,
-		data,
-	}: {
-		botId: string;
-		data: Prisma.BotConfigurationUncheckedCreateInput;
-	}) {
-		return this.executeAction(
-			() =>
-				this.prisma.botConfiguration.upsert({
-					where: { botId },
-					update: {
-						...data,
-					},
-					create: {
-						...data,
-					},
-				}),
-			"Failed to update or create bot configurations",
-		);
-	}
 }
 export async function getModels(...args: Parameters<typeof BotServerActions.getModels>) {
 	return BotServerActions.getModels(...args);
@@ -220,23 +134,5 @@ export async function updateBot(...args: Parameters<typeof BotServerActions.upda
 }
 export async function deleteBot(...args: Parameters<typeof BotServerActions.deleteBot>) {
 	return BotServerActions.deleteBot(...args);
-}
-export async function getBotSources(...args: Parameters<typeof BotServerActions.getBotSources>) {
-	return BotServerActions.getBotSources(...args);
-}
-export async function associateSourceWithBot(
-	...args: Parameters<typeof BotServerActions.associateSourceWithBot>
-) {
-	return BotServerActions.associateSourceWithBot(...args);
-}
-export async function dissociateSourceFromBot(
-	...args: Parameters<typeof BotServerActions.dissociateSourceFromBot>
-) {
-	return BotServerActions.dissociateSourceFromBot(...args);
-}
-export async function updateOrCreateBotConfig(
-	...args: Parameters<typeof BotServerActions.updateOrCreateBotConfig>
-) {
-	return BotServerActions.updateOrCreateBotConfig(...args);
 }
 export default BotServerActions;

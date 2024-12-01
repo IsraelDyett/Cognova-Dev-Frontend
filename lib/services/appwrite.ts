@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 const appwriteClient = new Client();
 
 appwriteClient
-	// .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "http://localhost:9012/v1")
+	.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "http://localhost:9012/v1")
 	.setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT || "cognova-ai");
 
 async function createSessionClient() {

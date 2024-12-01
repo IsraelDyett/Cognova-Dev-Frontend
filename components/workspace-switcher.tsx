@@ -18,29 +18,29 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
-import { useSidebarStore } from "./sidebar-store";
-import { useAuth } from "@/app/(workspace)/contexts/auth-context";
-import { useWorkspace } from "@/app/(workspace)/contexts/workspace-context";
-import { Skeleton } from "./ui/skeleton";
 import dynamic from "next/dynamic";
+import { Skeleton } from "./ui/skeleton";
+import { useSidebarStore } from "./sidebar-store";
+import { useAuth } from "@/app/(app)/contexts/auth-context";
+import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 
 export function WorkspaceSwitcher() {
 	const { user } = useAuth();
 	const { isMobile } = useSidebar();
+	const alreadyMounted = React.useRef(false);
 	const { workspace, isLoading } = useWorkspace();
 	const { workspaces, fetchWorkspaces } = useSidebarStore();
 
-	const alreadyMounted = React.useRef(false);
 	React.useEffect(() => {
-		if (!alreadyMounted.current) {
+		if (!alreadyMounted.current && user?.id) {
 			fetchWorkspaces(user.id);
 			alreadyMounted.current = true;
 		}
 	}, [user.id, fetchWorkspaces]);
 
 	const CreateWorkspaceDialog = dynamic(
-		() => import("@/app/onboarding/components/create-workspace-dialog"),
-		{ ssr: false },
+		() => import("@/app/(app)/onboarding/components/create-workspace-dialog"),
+		{ ssr: false, loading: () => <DropdownMenuItem disabled>Loading...</DropdownMenuItem> },
 	);
 	return (
 		<SidebarMenu>

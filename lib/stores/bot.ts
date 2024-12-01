@@ -1,16 +1,12 @@
 import { toast } from "sonner";
 import { create } from "zustand";
 import { debug } from "@/lib/utils";
-import type { Bot, Source, Sync, Technique } from "@prisma/client";
+import type { Bot } from "@prisma/client";
 import BotServerActions from "@/lib/actions/server/bot";
 
 interface BotState {
 	bots: Bot[];
-	sources: (Source & {
-		syncs?: Sync[];
-		technique?: Technique;
-	})[];
-	loading: "bots" | "sources" | "none" | "initial";
+	loading: "bots" | "none" | "initial";
 	error: string | null;
 
 	isOpenCrudForm: boolean;
@@ -19,7 +15,6 @@ interface BotState {
 	deleteBot: (id: string) => Promise<void>;
 	fetchBots: (workspaceId: string) => Promise<void>;
 	updateBot: (id: string, data: Partial<Bot>) => Promise<void>;
-	fetchSources: (botId: string, silently?: boolean) => Promise<void>;
 	createBot: (data: Omit<Bot, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 
 	onCloseCrudForm: () => void;
@@ -29,7 +24,6 @@ interface BotState {
 
 export const useBotStore = create<BotState>((set) => ({
 	bots: [],
-	sources: [],
 	loading: "initial",
 	error: null,
 
@@ -52,20 +46,6 @@ export const useBotStore = create<BotState>((set) => ({
 		}
 		set({ loading: "none" });
 	},
-
-	fetchSources: async (botId, silently) => {
-		set({ loading: silently ? "none" : "sources", error: null });
-		debug("CLIENT", "fetchSources", "STORE");
-		const { data: sources, success, error } = await BotServerActions.getBotSources({ botId });
-		if (success) {
-			const data = sources.map((botSource) => botSource.source);
-			set({ sources: data });
-		} else {
-			toast.error(error);
-		}
-		set({ loading: "none" });
-	},
-
 	createBot: async (data) => {
 		debug("CLIENT", "createBot", "CONTEXT");
 		const { data: createdBotData, success, error } = await BotServerActions.createBot({ data });
@@ -110,23 +90,14 @@ export const useBotStore = create<BotState>((set) => ({
 	},
 
 	onOpenCreateForm: () => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: null });
 	},
 
 	onOpenEditForm: (data) => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: data,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: data });
 	},
 
 	onCloseCrudForm: () => {
-		set({
-			isOpenCrudForm: false,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: false, initialCrudFormData: null });
 	},
 }));

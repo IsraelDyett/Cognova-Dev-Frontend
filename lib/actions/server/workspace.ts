@@ -1,6 +1,11 @@
 "use server";
-import { Prisma } from "@prisma/client";
+import { Prisma, User, Workspace, WorkspaceInviteStatus } from "@prisma/client";
 import BaseServerActionActions from "./base";
+import { sendWorkspaceInvitationMail } from "./mail";
+import { z } from "zod";
+import { initializeWorkspaceSchema } from "@/lib/zod";
+import AuthServerActions from "./auth";
+import { generateUniqueName } from "./prisma";
 
 class WorkspaceServerActions extends BaseServerActionActions {
 	public static async getWorkspaces({
@@ -8,10 +13,10 @@ class WorkspaceServerActions extends BaseServerActionActions {
 		include = { workspace: true },
 	}: {
 		userId: string;
-		include?: Prisma.WorkspaceUserInclude;
+		include?: Prisma.WorkspaceMembershipInclude;
 	}) {
 		return this.executeAction(async () => {
-			const workspaces = await this.prisma.workspaceUser.findMany({
+			const workspaces = await this.prisma.workspaceMembership.findMany({
 				where: {
 					userId: userId,
 				},
@@ -53,9 +58,15 @@ class WorkspaceServerActions extends BaseServerActionActions {
 		);
 	}
 
-	public static async createWorkspace({ data }: { data: Prisma.WorkspaceUncheckedCreateInput }) {
+	public static async createWorkspace({
+		data,
+		include = {},
+	}: {
+		data: Prisma.WorkspaceUncheckedCreateInput;
+		include?: Prisma.WorkspaceInclude;
+	}) {
 		return this.executeAction(
-			() => this.prisma.workspace.create({ data }),
+			() => this.prisma.workspace.create({ data, include }),
 			"Failed to create workspace",
 		);
 	}
@@ -78,6 +89,102 @@ class WorkspaceServerActions extends BaseServerActionActions {
 	}
 
 	// EXTRA
+	public static async initializeWorkspace({
+		data,
+	}: {
+		data: z.infer<typeof initializeWorkspaceSchema>;
+	}) {
+		const { data: user } = await AuthServerActions.authUser();
+		if (!user) throw new Error("Not Authenticated to perform this action");
+
+		const parsedData = initializeWorkspaceSchema.parse(data);
+		const uniqueName = await generateUniqueName(parsedData.displayName, "workspace");
+
+		return this.executeAction(async () => {
+			const {
+				data: workspace,
+				success,
+				error,
+			} = await this.createWorkspace({
+				data: {
+					displayName: data.displayName,
+					name: uniqueName,
+					ownerId: user.id,
+				},
+				include: {
+					owner: true,
+				},
+			});
+			if (!success) throw new Error(error);
+
+			const { error: MembershipError, success: MembershipSuccess } =
+				await this.createWorkspaceMembership({
+					workspaceId: workspace.id,
+					userId: user.id,
+				});
+
+			if (!MembershipSuccess) throw new Error(MembershipError);
+			const members = parsedData.team.map((member) => {
+				return {
+					email: member.email,
+					roleId: member.roleId,
+					workspaceId: workspace.id,
+					status: WorkspaceInviteStatus.PENDING,
+				};
+			});
+			if (members.length > 0) {
+				const { error: InvitationError, success: InvitationSuccess } =
+					await this.createWorkspaceInvitation({ members, workspace });
+				if (!InvitationSuccess) {
+					throw new Error(InvitationError);
+				}
+			}
+			return workspace;
+		}, "Failed to initialize the workspace");
+	}
+	public static async createWorkspaceMembership({
+		workspaceId,
+		userId,
+	}: {
+		workspaceId: string;
+		userId: string;
+	}) {
+		return this.executeAction(
+			() =>
+				this.prisma.workspaceMembership.create({
+					data: {
+						workspaceId: workspaceId,
+						userId: userId,
+					},
+				}),
+			"Failed to create workspaceMembership",
+		);
+	}
+	public static async createWorkspaceInvitation({
+		members,
+		workspace,
+	}: {
+		members: Prisma.WorkspaceInvitationUncheckedCreateInput[];
+		workspace: Workspace & { owner: User };
+	}) {
+		return this.executeAction(async () => {
+			await this.prisma.workspaceInvitation.createMany({
+				data: members,
+			});
+			const teamMembersEmails = members.map((member) => member.email);
+			try {
+				await sendWorkspaceInvitationMail(
+					teamMembersEmails,
+					workspace.id,
+					workspace.displayName,
+					workspace.owner,
+				);
+			} catch (error) {
+				throw new Error("Failed to send invitation email");
+			}
+		}, "Failed to create workspace invitations");
+	}
+
 	public static async checkWorkspaceMembership({
 		userId,
 		workspaceId,
@@ -85,10 +192,10 @@ class WorkspaceServerActions extends BaseServerActionActions {
 	}: {
 		userId: string;
 		workspaceId: string;
-		select?: Prisma.WorkspaceUserSelect;
+		select?: Prisma.WorkspaceMembershipSelect;
 	}) {
 		return this.executeAction(async () => {
-			const membership = await this.prisma.workspaceUser.findFirst({
+			const membership = await this.prisma.workspaceMembership.findFirst({
 				where: {
 					userId: userId,
 					workspace: {
@@ -109,16 +216,16 @@ class WorkspaceServerActions extends BaseServerActionActions {
 		select = { workspace: true },
 	}: {
 		userId: string;
-		select?: Prisma.WorkspaceUserSelect;
+		select?: Prisma.WorkspaceMembershipSelect;
 	}) {
 		return this.executeAction(async () => {
-			const workspaceUser = await this.prisma.workspaceUser.findFirst({
+			const workspaceMembership = await this.prisma.workspaceMembership.findFirst({
 				where: {
 					userId: userId,
 				},
 				select,
 			});
-			return workspaceUser?.workspace;
+			return workspaceMembership?.workspace;
 		}, "Failed to get default workspace");
 	}
 }
@@ -143,6 +250,21 @@ export async function updateWorkspace(
 	...args: Parameters<typeof WorkspaceServerActions.updateWorkspace>
 ) {
 	return WorkspaceServerActions.updateWorkspace(...args);
+}
+export async function initializeWorkspace(
+	...args: Parameters<typeof WorkspaceServerActions.initializeWorkspace>
+) {
+	return WorkspaceServerActions.initializeWorkspace(...args);
+}
+export async function createWorkspaceMembership(
+	...args: Parameters<typeof WorkspaceServerActions.createWorkspaceMembership>
+) {
+	return WorkspaceServerActions.createWorkspaceMembership(...args);
+}
+export async function createWorkspaceInvitation(
+	...args: Parameters<typeof WorkspaceServerActions.createWorkspaceInvitation>
+) {
+	return WorkspaceServerActions.createWorkspaceInvitation(...args);
 }
 
 export default WorkspaceServerActions;

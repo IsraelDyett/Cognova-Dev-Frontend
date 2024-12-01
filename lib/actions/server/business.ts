@@ -176,43 +176,65 @@ class BusinessServerActions extends BaseServerActionActions {
 	}
 }
 
-export async function getBusinesses(...args: Parameters<typeof BusinessServerActions.getBusinesses>) {
-	return BusinessServerActions.getBusinesses(...args)
+export async function getBusinesses(
+	...args: Parameters<typeof BusinessServerActions.getBusinesses>
+) {
+	return BusinessServerActions.getBusinesses(...args);
 }
-export async function createBusiness(...args: Parameters<typeof BusinessServerActions.createBusiness>) {
-	return BusinessServerActions.createBusiness(...args)
+export async function createBusiness(
+	...args: Parameters<typeof BusinessServerActions.createBusiness>
+) {
+	return BusinessServerActions.createBusiness(...args);
 }
-export async function updateBusiness(...args: Parameters<typeof BusinessServerActions.updateBusiness>) {
-	return BusinessServerActions.updateBusiness(...args)
+export async function updateBusiness(
+	...args: Parameters<typeof BusinessServerActions.updateBusiness>
+) {
+	return BusinessServerActions.updateBusiness(...args);
 }
-export async function deleteBusiness(...args: Parameters<typeof BusinessServerActions.deleteBusiness>) {
-	return BusinessServerActions.deleteBusiness(...args)
+export async function deleteBusiness(
+	...args: Parameters<typeof BusinessServerActions.deleteBusiness>
+) {
+	return BusinessServerActions.deleteBusiness(...args);
 }
 export async function getLocations(...args: Parameters<typeof BusinessServerActions.getLocations>) {
-	return BusinessServerActions.getLocations(...args)
+	return BusinessServerActions.getLocations(...args);
 }
-export async function createLocation(...args: Parameters<typeof BusinessServerActions.createLocation>) {
-	return BusinessServerActions.createLocation(...args)
+export async function createLocation(
+	...args: Parameters<typeof BusinessServerActions.createLocation>
+) {
+	return BusinessServerActions.createLocation(...args);
 }
-export async function updateLocation(...args: Parameters<typeof BusinessServerActions.updateLocation>) {
-	return BusinessServerActions.updateLocation(...args)
+export async function updateLocation(
+	...args: Parameters<typeof BusinessServerActions.updateLocation>
+) {
+	return BusinessServerActions.updateLocation(...args);
 }
-export async function deleteLocation(...args: Parameters<typeof BusinessServerActions.deleteLocation>) {
-	return BusinessServerActions.deleteLocation(...args)
+export async function deleteLocation(
+	...args: Parameters<typeof BusinessServerActions.deleteLocation>
+) {
+	return BusinessServerActions.deleteLocation(...args);
 }
 export async function getProducts(...args: Parameters<typeof BusinessServerActions.getProducts>) {
-	return BusinessServerActions.getProducts(...args)
+	return BusinessServerActions.getProducts(...args);
 }
-export async function createProduct(...args: Parameters<typeof BusinessServerActions.createProduct>) {
-	return BusinessServerActions.createProduct(...args)
+export async function createProduct(
+	...args: Parameters<typeof BusinessServerActions.createProduct>
+) {
+	return BusinessServerActions.createProduct(...args);
 }
-export async function updateProduct(...args: Parameters<typeof BusinessServerActions.updateProduct>) {
-	return BusinessServerActions.updateProduct(...args)
+export async function updateProduct(
+	...args: Parameters<typeof BusinessServerActions.updateProduct>
+) {
+	return BusinessServerActions.updateProduct(...args);
 }
-export async function deleteProduct(...args: Parameters<typeof BusinessServerActions.deleteProduct>) {
-	return BusinessServerActions.deleteProduct(...args)
+export async function deleteProduct(
+	...args: Parameters<typeof BusinessServerActions.deleteProduct>
+) {
+	return BusinessServerActions.deleteProduct(...args);
 }
-export async function retrieveBusinessConfig(...args: Parameters<typeof BusinessServerActions.retrieveBusinessConfig>) {
-	return BusinessServerActions.retrieveBusinessConfig(...args)
+export async function retrieveBusinessConfig(
+	...args: Parameters<typeof BusinessServerActions.retrieveBusinessConfig>
+) {
+	return BusinessServerActions.retrieveBusinessConfig(...args);
 }
 export default BusinessServerActions;

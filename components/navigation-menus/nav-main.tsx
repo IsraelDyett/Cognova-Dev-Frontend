@@ -13,7 +13,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { WorkspaceLink } from "@/app/(workspace)/components/link";
+import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 
 export function NavMain({
 	items,

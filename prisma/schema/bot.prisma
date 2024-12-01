@@ -1,62 +1,24 @@
 model Bot {
   id                 String            @id @default(cuid())
   workspaceId        String
+  businessId         String?
   name               String
   description        String?
   language           String?
   systemMessage      String?
-  placeholderMessage String?
-  welcomeMessage     String?
-  starterQuestions   String[]
   modelId            String?
   waPhoneNumber      String?           @unique
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @default(now()) @updatedAt
-  configurations     BotConfiguration?
-  sources            BotSources[]
-  type               BotTypes          @default(KNOWLEDGE_BASE_ASSISTANT)
+  type               BotTypes          @default(SALES_ASSISTANT)
   model              Model?            @relation(fields: [modelId], references: [id], onDelete: SetNull)
   workspace          Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   conversations      Conversation[]
   business           Business?         @relation(fields: [businessId], references: [id])
-  businessId         String?
 
   @@map("bots")
 }
 
-model BotConfiguration {
-  id                 String   @id @default(cuid())
-  botId              String   @unique
-  avatarURL          String?
-  uMessageColor      String?
-  aMessageColor      String?
-  fontId             String
-  showSources        Boolean
-  sendButtonText     String?
-  customCSS          String?
-  embedAngle         String?
-  embedWidgetSize    String?
-  embedWidgetIconURL String?
-  embedAutoOpen      Boolean?
-  embedPingMessage   String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @default(now()) @updatedAt
-  botChatAvatarURL   String?
-  bot                Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
-
-  @@map("bot_configuration")
-}
-
-model BotSources {
-  id        String   @id @default(cuid())
-  botId     String
-  sourceId  String
-  createdAt DateTime @default(now())
-  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
-  source    Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-
-  @@map("bot_sources")
-}
 
 model Model {
   id           String      @id @default(cuid())

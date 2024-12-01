@@ -126,11 +126,6 @@ export const sidebarData = {
 			url: "/bots",
 			icon: Bot,
 		},
-		{
-			title: "Sources",
-			url: "/sources",
-			icon: Brain,
-		},
 	],
 	businessNavigationMenus: [
 		{
@@ -165,11 +160,6 @@ export const sidebarData = {
 		},
 	],
 	botNavigationMenus: [
-		// {
-		// 	title: "Sources",
-		// 	url: "bots/{botId}/sources",
-		// 	icon: Brain,
-		// },
 		{
 			title: "Analytics",
 			url: "bots/{botId}/analytics",
@@ -179,11 +169,6 @@ export const sidebarData = {
 			title: "Playground",
 			url: "bots/{botId}/playground",
 			icon: SquareTerminal,
-		},
-		{
-			title: "Customize",
-			url: "bots/{botId}/customize",
-			icon: Cog,
 		},
 		{
 			title: "Chats",
