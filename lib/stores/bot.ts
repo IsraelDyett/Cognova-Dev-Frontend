@@ -36,11 +36,7 @@ export const useBotStore = create<BotState>((set) => ({
 	fetchBots: async (workspaceId: string) => {
 		debug("CLIENT", "fetchBots", "STORE");
 		set({ loading: "bots", error: null });
-		const {
-			data: bots,
-			success,
-			error,
-		} = await getBots({ workspaceId: workspaceId });
+		const { data: bots, success, error } = await getBots({ workspaceId: workspaceId });
 		if (success) {
 			set({ bots: bots });
 		} else {
@@ -51,11 +47,7 @@ export const useBotStore = create<BotState>((set) => ({
 	},
 	fetchModels: async () => {
 		debug("CLIENT", "fetchModels", "STORE");
-		const {
-			data: models,
-			success,
-			error,
-		} = await  getModels({});
+		const { data: models, success, error } = await getModels({});
 		if (success) {
 			set({ models: models });
 		} else {
@@ -78,11 +70,7 @@ export const useBotStore = create<BotState>((set) => ({
 
 	updateBot: async (id, data) => {
 		debug("CLIENT", "updateBot", "CONTEXT");
-		const {
-			data: updatedBotData,
-			success,
-			error,
-		} = await updateBot({ botId: id, data });
+		const { data: updatedBotData, success, error } = await updateBot({ botId: id, data });
 		if (success) {
 			set((state) => ({
 				bots: state.bots.map((item) => (item.id === id ? updatedBotData : item)),

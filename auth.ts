@@ -32,15 +32,24 @@ export const config: NextAuthConfig = {
 			}
 
 			try {
-				const { data: response, success, error } = await AuthServerActions.signUpOrIn({
-					email: user.email,
-					name: user.name,
-					password: user.id,
-					image: user.image,
-				}, "GOOGLE");
+				const {
+					data: response,
+					success,
+					error,
+				} = await AuthServerActions.signUpOrIn(
+					{
+						email: user.email,
+						name: user.name,
+						password: user.id,
+						image: user.image,
+					},
+					"GOOGLE",
+				);
 				if (!success) return false;
 				if (response?.sessionToken.sessionToken && response?.sessionToken.expiresAt) {
-					SessionServerActions.setSessionTokenCookie({ sessionToken: response?.sessionToken.sessionToken });
+					SessionServerActions.setSessionTokenCookie({
+						sessionToken: response?.sessionToken.sessionToken,
+					});
 					return true;
 				}
 

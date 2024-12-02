@@ -121,11 +121,6 @@ export const sidebarData = {
 			url: "/businesses",
 			icon: Building,
 		},
-		{
-			title: "Bots",
-			url: "/bots",
-			icon: Bot,
-		},
 	],
 	businessNavigationMenus: [
 		{
@@ -142,6 +137,11 @@ export const sidebarData = {
 			title: "Products",
 			icon: ShoppingBag,
 			url: "businesses/{businessId}/products",
+		},
+		{
+			title: "Bots",
+			icon: Bot,
+			url: "businesses/{businessId}/bots",
 		},
 		{
 			title: "Locations",
@@ -162,24 +162,19 @@ export const sidebarData = {
 	botNavigationMenus: [
 		{
 			title: "Analytics",
-			url: "bots/{botId}/analytics",
+			url: "businesses/{businessId}/bots/{botId}/analytics",
 			icon: ChartArea,
 		},
 		{
 			title: "Playground",
-			url: "bots/{botId}/playground",
+			url: "businesses/{businessId}/bots/{botId}/playground",
 			icon: SquareTerminal,
 		},
 		{
 			title: "Chats",
-			url: "bots/{botId}/chats",
+			url: "businesses/{businessId}/bots/{botId}/chats",
 			icon: MessageSquareText,
 		},
-		// {
-		// 	title: "Embed",
-		// 	url: "bots/{botId}/customize",
-		// 	icon: SquareMousePointer,
-		// },
 	],
 	workspaceNavigationMenus: [
 		{

@@ -43,7 +43,6 @@ class ChatServerActions extends BaseServerActionActions {
 	}
 
 	public static async createConversation({ botId }: { botId: string }) {
-		const metadata = SessionServerActions.getUserAgentMetadata();
 		const sessionId = await SessionServerActions.getOrCreateHeadlessSessionId();
 		return this.executeAction(async () => {
 			const bot = await this.prisma.bot.findUnique({
@@ -56,7 +55,6 @@ class ChatServerActions extends BaseServerActionActions {
 				data: {
 					botId,
 					sessionId,
-					...metadata,
 					countryCode: headers().get("CF-IPCountry") || null,
 				},
 				include: { bot: true },

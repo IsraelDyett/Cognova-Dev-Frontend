@@ -5,7 +5,7 @@ import Footer from "./components/footer";
 
 const LandingPageLayout = ({ children }: { children: React.ReactNode }) => {
 	const origin = typeof window !== "undefined" ? window.location.origin : siteConfig.domains.root;
-	const botID = process.env.SYS_BOT_ID || "cm3fqhmhh000708job4qfgfpn";
+	const botID = process.env.SYS_BOT_ID || "cm45wcief000tn1ufdi3g28dh";
 	return (
 		<div className="flex flex-col min-h-screen bg-background">
 			<Header />

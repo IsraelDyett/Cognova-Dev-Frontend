@@ -36,9 +36,7 @@ const formSchema = z.object({
 	name: z.string().min(1, "Required"),
 	address: z.string().min(1, "Required"),
 	city: z.string().min(1, "Required"),
-	state: z.string().optional(),
 	country: z.string().min(1, "Required"),
-	postalCode: z.string().optional(),
 	phone: z.string().optional(),
 	email: z.string().optional(),
 	isMain: z.boolean(),
@@ -51,9 +49,7 @@ const defaultValues = {
 	name: "",
 	address: "",
 	city: "",
-	state: "",
 	country: "",
-	postalCode: "",
 	phone: "",
 	email: "",
 	isMain: false,
@@ -189,24 +185,6 @@ export function BusinessLocationForm() {
 
 						<FormField
 							control={form.control}
-							name="state"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>State</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter state"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
 							name="country"
 							render={({ field }) => (
 								<FormItem>
@@ -215,24 +193,6 @@ export function BusinessLocationForm() {
 										<Input
 											disabled={isLoading}
 											placeholder="Enter country"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="postalCode"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>PostalCode</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter postalCode"
 											{...field}
 										/>
 									</FormControl>
@@ -281,7 +241,7 @@ export function BusinessLocationForm() {
 							control={form.control}
 							name="isMain"
 							render={({ field }) => (
-								<FormItem className="flex flex-col col-span-full">
+								<FormItem className="flex flex-col">
 									<FormLabel className="text-base">IsMain</FormLabel>
 									<FormControl>
 										<Switch

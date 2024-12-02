@@ -44,7 +44,7 @@ export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 			const configuration = row.original.business.configurations;
 			return (
 				<div className="font-medium">
-					{configuration?.currency || "$"}
+					{configuration?.currency || "$"} {" "}
 					{Number(row.getValue("price")).toLocaleString(undefined, {
 						minimumFractionDigits: 2,
 						maximumFractionDigits: 2,
@@ -58,18 +58,6 @@ export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Stock" />,
 		cell: ({ row }) => (
 			<div className="font-medium">{Number(row.getValue("stock")).toLocaleString()}</div>
-		),
-	},
-	{
-		accessorKey: "sku",
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Sku" />,
-		cell: ({ row }) => <div className="font-medium">{row.getValue("sku")}</div>,
-	},
-	{
-		accessorKey: "images",
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Images" />,
-		cell: ({ row }) => (
-			<div className="font-medium">{(row.getValue("images") as string[]).length} items</div>
 		),
 	},
 	{
@@ -111,12 +99,6 @@ export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem asChild>
-							<WorkspaceLink href={`/product/${item.id}`}>
-								<Eye className="h-4 w-4" />
-								<span>View</span>
-							</WorkspaceLink>
-						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={(e) => e.preventDefault()}
 							onClick={() => onOpenEditForm(item)}

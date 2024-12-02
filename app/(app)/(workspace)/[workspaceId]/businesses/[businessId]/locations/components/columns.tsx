@@ -105,12 +105,6 @@ export const columns: ColumnDef<BusinessLocation>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem asChild>
-							<WorkspaceLink href={`{businessId}/locations/${item.id}`}>
-								<Eye className="h-4 w-4" />
-								<span>View</span>
-							</WorkspaceLink>
-						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={(e) => e.preventDefault()}
 							onClick={() => onOpenEditForm(item)}

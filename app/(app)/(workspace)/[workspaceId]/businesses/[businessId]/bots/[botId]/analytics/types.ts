@@ -17,7 +17,6 @@ export interface PrismaCountryDistribution extends PrismaDistributionCount {
 	countryCode: string;
 }
 
-
 // Processed types for frontend
 export interface QueryPerDay {
 	date: string;

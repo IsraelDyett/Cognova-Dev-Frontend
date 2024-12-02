@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { debug } from "@/lib/utils";
 import type { Chat, Conversation } from "@prisma/client";
-import ChatServerActions from "@/lib/actions/server/chat";
+import { getChats, getConversations } from "@/lib/actions/server/chat";
 
 interface ChatState {
 	chats: Chat[];
@@ -36,7 +36,7 @@ export const useChatStore = create<ChatState>((set) => ({
 			data: chats,
 			success,
 			error,
-		} = await ChatServerActions.getChats({ conversationId });
+		} = await getChats({ conversationId });
 		if (success) {
 			set({ chats: chats });
 		} else {
@@ -53,7 +53,7 @@ export const useChatStore = create<ChatState>((set) => ({
 			data: conversations,
 			success,
 			error,
-		} = await ChatServerActions.getConversations({ botId });
+		} = await getConversations({ botId });
 		if (success) {
 			set({ conversations: conversations });
 		} else {

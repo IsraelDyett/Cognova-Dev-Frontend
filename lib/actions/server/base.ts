@@ -23,18 +23,16 @@ abstract class BaseServerActionActions {
 			const result = await action();
 			return { success: true, data: result, error: null as unknown as string };
 		} catch (error) {
+			console.log("GO ERROR", error, typeof error)
 			const newErrorMessage = error instanceof Error ? error.message : errorMessage;
 			if (onError) onError(error);
 			return { success: false, data: null as T, error: newErrorMessage };
 		}
 	}
 	protected static getCallerFunctionName(): string {
-		const stack = new Error().stack;
-		// Get the third line of the stack trace (first is Error, second is getCallerFunctionName, third is the actual caller)
-		const callerLine = stack?.split("\n")[2];
-		// Extract the function name using regex
+		const stack = `${new Error().stack}`;
+		const callerLine = stack?.split("\n")[3];
 		const functionName = callerLine?.match(/at\s+(.*?)\s+\(/)?.[1] ?? "unknown";
-		// Get just the method name without the class name
 		return functionName.split(".").pop() ?? "unknown";
 	}
 }

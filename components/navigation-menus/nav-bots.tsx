@@ -21,11 +21,18 @@ import { Skeleton } from "../ui/skeleton";
 import { shareBot } from "../share-button";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
+import { Bot } from "@prisma/client";
 
 export function NavBots() {
 	const { isMobile } = useSidebar();
 	const { workspace, isLoading } = useWorkspace();
-	if ((workspace?.bots || []).length == 0 && !isLoading) return null;
+	const bots: Bot[] = []
+	workspace?.businesses?.forEach((b) => {
+		b.bots.forEach((bot)  => {
+			bots.push(bot)
+		})
+	})
+	if (bots.length == 0 && !isLoading) return null;
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Bots</SidebarGroupLabel>
@@ -45,10 +52,10 @@ export function NavBots() {
 					</>
 				) : (
 					<>
-						{workspace?.bots?.slice(0, 3).map((bot) => (
+						{bots?.slice(0, 3).map((bot) => (
 							<SidebarMenuItem key={bot.name}>
 								<SidebarMenuButton asChild className="w-full">
-									<WorkspaceLink href={`/bots/${bot.id}`}>
+									<WorkspaceLink href={`businesses/${bot.businessId}/bots/${bot.id}`}>
 										<BotIcon />
 										<span>{bot.name}</span>
 									</WorkspaceLink>
@@ -75,7 +82,7 @@ export function NavBots() {
 						))}
 					</>
 				)}
-				{(workspace?.bots || []).length > 3 && (
+				{bots.length > 3 && (
 					<SidebarMenuItem>
 						<SidebarMenuButton className="text-sidebar-foreground/70">
 							<MoreHorizontal className="text-sidebar-foreground/70" />

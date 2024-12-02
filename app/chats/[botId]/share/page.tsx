@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/site";
 import { notFound } from "next/navigation";
 import { WorkspacePageProps } from "@/types";
 import BotServerActions from "@/lib/actions/server/bot";
-import PlaygroundPage from "@/app/(app)/(workspace)/[workspaceId]/bots/[botId]/playground/page";
+import PlaygroundPage from "@/businessId/bots/[botId]/playground/page";
 
 export async function generateMetadata({
 	params,

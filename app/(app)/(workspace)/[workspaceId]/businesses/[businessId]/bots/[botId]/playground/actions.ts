@@ -49,8 +49,8 @@ export const handlePrompt = async ({
 	conversationId: string;
 }) => {
 	debug("CLIENT", "handlePrompt", "UTILS-FUNC");
-	const backendAPI = process.env.NEXT_PUBLIC_FAST_API_HOST || "https://api.cognova.io";
-	const response = await fetch(`${backendAPI}/api/v1/bots/${botId}/chat/${conversationId}`, {
+	const backendAPI = process.env.NEXT_PUBLIC_FAST_API_HOST || "https://api.cognova.io/api/v1";
+	const response = await fetch(`${backendAPI}/bots/${botId}/chat/${conversationId}`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

@@ -63,11 +63,7 @@ class BotServerActions extends BaseServerActionActions {
 			() =>
 				this.prisma.bot
 					.create({
-						data: {
-							name: data.name,
-							modelId: data.modelId,
-							workspaceId: data.workspaceId,
-						},
+						data: data,
 						include,
 					})
 					.then((bot) => {
@@ -93,11 +89,7 @@ class BotServerActions extends BaseServerActionActions {
 			() =>
 				this.prisma.bot.update({
 					where: { id: botId },
-					data: {
-						name: data.name,
-						modelId: data.modelId,
-						workspaceId: data.workspaceId,
-					},
+					data: data,
 					include,
 				}),
 			"Failed to update bot",

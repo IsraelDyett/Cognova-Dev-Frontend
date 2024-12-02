@@ -38,9 +38,6 @@ const defaultValues = {
 	name: "",
 	description: "",
 	language: "en",
-	systemMessage: "You're helpful assistant",
-	placeholderMessage: "Ask me anything",
-	welcomeMessage: "Hey how can i assist you today",
 	starterQuestions: [],
 	modelId: "",
 	waPhoneNumber: "",
@@ -111,7 +108,6 @@ export function BotForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					{JSON.stringify(form.formState.errors, null, 2)}
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -186,6 +182,25 @@ export function BotForm() {
 							itemLabelKey="displayName"
 							idKey="modelId"
 						/>
+						<FormField
+							control={form.control}
+							name="waPhoneNumber"
+							render={({ field }) => (
+								<FormItem className="md:col-span-1 col-span-full">
+									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">
+										Wa Phone Number
+									</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isLoading}
+											placeholder="Enter waPhoneNumber"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
 						<FormField
 							control={form.control}
@@ -206,25 +221,7 @@ export function BotForm() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="waPhoneNumber"
-							render={({ field }) => (
-								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">
-										Wa Phone Number
-									</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter waPhoneNumber"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+
 
 						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button

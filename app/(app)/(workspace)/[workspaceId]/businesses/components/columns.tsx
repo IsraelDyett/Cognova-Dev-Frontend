@@ -39,45 +39,6 @@ export const columns: ColumnDef<Business>[] = [
 		},
 	},
 	{
-		accessorKey: "hasDelivery",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="We Do Delivery" />;
-		},
-		cell: ({ row }) => {
-			return (
-				<Badge variant={row.getValue("hasDelivery") ? "success" : "secondary"}>
-					{row.getValue("hasDelivery") ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "acceptsReturns",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="Accept Returns" />;
-		},
-		cell: ({ row }) => {
-			return (
-				<Badge variant={row.getValue("acceptsReturns") ? "success" : "secondary"}>
-					{row.getValue("acceptsReturns") ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "hasWarranty",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="Provide Warranty" />;
-		},
-		cell: ({ row }) => {
-			return (
-				<Badge variant={row.getValue("hasWarranty") ? "success" : "secondary"}>
-					{row.getValue("hasWarranty") ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
 		accessorKey: "createdAt",
 		header: ({ column }) => {
 			return <DataTableColumnHeader column={column} title="CreatedAt" />;

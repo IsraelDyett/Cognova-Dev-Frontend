@@ -21,10 +21,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		"default",
 	);
 	React.useEffect(() => {
-		if (businessId) {
-			setCurrentNavbar("business");
-		} else if (botId) {
+		if (botId) {
 			setCurrentNavbar("bot");
+		} else if (businessId) {
+			setCurrentNavbar("business");
 		} else {
 			setCurrentNavbar("default");
 		}

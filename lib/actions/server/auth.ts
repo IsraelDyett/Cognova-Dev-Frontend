@@ -59,15 +59,15 @@ class AuthServerActions extends BaseServerActionActions {
 
 			if (user) {
 				if (provider !== "GOOGLE") {
-					const { data: signInResponse, success, error } = await this.signIn(data)
-					if (!success) throw new Error(error)
+					const { data: signInResponse, success, error } = await this.signIn(data);
+					if (!success) throw new Error(error);
 					return signInResponse;
-				};
+				}
 				// :TODO Needs some security measures
 				return this.authenticate("SIGN_IN", user);
 			}
 			const { data: signUpResponse, success, error } = await this.signUp(data, true);
-			if (!success) throw new Error(error)
+			if (!success) throw new Error(error);
 			return signUpResponse;
 		}, "SIGN_UP_OR_IN_FAILED");
 	}

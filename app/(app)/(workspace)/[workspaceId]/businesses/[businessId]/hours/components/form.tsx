@@ -114,7 +114,6 @@ export function HourForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					{JSON.stringify(form.getValues(), null, 2)}
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="grid gap-4 grid-cols-1 sm:grid-cols-2"
@@ -140,13 +139,13 @@ export function HourForm() {
 							label="Day Of Week"
 							form={form}
 							items={[
-								{ id: 0, name: "Sunday" },
-								{ id: 1, name: "Monday" },
-								{ id: 2, name: "Tuesday" },
-								{ id: 3, name: "Wednesday" },
-								{ id: 4, name: "Thursday" },
-								{ id: 5, name: "Friday" },
-								{ id: 6, name: "Saturday" },
+								{ id: WeekDays.SUNDAY, name: "Sunday" },
+								{ id: WeekDays.MONDAY, name: "Monday" },
+								{ id: WeekDays.TUESDAY, name: "Tuesday" },
+								{ id: WeekDays.WEDNESDAY, name: "Wednesday" },
+								{ id: WeekDays.THURSDAY, name: "Thursday" },
+								{ id: WeekDays.FRIDAY, name: "Friday" },
+								{ id: WeekDays.SATURDAY, name: "Saturday" },
 							]}
 							itemKey="id"
 							itemLabelKey="name"
@@ -193,7 +192,7 @@ export function HourForm() {
 							control={form.control}
 							name="isClosed"
 							render={({ field }) => (
-								<FormItem className="flex flex-col col-span-full">
+								<FormItem className="flex flex-col">
 									<FormLabel className="text-base">Is Closed</FormLabel>
 									<FormControl>
 										<Switch

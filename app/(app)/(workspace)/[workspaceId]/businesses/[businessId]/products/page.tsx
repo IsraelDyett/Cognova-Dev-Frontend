@@ -15,8 +15,7 @@ import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 export default function ProductDashboard() {
 	const { businessId } = useParams();
 	const { workspace } = useWorkspace();
-	const { products, loading, error, fetchProducts, onOpenCreateForm } =
-		useProductStore();
+	const { products, loading, error, fetchProducts, onOpenCreateForm } = useProductStore();
 
 	useEffect(() => {
 		if (workspace && businessId) {

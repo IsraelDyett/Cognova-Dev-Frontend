@@ -24,6 +24,9 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import type { BusinessConfig } from "@prisma/client";
+import { updateOrCreateBusinessConfig } from "@/lib/actions/server/business";
+import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 const businessConfigSchema = z.object({
 	deliveryFee: z.number().min(0).optional(),
@@ -36,7 +39,8 @@ const businessConfigSchema = z.object({
 
 type BusinessConfigFormValues = z.infer<typeof businessConfigSchema>;
 
-export function BusinessConfigForm({ businessConfig }: { businessConfig: BusinessConfig }) {
+export function BusinessConfigForm({ businessConfig }: { businessConfig: BusinessConfig | null }) {
+	const { businessId } = useParams()
 	const form = useForm<BusinessConfigFormValues>({
 		resolver: zodResolver(businessConfigSchema),
 		defaultValues: {
@@ -49,8 +53,14 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 		},
 	});
 
-	function onSubmit(data: BusinessConfigFormValues) {
-		console.log(data);
+	async function onSubmit(data: BusinessConfigFormValues) {
+		const data_ = { ...data, businessId: `${businessId}` }
+		const response = await updateOrCreateBusinessConfig({ businessId: `${businessId}`, data: data_ });
+		if (response.success) {
+			toast.success("BusinessConfig created/updated successfully");
+		} else {
+			toast.error(response.error)
+		}
 	}
 
 	return (
@@ -70,6 +80,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 											type="number"
 											step="0.01"
 											className="pl-8"
+											placeholder="$0"
 											{...field}
 											value={field.value || ""}
 											onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -90,7 +101,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 								<FormControl>
 									<div className="relative">
 										<Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input className="pl-8" {...field} />
+										<Input className="pl-8" {...field} placeholder="2 Hours" />
 									</div>
 								</FormControl>
 								<FormDescription>
@@ -105,7 +116,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 						name="minDeliveryOrderAmount"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Minimum Order Amount</FormLabel>
+								<FormLabel>Minimum Delivery Order Amount</FormLabel>
 								<FormControl>
 									<div className="relative">
 										<CreditCard className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -113,9 +124,8 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 											type="number"
 											step="0.01"
 											className="pl-8"
+											placeholder="$10"
 											{...field}
-											value={field.value || ""}
-											onChange={(e) => field.onChange(e.target.valueAsNumber)}
 										/>
 									</div>
 								</FormControl>
@@ -126,28 +136,25 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 							</FormItem>
 						)}
 					/>
-					
+
 					<FormField
 						control={form.control}
 						name="returnPeriod"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Return Period (Days)</FormLabel>
+								<FormLabel>Return Period</FormLabel>
 								<FormControl>
 									<div className="relative">
 										<Box className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
 											type="text"
 											className="pl-8"
+											placeholder="2 Days"
 											{...field}
-											value={field.value || ""}
-											onChange={(e) => field.onChange(e.target.valueAsNumber)}
 										/>
 									</div>
 								</FormControl>
-								<FormDescription>
-									The period allowed for returns.
-								</FormDescription>
+								<FormDescription>The period allowed for returns.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -157,16 +164,15 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 						name="warrantyPeriod"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Warranty Period (Days)</FormLabel>
+								<FormLabel>Warranty Period</FormLabel>
 								<FormControl>
 									<div className="relative">
 										<Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
 											type="number"
 											className="pl-8"
+											placeholder="12 Months"
 											{...field}
-											value={field.value || ""}
-											onChange={(e) => field.onChange(e.target.valueAsNumber)}
 										/>
 									</div>
 								</FormControl>
@@ -194,7 +200,7 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 									</FormControl>
 									<SelectContent>
 										<SelectItem value="USD">USD</SelectItem>
-										<SelectItem value="EUR">EUR</SelectItem>
+										<SelectItem value="RWF">RWF</SelectItem>
 										<SelectItem value="GBP">GBP</SelectItem>
 									</SelectContent>
 								</Select>

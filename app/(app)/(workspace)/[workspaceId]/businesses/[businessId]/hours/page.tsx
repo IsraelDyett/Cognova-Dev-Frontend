@@ -29,7 +29,7 @@ export default function HourDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{hours.length === 0 && !loading ? (
-					<NoStateComponent  title="Hour" onOpenCreateForm={onOpenCreateForm}  />
+					<NoStateComponent title="Hour" onOpenCreateForm={onOpenCreateForm} />
 				) : (
 					<DataTable
 						columns={columns}

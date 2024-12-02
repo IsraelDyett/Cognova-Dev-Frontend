@@ -31,7 +31,7 @@ export default function BusinessLocationDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{businesslocations.length === 0 && !loading ? (
-					<NoStateComponent  title="Location" onOpenCreateForm={onOpenCreateForm}  />
+					<NoStateComponent title="Location" onOpenCreateForm={onOpenCreateForm} />
 				) : (
 					<DataTable
 						columns={columns}

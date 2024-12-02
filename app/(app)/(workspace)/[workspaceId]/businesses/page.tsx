@@ -28,11 +28,12 @@ export default function BusinessDashboard() {
 		<>
 			<div className="container mx-auto p-4">
 				{businesses.length === 0 && !loading ? (
-					<NoStateComponent  title="Business" onOpenCreateForm={onOpenCreateForm}  />
+					<NoStateComponent title="Business" onOpenCreateForm={onOpenCreateForm} />
 				) : (
 					<DataTable
 						columns={columns}
 						data={businesses}
+						tableRowLink={`/${workspace?.name}/businesses/{id}`}
 						searchField="name"
 						toolBarChildren={
 							<Button onClick={onOpenCreateForm}>

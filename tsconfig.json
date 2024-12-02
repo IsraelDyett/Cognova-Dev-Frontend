@@ -25,7 +25,9 @@
 			"@/bin/*": ["./lib/bin/*"],
 			"@/zod/*": ["./lib/zod/*"],
 			"@/lang/*": ["./lib/lang/*"],
-			"@/services/*": ["./lib/services/*"]
+			"@/services/*": ["./lib/services/*"],
+			"@/workspaceId/*": ["./app/(app)/(workspace)/[workspaceId]/*"],
+			"@/businessId/*": ["./app/(app)/(workspace)/[workspaceId]/businesses/[businessId]/*"]
 		}
 	},
 	"include": [

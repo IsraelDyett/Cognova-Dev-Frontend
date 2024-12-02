@@ -47,12 +47,7 @@ const AnalyticsDashboard: React.FC<WorkspacePageProps> = (props) => {
 
 	if (!analytics) return null;
 
-	const {
-		conversationMetrics,
-		chatMetrics,
-		queriesPerDay,
-		countryDistribution,
-	} = analytics;
+	const { conversationMetrics, chatMetrics, queriesPerDay, countryDistribution } = analytics;
 
 	return (
 		<div className="space-y-6">

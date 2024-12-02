@@ -38,15 +38,6 @@ export const columns: ColumnDef<Bot>[] = [
 		},
 	},
 	{
-		accessorKey: "language",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="Language" />;
-		},
-		cell: ({ row }) => {
-			return <div className="font-medium">{row.getValue("language")}</div>;
-		},
-	},
-	{
 		accessorKey: "waPhoneNumber",
 		header: ({ column }) => {
 			return <DataTableColumnHeader column={column} title="Wa Phone Number" />;
@@ -71,7 +62,7 @@ export const columns: ColumnDef<Bot>[] = [
 	{
 		id: "actions",
 		cell: ({ row }) => {
-			const item = row.original;
+			const bot = row.original;
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { deleteBot, onOpenEditForm } = useBotStore();
 
@@ -86,14 +77,14 @@ export const columns: ColumnDef<Bot>[] = [
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 						<DropdownMenuItem asChild>
-							<WorkspaceLink href={`/bot/${item.id}`}>
+							<WorkspaceLink href={`/businesses/${bot.businessId}/bots/${bot.id}`}>
 								<Eye className="h-4 w-4" />
 								<span>View</span>
 							</WorkspaceLink>
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={(e) => e.preventDefault()}
-							onClick={() => onOpenEditForm(item)}
+							onClick={() => onOpenEditForm(bot)}
 						>
 							<Pencil className="h-4 w-4" />
 							<span>Edit</span>
@@ -118,7 +109,7 @@ export const columns: ColumnDef<Bot>[] = [
 									<AlertDialogFooter>
 										<AlertDialogCancel>Cancel</AlertDialogCancel>
 										<AlertDialogAction
-											onClick={() => deleteBot(item.id)}
+											onClick={() => deleteBot(bot.id)}
 											className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 										>
 											Delete

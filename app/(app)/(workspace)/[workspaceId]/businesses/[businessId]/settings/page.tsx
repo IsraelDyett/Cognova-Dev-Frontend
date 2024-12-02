@@ -9,7 +9,7 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 	const { data: businessConfig, error } = await retrieveBusinessConfig({
 		businessId: props.params.businessId,
 	});
-	if (error || !businessConfig) return <div>Error: {error}</div>;
+	if (error) return <div>Error: {error}</div>;
 	return (
 		<div className="container mx-auto p-4">
 			<Tabs defaultValue="general" className="space-y-4">

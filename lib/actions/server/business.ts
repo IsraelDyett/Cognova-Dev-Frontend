@@ -1,6 +1,7 @@
 "use server";
 import { Prisma } from "@prisma/client";
 import BaseServerActionActions from "./base";
+import { exclude } from "@/lib/utils";
 
 class BusinessServerActions extends BaseServerActionActions {
 	public static async getBusinesses({
@@ -180,7 +181,7 @@ class BusinessServerActions extends BaseServerActionActions {
 				this.prisma.businessProduct.update({
 					where: { id },
 					data,
-					include
+					include,
 				}),
 			"Failed to update business product",
 		);
@@ -202,15 +203,22 @@ class BusinessServerActions extends BaseServerActionActions {
 			"Failed to retrieve business config",
 		);
 	}
-	public static async updateOrCreateBusinessConfig({ businessId, data }: { businessId: string, data: Prisma.BusinessConfigUncheckedCreateInput }) {
+	public static async updateOrCreateBusinessConfig({
+		businessId,
+		data,
+	}: {
+		businessId: string;
+		data: Prisma.BusinessConfigUncheckedCreateInput;
+	}) {
 		return this.executeAction(
-			() => this.prisma.businessConfig.upsert({
-				where: {
-					businessId,
-				},
-				create: data,
-				update: data,
-			}),
+			() =>
+				this.prisma.businessConfig.upsert({
+					where: {
+						businessId,
+					},
+					create: data,
+					update: data,
+				}),
 			"Failed to retrieve business config",
 		);
 	}
@@ -251,11 +259,13 @@ class BusinessServerActions extends BaseServerActionActions {
 
 	public static async createHour({
 		data,
+		include = {},
 	}: {
 		data: Prisma.BusinessOperatingHoursUncheckedCreateInput;
+		include?: Prisma.BusinessOperatingHoursInclude;
 	}) {
 		return this.executeAction(
-			() => this.prisma.businessOperatingHours.create({ data }),
+			() => this.prisma.businessOperatingHours.create({ data, include }),
 			"Failed to create business operating hour",
 		);
 	}
@@ -263,15 +273,18 @@ class BusinessServerActions extends BaseServerActionActions {
 	public static async updateHour({
 		id,
 		data,
+		include = {},
 	}: {
 		id: string;
 		data: Prisma.BusinessOperatingHoursUncheckedUpdateInput;
+		include?: Prisma.BusinessOperatingHoursInclude;
 	}) {
 		return this.executeAction(
 			() =>
 				this.prisma.businessOperatingHours.update({
 					where: { id },
 					data,
+					include,
 				}),
 			"Failed to update business operating hour",
 		);
@@ -286,7 +299,6 @@ class BusinessServerActions extends BaseServerActionActions {
 			"Failed to delete business operating hour",
 		);
 	}
-
 }
 
 export async function getBusinesses(
@@ -371,7 +383,8 @@ export async function retrieveBusinessConfig(
 ) {
 	return BusinessServerActions.retrieveBusinessConfig(...args);
 }
-export async function updateOrCreateBusinessConfig(...args: Parameters<typeof BusinessServerActions.updateOrCreateBusinessConfig>
+export async function updateOrCreateBusinessConfig(
+	...args: Parameters<typeof BusinessServerActions.updateOrCreateBusinessConfig>
 ) {
 	return BusinessServerActions.updateOrCreateBusinessConfig(...args);
 }

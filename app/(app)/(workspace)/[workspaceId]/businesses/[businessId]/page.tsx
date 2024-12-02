@@ -30,7 +30,7 @@ export default function BusinessDetail() {
 
 	useEffect(() => {
 		if (params.businessId) {
-			retrieveBusiness({ businessId: params.businessId as string}).then((res) => {
+			retrieveBusiness({ businessId: params.businessId as string }).then((res) => {
 				setCurrentBusiness(res.data);
 			});
 		}

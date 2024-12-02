@@ -28,7 +28,6 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
 	{
 		accessorKey: "location",
@@ -44,7 +43,7 @@ export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
 		cell: ({ row }) => {
 			return (
 				<span className="font-medium">
-					{daysOfWeek[parseInt(row.getValue("dayOfWeek"))]}
+					{row.getValue("dayOfWeek")}
 				</span>
 			);
 		},
@@ -96,12 +95,6 @@ export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem asChild>
-							<WorkspaceLink href={`/hour/${item.id}`}>
-								<Eye className="h-4 w-4" />
-								<span>View</span>
-							</WorkspaceLink>
-						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={(e) => e.preventDefault()}
 							onClick={() => onOpenEditForm(item)}

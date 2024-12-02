@@ -9,7 +9,7 @@ import DataTable from "@/components/ui/data-table";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { useBotStore } from "@/lib/stores/bot";
 import dynamic from "next/dynamic";
-import { NoStateComponent } from "../../components/no-state";
+import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 
 const BotForm = dynamic(() => import("./components/form").then((mod) => mod.BotForm));
 
@@ -38,6 +38,7 @@ export default function BotDashboard() {
 						columns={columns}
 						data={bots}
 						searchField="name"
+						tableRowLink={`/${workspace?.name}/businesses/{businessId}/bots/{id}`}
 						toolBarChildren={
 							<Button onClick={onOpenCreateForm}>
 								<PlusIcon className="mr-2 h-4 w-4" /> Add New Bot

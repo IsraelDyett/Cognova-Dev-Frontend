@@ -58,7 +58,7 @@ const DialogContent = React.forwardRef<
 			ref={ref}
 			aria-describedby={undefined}
 			className={cn(
-				"fixed left-[50%] py-2 [&_.simplebar-track]:!mx-2  [&_.simplebar-track]:!mt-6 [&_.simplebar-track]:!bg-zinc-100 [&_.simplebar-scrollbar::before]:!bg-zinc-400 outline-none top-[50%] z-50 grid w-[96%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-lg",
+				"fixed left-[50%] py-2 [&_.simplebar-track]:!mx-2  [&_.simplebar-track]:!mt-6 [&_.simplebar-track]:!bg-zinc-100 [&_.simplebar-scrollbar::before]:!bg-zinc-400 border-none outline-none top-[50%] z-50 grid w-[96%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-lg",
 				dialogSizes[size],
 				className,
 			)}

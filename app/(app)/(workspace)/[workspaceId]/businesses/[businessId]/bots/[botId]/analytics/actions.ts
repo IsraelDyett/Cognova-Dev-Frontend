@@ -1,10 +1,6 @@
 "use server";
 import { prisma } from "@/lib/services/prisma";
-import {
-	AnalyticsResponse,
-	PrismaQueryPerDay,
-	PrismaCountryDistribution,
-} from "./types";
+import { AnalyticsResponse, PrismaQueryPerDay, PrismaCountryDistribution } from "./types";
 
 const bigIntToNumber = (value: bigint): number => {
 	try {
@@ -16,12 +12,7 @@ const bigIntToNumber = (value: bigint): number => {
 };
 
 export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
-	const [
-		conversationData,
-		chatData,
-		queriesPerDay,
-		countryDistribution,
-	] = await Promise.all([
+	const [conversationData, chatData, queriesPerDay, countryDistribution] = await Promise.all([
 		// Conversation metrics
 		prisma.$transaction(async (tx) => {
 			const totalConversations = await tx.conversation.count({

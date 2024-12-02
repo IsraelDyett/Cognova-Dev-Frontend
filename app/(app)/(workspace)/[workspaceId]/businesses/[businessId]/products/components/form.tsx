@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useProductStore } from "../store";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import { BusinessProductsCategory } from "@prisma/client";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -37,9 +38,8 @@ const formSchema = z.object({
 	description: z.string().optional(),
 	price: z.number(),
 	stock: z.number(),
-	sku: z.string().optional(),
 	images: z.array(z.string()),
-	isActive: z.boolean(),
+	isActive: z.boolean().default(true),
 });
 const defaultValues = {
 	businessId: "",
@@ -50,7 +50,7 @@ const defaultValues = {
 	stock: 0,
 	sku: "",
 	images: [],
-	isActive: false,
+	isActive: true,
 };
 
 type FormValues = z.infer<typeof formSchema>;
@@ -97,7 +97,12 @@ export function ProductForm() {
 			form.reset(defaultValues);
 		}
 	}, [initialCrudFormData, isOpenCrudForm, form]);
-
+	const categories: BusinessProductsCategory[] = [];
+	workspace?.businesses?.forEach((business) => {
+		business.categories.forEach((category) => {
+			categories.push(category)
+		})
+	})
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
 			<DialogContent size="4xl">
@@ -112,6 +117,7 @@ export function ProductForm() {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="gap-4 grid grid-cols-1 sm:grid-cols-2"
 					>
+						{/* NEEDS TO BE REMOVED */}
 						<DynamicSelector
 							label="Business"
 							form={form}
@@ -120,24 +126,14 @@ export function ProductForm() {
 							itemLabelKey="name"
 							idKey="businessId"
 						/>
-
-						{/* <FormField
-							control={form.control}
-							name="categoryId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>CategoryId</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter categoryId"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/> */}
+						<DynamicSelector
+							label="Category"
+							form={form}
+							items={categories}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="categoryId"
+						/>
 
 						<FormField
 							control={form.control}
@@ -214,24 +210,6 @@ export function ProductForm() {
 											onChange={(e) =>
 												field.onChange(parseInt(e.target.value))
 											}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="sku"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Sku</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter sku"
-											{...field}
 										/>
 									</FormControl>
 									<FormMessage />
