@@ -5,11 +5,14 @@ import {
 	updateProduct,
 	deleteProduct,
 	getProducts,
+	getCategories,
 } from "@/lib/actions/server/business";
-import type { BusinessConfig, BusinessProduct as Product } from "@prisma/client";
+import type { BusinessConfig, BusinessProduct as Product, ProductCategory } from "@prisma/client";
+
 
 export interface ProductsStoreState {
 	products: (Product & { business: { configurations: BusinessConfig | null } })[];
+	categories: ProductCategory[]
 	loading: boolean;
 	error: string | null;
 
@@ -17,6 +20,7 @@ export interface ProductsStoreState {
 	isOpenCrudForm: boolean;
 
 	fetchProducts: (businessId: string) => Promise<void>;
+	fetchCategories: () => Promise<void>;
 	createProduct: (data: Omit<Product, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 	updateProduct: (id: string, data: Partial<Product>) => Promise<void>;
 	deleteProduct: (id: string) => Promise<void>;
@@ -28,6 +32,8 @@ export interface ProductsStoreState {
 
 export const useProductStore = create<ProductsStoreState>((set) => ({
 	products: [],
+
+	categories: [],
 	loading: false,
 	error: null,
 
@@ -49,6 +55,16 @@ export const useProductStore = create<ProductsStoreState>((set) => ({
 			}
 		} finally {
 			set({ loading: false });
+		}
+	},
+
+	fetchCategories: async () => {
+		const response = await getCategories();
+		if (response.success) {
+			set({ categories: response.data });
+		} else {
+			toast.error("Failed to load Businesses");
+			throw new Error(response.error);
 		}
 	},
 

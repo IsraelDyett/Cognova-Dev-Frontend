@@ -18,7 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
-import { Store, Truck, ShoppingBag, AlertTriangle, Settings, Trash2 } from "lucide-react";
+import { Store, Truck, AlertTriangle, Settings, Trash2 } from "lucide-react";
 import { retrieveBusiness } from "@/lib/actions/server/business";
 
 export default function BusinessDetail() {

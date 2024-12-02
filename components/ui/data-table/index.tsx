@@ -24,6 +24,7 @@ import {
 import { DataTableToolbar } from "./toolbar";
 import { DataTablePagination } from "./pagination";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 export default function DataTable({
 	data,
 	columns,
@@ -113,6 +114,7 @@ export default function DataTable({
 							table.getRowModel().rows.map((row) => (
 									<TableRow
 										key={row.id}
+										className={cn(tableRowLink ? "cursor-pointer" : "cursor-default")}
 										onClick={() => {
 											tableRowLink ? router.push(getFormattedLink(row, tableRowLink)) : {}
 										}}

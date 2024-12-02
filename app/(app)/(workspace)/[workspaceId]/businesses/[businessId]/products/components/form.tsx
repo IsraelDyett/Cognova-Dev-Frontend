@@ -29,7 +29,6 @@ import { toast } from "sonner";
 import { useProductStore } from "../store";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
-import { BusinessProductsCategory } from "@prisma/client";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -37,30 +36,19 @@ const formSchema = z.object({
 	name: z.string().min(1, "Required"),
 	description: z.string().optional(),
 	price: z.number(),
-	stock: z.number(),
+	stock: z.string().default("IN_STOCK"),
 	images: z.array(z.string()),
 	isActive: z.boolean().default(true),
 });
-const defaultValues = {
-	businessId: "",
-	categoryId: "",
-	name: "",
-	description: "",
-	price: 0,
-	stock: 0,
-	sku: "",
-	images: [],
-	isActive: true,
-};
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function ProductForm() {
-	const { createProduct, updateProduct, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
+	const { createProduct, fetchCategories, categories, updateProduct, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
 		useProductStore();
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
-		defaultValues,
 	});
 
 	const isLoading = form.formState.isSubmitting;
@@ -82,6 +70,9 @@ export function ProductForm() {
 	const { workspace } = useWorkspace();
 
 	useEffect(() => {
+		if (categories.length == 0) {
+			fetchCategories()
+		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
 				businessId: initialCrudFormData.businessId,
@@ -89,20 +80,12 @@ export function ProductForm() {
 				name: initialCrudFormData.name,
 				description: initialCrudFormData?.description || "",
 				price: initialCrudFormData.price,
-				stock: initialCrudFormData.stock,
+				stock: initialCrudFormData.stock || "",
 				images: initialCrudFormData.images,
 				isActive: initialCrudFormData.isActive,
 			});
-		} else if (isOpenCrudForm) {
-			form.reset(defaultValues);
 		}
-	}, [initialCrudFormData, isOpenCrudForm, form]);
-	const categories: BusinessProductsCategory[] = [];
-	workspace?.businesses?.forEach((business) => {
-		business.categories.forEach((category) => {
-			categories.push(category)
-		})
-	})
+	}, [initialCrudFormData, isOpenCrudForm, form, categories.length, fetchCategories]);
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
 			<DialogContent size="4xl">
@@ -152,25 +135,6 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
-
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem className="col-span-full">
-									<FormLabel>Description</FormLabel>
-									<FormControl>
-										<Textarea
-											disabled={isLoading}
-											placeholder="Enter description"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
 						<FormField
 							control={form.control}
 							name="price"
@@ -192,6 +156,26 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
+
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem className="col-span-full">
+									<FormLabel>Description</FormLabel>
+									<FormControl>
+										<Textarea
+											disabled={isLoading}
+											placeholder="Enter description"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+
 
 						<FormField
 							control={form.control}
@@ -250,7 +234,7 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
-						<DialogFooter className="col-span-full w-full">
+						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button
 								disabled={isLoading}
 								variant="outline"

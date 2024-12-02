@@ -27,6 +27,7 @@ import type { BusinessConfig } from "@prisma/client";
 import { updateOrCreateBusinessConfig } from "@/lib/actions/server/business";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const businessConfigSchema = z.object({
 	deliveryFee: z.number().min(0).optional(),
@@ -35,6 +36,9 @@ const businessConfigSchema = z.object({
 	returnPeriod: z.string().optional(),
 	warrantyPeriod: z.string().optional(),
 	currency: z.string().default("USD"),
+	hasDelivery: z.boolean().default(false),
+acceptsReturns: z.boolean().default(false),
+hasWarranty: z.boolean().default(false),
 });
 
 type BusinessConfigFormValues = z.infer<typeof businessConfigSchema>;
@@ -47,9 +51,12 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 			deliveryFee: businessConfig?.deliveryFee || 0,
 			estimatedDeliveryArrival: businessConfig?.estimatedDeliveryArrival || "",
 			minDeliveryOrderAmount: businessConfig?.minDeliveryOrderAmount || 0,
-			returnPeriod: businessConfig?.returnPeriod || "1 Day",
-			warrantyPeriod: businessConfig?.warrantyPeriod || "12 Months",
+			returnPeriod: businessConfig?.returnPeriod || "",
+			warrantyPeriod: businessConfig?.warrantyPeriod || "",
 			currency: businessConfig?.currency || "",
+			hasDelivery: businessConfig?.hasDelivery,
+			acceptsReturns: businessConfig?.acceptsReturns,
+			hasWarranty: businessConfig?.hasWarranty
 		},
 	});
 
@@ -78,9 +85,8 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 										<Truck className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
 											type="number"
-											step="0.01"
 											className="pl-8"
-											placeholder="$0"
+											placeholder="$2"
 											{...field}
 											value={field.value || ""}
 											onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -122,10 +128,10 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 										<CreditCard className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
 											type="number"
-											step="0.01"
 											className="pl-8"
-											placeholder="$10"
+											placeholder="10"
 											{...field}
+											onChange={(e) => field.onChange(e.target.valueAsNumber)}
 										/>
 									</div>
 								</FormControl>
@@ -169,7 +175,6 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 									<div className="relative">
 										<Calendar className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 										<Input
-											type="number"
 											className="pl-8"
 											placeholder="12 Months"
 											{...field}
@@ -211,6 +216,56 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 							</FormItem>
 						)}
 					/>
+											<div className="grid-cols-2 grid col-span-full">
+							<FormField
+								control={form.control}
+								name="hasDelivery"
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="text-base">We do Delivery</FormLabel>
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="acceptsReturns"
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="text-base">Accept Returns</FormLabel>
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="hasWarranty"
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="text-base">
+											Provide Warranty
+										</FormLabel>
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						</div>
 				</div>
 				<Button type="submit">Save Changes</Button>
 			</form>

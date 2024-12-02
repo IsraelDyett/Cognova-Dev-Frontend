@@ -30,6 +30,7 @@ interface BusinessState {
 
 export const useBusinessStore = create<BusinessState>((set) => ({
 	businesses: [],
+
 	loading: true,
 	error: null,
 
@@ -38,98 +39,67 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 
 	fetchBusinesses: async (workspaceId: string) => {
 		set({ loading: true, error: null });
-		try {
-			const response = await getBusinesses({ workspaceId });
-			if (response.success) {
-				set({ businesses: response.data });
-			} else {
-				throw new Error(response.error);
-			}
-		} catch (err: any) {
-			const error: Error = err;
-			set({ error: error.message });
+		const response = await getBusinesses({ workspaceId });
+		if (response.success) {
+			set({ businesses: response.data });
+		} else {
+			set({ error: response.error });
 			toast.error("Failed to load Businesses");
-		} finally {
-			set({ loading: false });
 		}
+		set({ loading: false });
+
 	},
 
+
 	createBusiness: async (data) => {
-		try {
-			const response = await createBusiness({ data });
-			if (response.success) {
-				set((state) => ({
-					businesses: [...state.businesses, response?.data ?? ({} as Business)],
-				}));
-				toast.success("Business created successfully");
-			} else {
-				throw new Error(response.error);
-			}
-		} catch (err: any) {
-			const error: Error = err;
-			set({ error: error.message });
+		const response = await createBusiness({ data });
+		if (response.success) {
+			set((state) => ({
+				businesses: [...state.businesses, response?.data ?? ({} as Business)],
+			}));
+			toast.success("Business created successfully");
+		} else {
+			console.error(response.error);
 			toast.error("Failed to create Business");
 		}
 	},
 
 	updateBusiness: async (id, data) => {
-		try {
-			const response = await updateBusiness({ id, data });
-			if (response.success) {
-				set((state) => ({
-					businesses: state.businesses.map((item) =>
-						item.id === id ? (response.data ?? ({} as Business)) : item,
-					),
-				}));
-				toast.success("Business updated successfully");
-			} else {
-				throw new Error(response.error);
-			}
-		} catch (err: any) {
-			const error: Error = err;
-			set({ error: error.message });
+		const response = await updateBusiness({ id, data });
+		if (response.success) {
+			set((state) => ({
+				businesses: state.businesses.map((item) =>
+					item.id === id ? (response.data ?? ({} as Business)) : item,
+				),
+			}));
+			toast.success("Business updated successfully");
+		} else {
+			console.error(response.error);
 			toast.error("Failed to update Business");
 		}
 	},
 
 	deleteBusiness: async (id) => {
-		set({ loading: true, error: null });
-		try {
-			const response = await deleteBusiness({ id });
-			if (response.success) {
-				set((state) => ({
-					businesses: state.businesses.filter((item) => item.id !== id),
-				}));
-				toast.success("Business deleted successfully");
-			} else {
-				throw new Error(response.error);
-			}
-		} catch (err: any) {
-			const error: Error = err;
-			set({ error: error.message });
+		const response = await deleteBusiness({ id });
+		if (response.success) {
+			set((state) => ({
+				businesses: state.businesses.filter((item) => item.id !== id),
+			}));
+			toast.success("Business deleted successfully");
+		} else {
+			console.error(response.error)
 			toast.error("Failed to delete Business");
-		} finally {
-			set({ loading: false });
 		}
 	},
 	onOpenCreateForm: () => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: null, });
 	},
 
 	onOpenEditForm: (data) => {
-		set({
-			isOpenCrudForm: true,
-			initialCrudFormData: data,
-		});
+		set({ isOpenCrudForm: true, initialCrudFormData: data, });
 	},
 
 	onCloseCrudForm: () => {
-		set({
-			isOpenCrudForm: false,
-			initialCrudFormData: null,
-		});
+		set({ isOpenCrudForm: false, initialCrudFormData: null, });
 	},
 }));

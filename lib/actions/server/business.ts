@@ -1,7 +1,6 @@
 "use server";
 import { Prisma } from "@prisma/client";
 import BaseServerActionActions from "./base";
-import { exclude } from "@/lib/utils";
 
 class BusinessServerActions extends BaseServerActionActions {
 	public static async getBusinesses({
@@ -299,6 +298,14 @@ class BusinessServerActions extends BaseServerActionActions {
 			"Failed to delete business operating hour",
 		);
 	}
+	// Category
+	public static async getCategories() {
+		return this.executeAction(
+			() =>
+				this.prisma.productCategory.findMany(),
+			"Failed to get product categories",
+		);
+	}
 }
 
 export async function getBusinesses(
@@ -387,5 +394,10 @@ export async function updateOrCreateBusinessConfig(
 	...args: Parameters<typeof BusinessServerActions.updateOrCreateBusinessConfig>
 ) {
 	return BusinessServerActions.updateOrCreateBusinessConfig(...args);
+}
+export async function getCategories(
+	...args: Parameters<typeof BusinessServerActions.getCategories>
+) {
+	return BusinessServerActions.getCategories(...args);
 }
 export default BusinessServerActions;

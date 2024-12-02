@@ -223,20 +223,20 @@ async function mainSeeder() {
 	});
 	console.log("GPT-4 Model created");
 
-	await prisma.bot.create({
-		data: {
-			name: "Acme Store",
-			workspaceId: SYSTEM_WORKSPACE_ID,
-			waPhoneNumber: "+250729882416",
-			type: "SALES_ASSISTANT",
-			modelId: gpt4Model.id,
-			description: "Virtual sales assistant for Acme Store",
-			language: "en",
-			systemMessage:
-				"You are a friendly sales assistant for Acme Store. Help customers find the perfect products and provide information about our products and services.",
-		},
-	});
-	console.log("Bots created");
+	// await prisma.bot.create({
+	// 	data: {
+	// 		name: "Acme Store",
+	// 		workspaceId: SYSTEM_WORKSPACE_ID,
+	// 		waPhoneNumber: "+250729882416",
+	// 		type: "SALES_ASSISTANT",
+	// 		modelId: gpt4Model.id,
+	// 		description: "Virtual sales assistant for Acme Store",
+	// 		language: "en",
+	// 		systemMessage:
+	// 			"You are a friendly sales assistant for Acme Store. Help customers find the perfect products and provide information about our products and services.",
+	// 	},
+	// });
+	// console.log("Bots created");
 
 	prisma.$disconnect();
 }

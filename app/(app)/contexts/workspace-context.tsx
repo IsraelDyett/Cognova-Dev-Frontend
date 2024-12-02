@@ -2,12 +2,12 @@
 import { debug } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { retrieveWorkspace } from "@/lib/actions/server/workspace";
-import { Workspace, Plan, Bot, Business, Subscription, BusinessProductsCategory } from "@prisma/client";
+import { Workspace, Plan, Bot, Business, Subscription } from "@prisma/client"; 
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 interface ExtendedWorkspace extends Workspace {
 	subscription: Subscription & { plan?: Plan | null };
-	businesses: (Business & { bots: Bot[], categories: BusinessProductsCategory[] })[] | null;
+	businesses: (Business & { bots: Bot[] })[] | null;
 }
 
 const DefaultProps = {
@@ -39,7 +39,6 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 					businesses: {
 						include: {
 							bots: true,
-							categories: true
 						}
 					},
 					subscription: {

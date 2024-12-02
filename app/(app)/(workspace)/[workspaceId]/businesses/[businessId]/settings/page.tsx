@@ -49,7 +49,7 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<p>Financial settings content goes here.</p>
+							<p>Coming Soon</p>
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -62,7 +62,7 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<p>Advanced settings content goes here.</p>
+							<p>Coming Soon</p>
 						</CardContent>
 					</Card>
 				</TabsContent>
