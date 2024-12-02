@@ -223,6 +223,24 @@ async function mainSeeder() {
 	});
 	console.log("GPT-4 Model created");
 
+	await prisma.productCategory.createMany({
+		data: [
+			{
+				name: "Shoes"
+			},
+			{
+				name: "Meals"
+			},
+			{
+				name: "Clothes"
+			},
+			{
+				name: "Electronic"
+			}
+		]
+	})
+	console.log("Product categories created")
+
 	// await prisma.bot.create({
 	// 	data: {
 	// 		name: "Acme Store",
