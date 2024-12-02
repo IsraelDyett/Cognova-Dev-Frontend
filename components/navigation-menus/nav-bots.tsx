@@ -26,12 +26,12 @@ import { Bot } from "@prisma/client";
 export function NavBots() {
 	const { isMobile } = useSidebar();
 	const { workspace, isLoading } = useWorkspace();
-	const bots: Bot[] = []
+	const bots: Bot[] = [];
 	workspace?.businesses?.forEach((b) => {
-		b.bots.forEach((bot)  => {
-			bots.push(bot)
-		})
-	})
+		b.bots.forEach((bot) => {
+			bots.push(bot);
+		});
+	});
 	if (bots.length == 0 && !isLoading) return null;
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -55,7 +55,9 @@ export function NavBots() {
 						{bots?.slice(0, 3).map((bot) => (
 							<SidebarMenuItem key={bot.name}>
 								<SidebarMenuButton asChild className="w-full">
-									<WorkspaceLink href={`businesses/${bot.businessId}/bots/${bot.id}`}>
+									<WorkspaceLink
+										href={`businesses/${bot.businessId}/bots/${bot.id}`}
+									>
 										<BotIcon />
 										<span>{bot.name}</span>
 									</WorkspaceLink>

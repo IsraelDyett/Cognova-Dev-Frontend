@@ -41,11 +41,7 @@ export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
 		accessorKey: "dayOfWeek",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Day" />,
 		cell: ({ row }) => {
-			return (
-				<span className="font-medium">
-					{row.getValue("dayOfWeek")}
-				</span>
-			);
+			return <span className="font-medium">{row.getValue("dayOfWeek")}</span>;
 		},
 	},
 	{

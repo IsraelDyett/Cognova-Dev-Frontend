@@ -22,9 +22,15 @@ class BusinessServerActions extends BaseServerActionActions {
 		);
 	}
 
-	public static async retrieveBusiness({ businessId }: { businessId: string }) {
+	public static async retrieveBusiness({
+		businessId,
+		include = {},
+	}: {
+		businessId: string;
+		include?: Prisma.BusinessInclude;
+	}) {
 		return this.executeAction(
-			() => this.prisma.business.findUnique({ where: { id: businessId } }),
+			() => this.prisma.business.findUnique({ where: { id: businessId }, include }),
 			"Failed to retrieve business",
 		);
 	}
@@ -301,8 +307,7 @@ class BusinessServerActions extends BaseServerActionActions {
 	// Category
 	public static async getCategories() {
 		return this.executeAction(
-			() =>
-				this.prisma.productCategory.findMany(),
+			() => this.prisma.productCategory.findMany(),
 			"Failed to get product categories",
 		);
 	}

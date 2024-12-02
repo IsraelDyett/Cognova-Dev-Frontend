@@ -73,6 +73,7 @@ export function HourForm() {
 				await createHour(values);
 			}
 			onCloseCrudForm();
+			form.reset();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}

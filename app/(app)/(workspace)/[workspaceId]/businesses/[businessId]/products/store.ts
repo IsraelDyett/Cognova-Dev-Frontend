@@ -9,10 +9,9 @@ import {
 } from "@/lib/actions/server/business";
 import type { BusinessConfig, BusinessProduct as Product, ProductCategory } from "@prisma/client";
 
-
 export interface ProductsStoreState {
 	products: (Product & { business: { configurations: BusinessConfig | null } })[];
-	categories: ProductCategory[]
+	categories: ProductCategory[];
 	loading: boolean;
 	error: string | null;
 

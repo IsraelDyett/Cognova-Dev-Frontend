@@ -44,7 +44,7 @@ export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 			const configuration = row.original.business.configurations;
 			return (
 				<div className="font-medium">
-					{configuration?.currency || "$"} {" "}
+					{configuration?.currency || "$"}{" "}
 					{Number(row.getValue("price")).toLocaleString(undefined, {
 						minimumFractionDigits: 2,
 						maximumFractionDigits: 2,

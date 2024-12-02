@@ -31,14 +31,14 @@ export default function DataTable({
 	searchField,
 	toolBarChildren,
 	initialPageSize = 10,
-	tableRowLink
+	tableRowLink,
 }: {
 	data: any[];
 	columns: ColumnDef<any>[];
 	searchField: string;
 	toolBarChildren?: React.ReactNode;
 	initialPageSize?: number;
-	tableRowLink?: string
+	tableRowLink?: string;
 }) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -70,12 +70,12 @@ export default function DataTable({
 		},
 	});
 
-	const router = useRouter()
+	const router = useRouter();
 	const getFormattedLink = (row: any, linkTemplate?: string) => {
 		if (!linkTemplate) return "";
 
 		return linkTemplate.replace(/\{(\w+)\}/g, (_, key) => {
-			return row.original[key]?.toString() || '';
+			return row.original[key]?.toString() || "";
 		});
 	};
 
@@ -100,9 +100,9 @@ export default function DataTable({
 											{header.isPlaceholder
 												? null
 												: flexRender(
-													header.column.columnDef.header,
-													header.getContext(),
-												)}
+														header.column.columnDef.header,
+														header.getContext(),
+													)}
 										</TableHead>
 									);
 								})}
@@ -112,26 +112,30 @@ export default function DataTable({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-									<TableRow
-										key={row.id}
-										className={cn(tableRowLink ? "cursor-pointer" : "cursor-default")}
-										onClick={() => {
-											tableRowLink ? router.push(getFormattedLink(row, tableRowLink)) : {}
-										}}
-										data-state={row.getIsSelected() && "selected"}
-									>
-										{row.getVisibleCells().map((cell) => (
-											<TableCell
-												key={cell.id}
-												className="text-nowrap shrink-0 whitespace-nowrap"
-											>
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext(),
-												)}
-											</TableCell>
-										))}
-									</TableRow>
+								<TableRow
+									key={row.id}
+									className={cn(
+										tableRowLink ? "cursor-pointer" : "cursor-default",
+									)}
+									onClick={() => {
+										tableRowLink
+											? router.push(getFormattedLink(row, tableRowLink))
+											: {};
+									}}
+									data-state={row.getIsSelected() && "selected"}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell
+											key={cell.id}
+											className="text-nowrap shrink-0 whitespace-nowrap"
+										>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext(),
+											)}
+										</TableCell>
+									))}
+								</TableRow>
 							))
 						) : (
 							<TableRow>

@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useProductStore } from "../store";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import MoneyInput from "@/components/ui/money-input";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -37,18 +38,30 @@ const formSchema = z.object({
 	description: z.string().optional(),
 	price: z.number(),
 	stock: z.string().default("IN_STOCK"),
-	images: z.array(z.string()),
+	images: z.array(z.string()).default([]),
 	isActive: z.boolean().default(true),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function ProductForm() {
-	const { createProduct, fetchCategories, categories, updateProduct, onCloseCrudForm, initialCrudFormData, isOpenCrudForm } =
-		useProductStore();
+	const {
+		createProduct,
+		fetchCategories,
+		categories,
+		updateProduct,
+		onCloseCrudForm,
+		initialCrudFormData,
+		isOpenCrudForm,
+	} = useProductStore();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
+		defaultValues: {
+			stock: "IN_STOCK",
+			isActive: true,
+			images: [],
+		},
 	});
 
 	const isLoading = form.formState.isSubmitting;
@@ -62,6 +75,7 @@ export function ProductForm() {
 				await createProduct(values);
 			}
 			onCloseCrudForm();
+			form.reset();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}
@@ -71,7 +85,7 @@ export function ProductForm() {
 
 	useEffect(() => {
 		if (categories.length == 0) {
-			fetchCategories()
+			fetchCategories();
 		}
 		if (isOpenCrudForm && initialCrudFormData) {
 			form.reset({
@@ -135,26 +149,11 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
+						<MoneyInput
 							name="price"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Price</FormLabel>
-									<FormControl>
-										<Input
-											type="number"
-											disabled={isLoading}
-											placeholder="Enter price"
-											{...field}
-											onChange={(e) =>
-												field.onChange(parseFloat(e.target.value))
-											}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+							placeholder="Enter Price"
+							label="Price"
+							form={form}
 						/>
 
 						<FormField
@@ -175,25 +174,21 @@ export function ProductForm() {
 							)}
 						/>
 
-
-
 						<FormField
 							control={form.control}
 							name="stock"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel helpText="How many in stock you can provide">
+									<FormLabel
+										helpText={`How many in stock you can provide. when "IN_STOCK" means products are produced always at your location`}
+									>
 										Stock
 									</FormLabel>
 									<FormControl>
 										<Input
-											type="number"
 											disabled={isLoading}
 											placeholder="Enter stock"
 											{...field}
-											onChange={(e) =>
-												field.onChange(parseInt(e.target.value))
-											}
 										/>
 									</FormControl>
 									<FormMessage />

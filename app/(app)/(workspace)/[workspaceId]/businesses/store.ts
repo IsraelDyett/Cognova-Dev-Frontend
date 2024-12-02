@@ -47,9 +47,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			toast.error("Failed to load Businesses");
 		}
 		set({ loading: false });
-
 	},
-
 
 	createBusiness: async (data) => {
 		const response = await createBusiness({ data });
@@ -87,19 +85,19 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			}));
 			toast.success("Business deleted successfully");
 		} else {
-			console.error(response.error)
+			console.error(response.error);
 			toast.error("Failed to delete Business");
 		}
 	},
 	onOpenCreateForm: () => {
-		set({ isOpenCrudForm: true, initialCrudFormData: null, });
+		set({ isOpenCrudForm: true, initialCrudFormData: null });
 	},
 
 	onOpenEditForm: (data) => {
-		set({ isOpenCrudForm: true, initialCrudFormData: data, });
+		set({ isOpenCrudForm: true, initialCrudFormData: data });
 	},
 
 	onCloseCrudForm: () => {
-		set({ isOpenCrudForm: false, initialCrudFormData: null, });
+		set({ isOpenCrudForm: false, initialCrudFormData: null });
 	},
 }));

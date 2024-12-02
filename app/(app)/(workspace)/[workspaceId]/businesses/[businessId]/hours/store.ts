@@ -53,7 +53,7 @@ export const useHourStore = create<HourState>((set) => ({
 	createHour: async (data) => {
 		debug("CLIENT", "createHour", "STORE");
 		try {
-			const response = await createHour({ data: data, include: { location: true} });
+			const response = await createHour({ data: data, include: { location: true } });
 			if (response.success) {
 				set((state) => ({
 					hours: [...state.hours, response?.data ?? ({} as Hour)],
@@ -72,7 +72,7 @@ export const useHourStore = create<HourState>((set) => ({
 	updateHour: async (id, data) => {
 		debug("CLIENT", " updateHour", "STORE");
 		try {
-			const response = await updateHour({ id, data, include: { location: true} });
+			const response = await updateHour({ id, data, include: { location: true } });
 			if (response.success) {
 				set((state) => ({
 					hours: state.hours.map((item) =>

@@ -23,7 +23,7 @@ abstract class BaseServerActionActions {
 			const result = await action();
 			return { success: true, data: result, error: null as unknown as string };
 		} catch (error) {
-			console.log("GO ERROR", error, typeof error)
+			console.log("GO ERROR", error, typeof error);
 			const newErrorMessage = error instanceof Error ? error.message : errorMessage;
 			if (onError) onError(error);
 			return { success: false, data: null as T, error: newErrorMessage };

@@ -32,11 +32,7 @@ export const useChatStore = create<ChatState>((set) => ({
 	fetchChats: async (conversationId: string) => {
 		debug("CLIENT", "fetchChats", "STORE");
 		set({ loading: "chats", error: null });
-		const {
-			data: chats,
-			success,
-			error,
-		} = await getChats({ conversationId });
+		const { data: chats, success, error } = await getChats({ conversationId });
 		if (success) {
 			set({ chats: chats });
 		} else {
@@ -49,11 +45,7 @@ export const useChatStore = create<ChatState>((set) => ({
 	fetchConversations: async (botId: string, silently?: boolean) => {
 		set({ loading: silently ? "none" : "conversations", error: null });
 		debug("CLIENT", "fetchConversations", "STORE");
-		const {
-			data: conversations,
-			success,
-			error,
-		} = await getConversations({ botId });
+		const { data: conversations, success, error } = await getConversations({ botId });
 		if (success) {
 			set({ conversations: conversations });
 		} else {
