@@ -226,20 +226,20 @@ async function mainSeeder() {
 	await prisma.productCategory.createMany({
 		data: [
 			{
-				name: "Shoes"
+				name: "Shoes",
 			},
 			{
-				name: "Meals"
+				name: "Meals",
 			},
 			{
-				name: "Clothes"
+				name: "Clothes",
 			},
 			{
-				name: "Electronic"
-			}
-		]
-	})
-	console.log("Product categories created")
+				name: "Electronic",
+			},
+		],
+	});
+	console.log("Product categories created");
 
 	// await prisma.bot.create({
 	// 	data: {

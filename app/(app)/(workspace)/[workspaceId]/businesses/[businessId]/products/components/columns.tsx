@@ -56,9 +56,7 @@ export const columns: ColumnDef<ProductsStoreState["products"]["0"]>[] = [
 	{
 		accessorKey: "stock",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Stock" />,
-		cell: ({ row }) => (
-			<div className="font-medium">{Number(row.getValue("stock")).toLocaleString()}</div>
-		),
+		cell: ({ row }) => <div className="font-medium">{row.getValue("stock")}</div>,
 	},
 	{
 		accessorKey: "isActive",

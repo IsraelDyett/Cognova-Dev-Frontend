@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -30,6 +30,7 @@ import { useProductStore } from "../store";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import MoneyInput from "@/components/ui/money-input";
+import ImageUploader from "@/components/image-uploader";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -54,6 +55,9 @@ export function ProductForm() {
 		initialCrudFormData,
 		isOpenCrudForm,
 	} = useProductStore();
+	const [uploadedImages, setUploadedImages] = useState<
+		{ fileName: string; fileSize?: number; fileUrl: string }[]
+	>([]);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -98,6 +102,16 @@ export function ProductForm() {
 				images: initialCrudFormData.images,
 				isActive: initialCrudFormData.isActive,
 			});
+			if (initialCrudFormData.images.length > 0) {
+				setUploadedImages(
+					initialCrudFormData.images.map((image, index) => ({
+						fileName: `Image ${index + 1}`,
+						fileUrl: image,
+					})),
+				);
+			} else {
+				setUploadedImages([]);
+			}
 		}
 	}, [initialCrudFormData, isOpenCrudForm, form, categories.length, fetchCategories]);
 	return (
@@ -195,31 +209,12 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
-
-						{/* <FormField
-							control={form.control}
-							name="images"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Images</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter images"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/> */}
-
 						<FormField
 							control={form.control}
 							name="isActive"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
-									<FormLabel className="text-base">Is Active</FormLabel>
+									<FormLabel className="text-base">Available</FormLabel>
 									<FormControl>
 										<Switch
 											checked={field.value}
@@ -229,6 +224,26 @@ export function ProductForm() {
 								</FormItem>
 							)}
 						/>
+						<div className="col-span-full">
+							<FormField
+								control={form.control}
+								name="images"
+								render={() => (
+									<FormItem>
+										<FormLabel>Images</FormLabel>
+										<FormControl>
+											<ImageUploader
+												uploadedImages={uploadedImages}
+												setUploadedImages={setUploadedImages}
+												form={form}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
 						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
 							<Button
 								disabled={isLoading}
