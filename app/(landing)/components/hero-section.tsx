@@ -61,8 +61,10 @@ export default function HeroSection() {
 						and web chat.
 					</p>
 					<div className="mt-10 flex items-center gap-x-6">
-						<a href="/auth/sign-up">
-							<Button size={"lg"}>Create A Free Bot</Button>
+						<a
+							href={`/auth/sign-up?utm_source=landing&utm_medium=hero-section&utm_campaign=get-started`}
+						>
+							<Button>Get Started</Button>
 						</a>
 					</div>
 				</div>

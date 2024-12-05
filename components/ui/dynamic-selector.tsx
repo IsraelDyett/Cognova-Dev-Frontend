@@ -24,6 +24,7 @@ export default function DynamicSelector({
 	itemLabelKey,
 	label,
 	description,
+	labelProps,
 	...props
 }: {
 	form: UseFormReturn | any;
@@ -33,6 +34,7 @@ export default function DynamicSelector({
 	itemLabelKey: string;
 	label: string;
 	description?: string;
+	labelProps?: React.ComponentProps<typeof FormLabel>;
 }) {
 	return (
 		<FormField
@@ -40,7 +42,7 @@ export default function DynamicSelector({
 			name={idKey}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel {...labelProps}>{label}</FormLabel>
 					<Select
 						onValueChange={(value) =>
 							field.onChange(isNaN(parseInt(value)) ? value : parseInt(value))

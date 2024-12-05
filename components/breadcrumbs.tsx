@@ -8,6 +8,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import pluralize from "pluralize";
 import { useParams, usePathname } from "next/navigation";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 
@@ -40,9 +41,11 @@ export default function Breadcrumbs() {
 								{index !== paths.length - 2 ? (
 									<BreadcrumbLink
 										href={`/${paths.slice(0, index + 2).join("/")}`}
-										className="capitalize"
+										className="capitalize truncate"
 									>
-										{path}
+										{path.startsWith("cm")
+											? `[${pluralize.singular(paths[paths.indexOf(path) - 1])}]`
+											: path}
 									</BreadcrumbLink>
 								) : (
 									<BreadcrumbPage className="capitalize">{path}</BreadcrumbPage>

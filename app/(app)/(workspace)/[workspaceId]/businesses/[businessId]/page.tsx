@@ -16,7 +16,7 @@ import { useBusinessStore } from "../store";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { Store, Truck, AlertTriangle, Settings, Trash2 } from "lucide-react";
 import { retrieveBusiness } from "@/lib/actions/server/business";
@@ -126,12 +126,16 @@ export default function BusinessDetail() {
 						<AlertTriangle className="w-5 h-5 text-red-600" />
 						<CardTitle className="text-red-600">Danger Zone</CardTitle>
 					</div>
+					<CardDescription>
+						By deleting this business, you will delete all the data associated with it
+						(bots, products).
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<AlertDialog>
 						<AlertDialogTrigger asChild>
 							<Button variant="destructive">
-								<Trash2 className="mr-2 h-4 w-4 text-destructive" />
+								<Trash2 className="h-4 w-4 text-destructive" />
 								Delete Business
 							</Button>
 						</AlertDialogTrigger>

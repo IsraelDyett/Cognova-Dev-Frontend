@@ -17,6 +17,7 @@ import {
 	Form,
 	FormAction,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -25,10 +26,22 @@ import {
 import { toast } from "sonner";
 import { useBusinessStore } from "../store";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "../../../../contexts/workspace-context";
-import { Checkbox } from "@/components/ui/checkbox";
+
+const BUSINESS_TYPES = [
+	{ id: "retail_store", name: "Retail Store" },
+	{ id: "electronics_store", name: "Electronics Store" },
+	{ id: "clothing_apparel", name: "Clothing & Apparel" },
+	{ id: "furniture_store", name: "Furniture Store" },
+	{ id: "jewelry_store", name: "Jewelry Store" },
+	{ id: "sporting_goods", name: "Sporting Goods" },
+	{ id: "toys_games", name: "Toys & Games" },
+	{ id: "books_stationery", name: "Books & Stationery" },
+	{ id: "home_improvement", name: "Home Improvement" },
+	{ id: "beauty_cosmetics", name: "Beauty & Cosmetics" },
+];
 
 const formSchema = z.object({
 	workspaceId: z.string().min(1, "Required"),
@@ -122,17 +135,15 @@ export function BusinessForm() {
 							control={form.control}
 							name="type"
 							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Type</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter type"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
+								<DynamicSelector
+									form={form}
+									idKey="type"
+									items={BUSINESS_TYPES}
+									itemKey="id"
+									itemLabelKey="name"
+									label="Business Type"
+									description="Select the type of business you operate"
+								/>
 							)}
 						/>
 
@@ -141,7 +152,9 @@ export function BusinessForm() {
 							name="description"
 							render={({ field }) => (
 								<FormItem className=" col-span-full">
-									<FormLabel>Description</FormLabel>
+									<FormLabel helpText="This description helps AI to personalize how it communicates with your customers.">
+										Description
+									</FormLabel>
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
@@ -149,6 +162,10 @@ export function BusinessForm() {
 											{...field}
 										/>
 									</FormControl>
+									<FormDescription>
+										This description helps AI to personalize how it communicates
+										with your customers.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

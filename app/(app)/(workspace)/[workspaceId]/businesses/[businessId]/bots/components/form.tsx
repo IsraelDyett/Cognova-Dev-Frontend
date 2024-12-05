@@ -179,6 +179,10 @@ export function BotForm() {
 							form={form}
 							items={models || []}
 							itemKey="id"
+							labelProps={{
+								helpText:
+									"Select the AI model that will understand and respond to your customers. Different models have different capabilities and costs.",
+							}}
 							itemLabelKey="displayName"
 							idKey="modelId"
 						/>
@@ -193,7 +197,7 @@ export function BotForm() {
 									<FormControl>
 										<Input
 											disabled={isLoading}
-											placeholder="Enter waPhoneNumber"
+											placeholder="Enter WhatsApp Phone Number"
 											{...field}
 										/>
 									</FormControl>

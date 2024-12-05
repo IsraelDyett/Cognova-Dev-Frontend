@@ -12,10 +12,18 @@ import { NavMain } from "@/components/navigation-menus/nav-main";
 import { NavBots } from "@/components/navigation-menus/nav-bots";
 import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
+	useSidebar,
+} from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
+	const { state } = useSidebar();
 	const { botId, businessId } = useParams();
 	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">(
 		"default",
@@ -35,7 +43,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
 				<WorkspaceSwitcher />
-				{currentNavbar !== "default" && (
+				{currentNavbar !== "default" && state === "expanded" && (
 					<WorkspaceLink className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center">
 						<ChevronLeft
 							className="h-4 w-4 transition-transform duration-100 hover:-translate-x-0.5"

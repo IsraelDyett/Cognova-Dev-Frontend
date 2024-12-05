@@ -15,10 +15,24 @@ export default function Header() {
 				</Link>
 				<nav className="flex items-center space-x-4 w-full pt-2 sm:pt-0 sm:w-fit ">
 					<Button className="grow sm:grow-0" variant="ghost" asChild>
-						<Link href={siteConfig.domains.app + "/auth/sign-in"}>Login</Link>
+						<Link
+							href={
+								siteConfig.domains.app +
+								"/auth/sign-in?utm_source=landing&utm_medium=header&utm_campaign=login"
+							}
+						>
+							Login
+						</Link>
 					</Button>
 					<Button className="grow sm:grow-0" asChild>
-						<Link href={siteConfig.domains.app + "/auth/sign-up"}>Sign Up</Link>
+						<Link
+							href={
+								siteConfig.domains.app +
+								"/auth/sign-up?utm_source=landing&utm_medium=header&utm_campaign=sign-up"
+							}
+						>
+							Sign Up
+						</Link>
 					</Button>
 				</nav>
 			</div>

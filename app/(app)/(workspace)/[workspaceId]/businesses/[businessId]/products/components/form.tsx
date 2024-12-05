@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -58,14 +58,18 @@ export function ProductForm() {
 	const [uploadedImages, setUploadedImages] = useState<
 		{ fileName: string; fileSize?: number; fileUrl: string }[]
 	>([]);
-
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
+	const defaultValues = useMemo(
+		() => ({
 			stock: "IN_STOCK",
 			isActive: true,
 			images: [],
-		},
+		}),
+		[],
+	);
+
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues,
 	});
 
 	const isLoading = form.formState.isSubmitting;
@@ -79,6 +83,7 @@ export function ProductForm() {
 				await createProduct(values);
 			}
 			onCloseCrudForm();
+			setUploadedImages([]);
 			form.reset();
 		} catch (error) {
 			toast.error("Something went wrong");
@@ -91,18 +96,14 @@ export function ProductForm() {
 		if (categories.length == 0) {
 			fetchCategories();
 		}
-		if (isOpenCrudForm && initialCrudFormData) {
-			form.reset({
-				businessId: initialCrudFormData.businessId,
-				categoryId: initialCrudFormData?.categoryId || "",
-				name: initialCrudFormData.name,
-				description: initialCrudFormData?.description || "",
-				price: initialCrudFormData.price,
-				stock: initialCrudFormData.stock || "",
-				images: initialCrudFormData.images,
-				isActive: initialCrudFormData.isActive,
-			});
-			if (initialCrudFormData.images.length > 0) {
+		if (isOpenCrudForm) {
+			if (initialCrudFormData) {
+				form.reset({
+					...initialCrudFormData,
+					categoryId: initialCrudFormData.categoryId || "",
+					stock: initialCrudFormData.stock || "IN_STOCK",
+					description: initialCrudFormData.description || undefined,
+				});
 				setUploadedImages(
 					initialCrudFormData.images.map((image, index) => ({
 						fileName: `Image ${index + 1}`,
@@ -111,9 +112,17 @@ export function ProductForm() {
 				);
 			} else {
 				setUploadedImages([]);
+				form.reset(defaultValues);
 			}
 		}
-	}, [initialCrudFormData, isOpenCrudForm, form, categories.length, fetchCategories]);
+	}, [
+		initialCrudFormData,
+		isOpenCrudForm,
+		form,
+		categories.length,
+		fetchCategories,
+		defaultValues,
+	]);
 	return (
 		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
 			<DialogContent size="4xl">
@@ -175,7 +184,7 @@ export function ProductForm() {
 							name="description"
 							render={({ field }) => (
 								<FormItem className="col-span-full">
-									<FormLabel>Description</FormLabel>
+									<FormLabel>Description (Optional)</FormLabel>
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
@@ -193,9 +202,7 @@ export function ProductForm() {
 							name="stock"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel
-										helpText={`How many in stock you can provide. when "IN_STOCK" means products are produced always at your location`}
-									>
+									<FormLabel helpText="Enter the quantity available. Select 'IN_STOCK' if you always have this product ready at your location">
 										Stock
 									</FormLabel>
 									<FormControl>
@@ -214,7 +221,12 @@ export function ProductForm() {
 							name="isActive"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
-									<FormLabel className="text-base">Available</FormLabel>
+									<FormLabel
+										helpText="Product availability status when active can be retrieved in the conversation"
+										className="text-base"
+									>
+										Available
+									</FormLabel>
 									<FormControl>
 										<Switch
 											checked={field.value}
