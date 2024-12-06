@@ -18,7 +18,7 @@ const TooltipProvider = ({
 		setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
 	}, []);
 
-	if (isTouch) return <>{children}</>;
+	// if (isTouch) return <>{children}</>;
 
 	return <TooltipPrimitive.Provider {...props}>{children}</TooltipPrimitive.Provider>;
 };
