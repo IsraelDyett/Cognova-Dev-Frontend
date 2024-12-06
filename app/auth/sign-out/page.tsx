@@ -2,13 +2,17 @@
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
 import LoadingDots from "@/components/ui/loading-dots";
-import { signOut } from "@/lib/actions/server/auth";
+import { removeCookie } from "@/lib/actions/client/cookies";
+import AuthServerActions from "@/lib/actions/server/auth";
 
 export default function SignOutPage() {
+	const cookieKey = AuthServerActions.authCookieKey;
 	useEffect(() => {
 		posthog.capture("Signed Out");
-		signOut();
-	}, []);
+		if (typeof window !== "undefined") {
+			removeCookie(cookieKey);
+		}
+	}, [cookieKey]);
 	return (
 		<div className="flex fixed flex-col items-center justify-center h-screen bg-white inset-0">
 			<div className="flex items-end space-x-2">
