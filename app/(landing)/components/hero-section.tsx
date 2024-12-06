@@ -74,7 +74,7 @@ export default function HeroSection() {
 						</div>
 					</div>
 				</div>
-				<div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+				<div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow hidden md:block">
 					<Iphone15Pro
 						className="mx-auto max-h-[80dvh] w-[22.875rem] max-w-full drop-shadow-xl"
 						src={siteConfig.r2.waDemoVideo}

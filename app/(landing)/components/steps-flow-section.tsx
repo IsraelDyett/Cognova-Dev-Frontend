@@ -1,5 +1,6 @@
 import { FileText, Bot, Share2, MessageSquare } from "lucide-react";
 import Image from "next/image";
+import FlowDemoSection from "./flow-demo-section";
 
 export default function StepsFlowSection() {
 	return (
@@ -73,6 +74,7 @@ export default function StepsFlowSection() {
 							height={845}
 						/>
 					</div>
+					<FlowDemoSection />
 				</div>
 			</div>
 		</section>

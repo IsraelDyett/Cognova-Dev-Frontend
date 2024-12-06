@@ -11,4 +11,7 @@ class PricingServerActions extends BaseServerActionActions {
 		);
 	}
 }
+export async function getPlans(...args: Parameters<typeof PricingServerActions.getPlans>) {
+	return PricingServerActions.getPlans(...args);
+}
 export default PricingServerActions;

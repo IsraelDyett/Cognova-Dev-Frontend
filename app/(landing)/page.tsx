@@ -12,7 +12,6 @@ export default function LandingPage() {
 		<>
 			<HeroSection />
 			<StepsFlowSection />
-			<FlowDemoSection />
 			<PricingSection />
 			<FeaturesSection />
 			<SignUpSection />
