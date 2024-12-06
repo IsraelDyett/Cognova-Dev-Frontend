@@ -1,48 +1,58 @@
 import React from "react";
-import { CloudUpload, Bot, Database, MessageSquare, LineChart, ShoppingCart } from "lucide-react";
+import {
+	CloudUpload,
+	Bot,
+	Database,
+	MessageSquare,
+	LineChart,
+	ShoppingCart,
+	Share2,
+	Instagram,
+	Users,
+} from "lucide-react";
 
 const features = [
 	{
-		name: "Real-time Inventory & Business Info",
+		name: "AI Sales Agents",
 		description:
-			"Add and manage your products, pricing, and business contact information. AI automatically handles inventory queries and provides up-to-date product availability to customers.",
-		href: "#",
-		icon: ShoppingCart,
-	},
-	{
-		name: "Intelligent Data Processing",
-		description:
-			"Upload PDFs, documents, and website content to train your AI. Our system automatically processes and indexes your business data to create a knowledge base for accurate responses.",
-		href: "#",
-		icon: CloudUpload,
-	},
-	{
-		name: "WhatsApp Business Integration",
-		description:
-			"Seamlessly connect your WhatsApp Business account and let our AI handle customer inquiries 24/7. Provide instant responses about products, services, and business information.",
-		href: "#",
-		icon: MessageSquare,
-	},
-	{
-		name: "Multi-Channel Support",
-		description:
-			"Embed our AI chatbot on your website or use our customizable chat widget. Provide consistent support across WhatsApp and web platforms while maintaining conversation history.",
+			"Create personalized AI agents that represent your business and handle customer interactions professionally across multiple social channels.",
 		href: "#",
 		icon: Bot,
 	},
 	{
+		name: "Shareable Chat Links",
+		description:
+			"Generate unique chat links for your AI agents that you can share with customers through any platform or add to your social media profiles.",
+		href: "#",
+		icon: Share2,
+	},
+	{
+		name: "WhatsApp Integration",
+		description:
+			"Connect your WhatsApp Business account and let your AI agent handle customer inquiries 24/7, providing instant responses about products and services.",
+		href: "#",
+		icon: MessageSquare,
+	},
+	{
+		name: "Instagram Integration",
+		description:
+			"Extend your AI agent's reach to Instagram DMs, providing seamless customer support and sales assistance on social media.",
+		href: "#",
+		icon: Instagram,
+	},
+	{
 		name: "Advanced Analytics",
 		description:
-			"Track customer interactions, monitor response times, and gain insights into frequently asked questions. Make data-driven decisions to improve your customer service.",
+			"Track customer interactions, monitor response times, and gain insights into sales conversations to optimize your AI agent's performance.",
 		href: "#",
 		icon: LineChart,
 	},
 	{
-		name: "Knowledge Base Management",
+		name: "Multi-Agent Management",
 		description:
-			"Easily update and manage your business information through our intuitive dashboard. Add new products, services, or FAQs that your AI assistant can instantly learn.",
+			"Create and manage multiple AI agents for different products or services, each with its own personality and expertise.",
 		href: "#",
-		icon: Database,
+		icon: Users,
 	},
 ];
 

@@ -5,22 +5,21 @@ import React, { SVGProps } from "react";
 
 const footerNavigation = {
 	product: [
-		{ name: "AI Chat Widget", href: "#widget" },
-		{ name: "WhatsApp Integration", href: "#whatsapp" },
-		{ name: "Dashboard", href: "#dashboard" },
+		{ name: "AI Sales Agent", href: "#agent" },
+		{ name: "WhatsApp Business", href: "#whatsapp" },
+		{ name: "Instagram DMs", href: "#instagram" },
 		{ name: "Analytics", href: "#analytics" },
 	],
 	features: [
-		{ name: "Website Crawling", href: "#website-crawling" },
-		{ name: "Business Logic Training", href: "#training" },
-		{ name: "Real-time Chat Analysis", href: "#chat-analysis" },
+		{ name: "Auto Phone Verification", href: "#verification" },
+		{ name: "Business Contact Sharing", href: "#contact-sharing" },
+		{ name: "Chat Management", href: "#chat-management" },
 		{ name: "Custom AI Responses", href: "#responses" },
 	],
 	resources: [
 		{ name: "Documentation", href: "#docs" },
 		{ name: "API Reference", href: "#api" },
-		{ name: "Implementation Guide", href: "#guide" },
-		{ name: "Case Studies", href: "#cases" },
+		{ name: "Success Stories", href: "#stories" },
 		{ name: "Blog", href: "#blog" },
 	],
 	company: [
@@ -149,11 +148,11 @@ export default function Footer() {
 				<div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24 lg:flex lg:items-center lg:justify-between">
 					<div>
 						<h3 className="text-sm font-semibold leading-6 text-white">
-							Get AI-powered support updates
+							Stay updated with AI sales innovations
 						</h3>
 						<p className="mt-2 text-sm leading-6 text-gray-300">
-							Subscribe to our newsletter for the latest in AI customer support,
-							WhatsApp integration, and document processing.
+							Get the latest updates about AI sales agents, WhatsApp Business
+							automation, and social media integration features.
 						</p>
 					</div>
 					<form className="mt-6 sm:flex sm:max-w-md lg:mt-0">

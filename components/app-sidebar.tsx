@@ -23,7 +23,7 @@ import { Button } from "./ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
-	const { state } = useSidebar();
+	const { state, isMobile, toggleSidebar } = useSidebar();
 	const { botId, businessId } = useParams();
 	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">(
 		"default",
@@ -37,6 +37,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			setCurrentNavbar("default");
 		}
 	}, [botId, businessId, pathname]);
+
+	// Add effect to collapse sidebar on mobile when pathname changes
+	React.useEffect(() => {
+		if (typeof window !== "undefined" && isMobile && state === "expanded") {
+			toggleSidebar();
+		}
+	}, [pathname, isMobile, state, toggleSidebar]);
 
 	const NavUser = dynamic(() => import("@/components/navigation-menus/nav-user"), { ssr: false });
 	return (

@@ -25,14 +25,10 @@ Circle.displayName = "Circle";
 
 export default function FlowDemoSection({ className }: { className?: string }) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const googleDriveBeamRef = useRef<HTMLDivElement>(null);
-	const googleDocsBeamRef = useRef<HTMLDivElement>(null);
-	const websiteBeamRef = useRef<HTMLDivElement>(null);
 	const storeBeamRef = useRef<HTMLDivElement>(null);
 	const userBeamRef = useRef<HTMLDivElement>(null);
 	const llmBeamRef = useRef<HTMLDivElement>(null);
 	const whatsappBeamRef = useRef<HTMLDivElement>(null);
-	const messengerBeamRef = useRef<HTMLDivElement>(null);
 	const instagramBeamRef = useRef<HTMLDivElement>(null);
 	const browserBeamRef = useRef<HTMLDivElement>(null);
 
@@ -49,15 +45,6 @@ export default function FlowDemoSection({ className }: { className?: string }) {
 					<Circle ref={storeBeamRef}>
 						<Store width="24" height="24" />
 					</Circle>
-					<Circle ref={googleDriveBeamRef}>
-						<Icons.googleDrive />
-					</Circle>
-					<Circle ref={googleDocsBeamRef}>
-						<Icons.googleDocs />
-					</Circle>
-					<Circle ref={websiteBeamRef}>
-						<Icons.website />
-					</Circle>
 				</div>
 				<div className="flex flex-col justify-center">
 					<Circle ref={llmBeamRef} className="size-16">
@@ -68,14 +55,8 @@ export default function FlowDemoSection({ className }: { className?: string }) {
 					<Circle ref={whatsappBeamRef}>
 						<Icons.whatsapp />
 					</Circle>
-					<Circle ref={messengerBeamRef}>
-						<Icons.messenger />
-					</Circle>
 					<Circle ref={instagramBeamRef}>
 						<Icons.instagram />
-					</Circle>
-					<Circle ref={browserBeamRef}>
-						<Icons.browser />
 					</Circle>
 				</div>
 				<div className="flex flex-col justify-center">
@@ -88,24 +69,6 @@ export default function FlowDemoSection({ className }: { className?: string }) {
 			{/* AnimatedBeams */}
 			<AnimatedBeam
 				containerRef={containerRef}
-				fromRef={googleDriveBeamRef}
-				toRef={llmBeamRef}
-				duration={3}
-			/>
-			<AnimatedBeam
-				containerRef={containerRef}
-				fromRef={googleDocsBeamRef}
-				toRef={llmBeamRef}
-				duration={3}
-			/>
-			<AnimatedBeam
-				containerRef={containerRef}
-				fromRef={websiteBeamRef}
-				toRef={llmBeamRef}
-				duration={3}
-			/>
-			<AnimatedBeam
-				containerRef={containerRef}
 				fromRef={storeBeamRef}
 				toRef={llmBeamRef}
 				duration={3}
@@ -114,12 +77,6 @@ export default function FlowDemoSection({ className }: { className?: string }) {
 				containerRef={containerRef}
 				fromRef={llmBeamRef}
 				toRef={whatsappBeamRef}
-				duration={3}
-			/>
-			<AnimatedBeam
-				containerRef={containerRef}
-				fromRef={llmBeamRef}
-				toRef={messengerBeamRef}
 				duration={3}
 			/>
 			<AnimatedBeam
@@ -137,12 +94,6 @@ export default function FlowDemoSection({ className }: { className?: string }) {
 			<AnimatedBeam
 				containerRef={containerRef}
 				fromRef={whatsappBeamRef}
-				toRef={userBeamRef}
-				duration={3}
-			/>
-			<AnimatedBeam
-				containerRef={containerRef}
-				fromRef={messengerBeamRef}
 				toRef={userBeamRef}
 				duration={3}
 			/>
@@ -249,213 +200,6 @@ const Icons = {
 			/>
 		</svg>
 	),
-	googleDocs: () => (
-		<svg width="47px" height="65px" viewBox="0 0 47 65" xmlns="http://www.w3.org/2000/svg">
-			<defs>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-1"
-				/>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-3"
-				/>
-				<linearGradient
-					x1="50.0053945%"
-					y1="8.58610612%"
-					x2="50.0053945%"
-					y2="100.013939%"
-					id="linearGradient-5"
-				>
-					<stop stopColor="#1A237E" stopOpacity="0.2" offset="0%" />
-					<stop stopColor="#1A237E" stopOpacity="0.02" offset="100%" />
-				</linearGradient>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-6"
-				/>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-8"
-				/>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-10"
-				/>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-12"
-				/>
-				<path
-					d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-					id="path-14"
-				/>
-				<radialGradient
-					cx="3.16804688%"
-					cy="2.71744318%"
-					fx="3.16804688%"
-					fy="2.71744318%"
-					r="161.248516%"
-					gradientTransform="translate(0.031680,0.027174),scale(1.000000,0.723077),translate(-0.031680,-0.027174)"
-					id="radialGradient-16"
-				>
-					<stop stopColor="#FFFFFF" stopOpacity="0.1" offset="0%" />
-					<stop stopColor="#FFFFFF" stopOpacity="0" offset="100%" />
-				</radialGradient>
-			</defs>
-			<g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-				<g transform="translate(-451.000000, -463.000000)">
-					<g id="Hero" transform="translate(0.000000, 63.000000)">
-						<g id="Personal" transform="translate(277.000000, 309.000000)">
-							<g id="Docs-icon" transform="translate(174.000000, 91.000000)">
-								<g id="Group">
-									<g id="Clipped">
-										<mask id="mask-2" fill="white">
-											<use xlinkHref="#path-1" />
-										</mask>
-										<g id="SVGID_1_" />
-										<path
-											d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L36.71875,10.3409091 L29.375,0 Z"
-											id="Path"
-											fill="#4285F4"
-											fillRule="nonzero"
-											mask="url(#mask-2)"
-										/>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-4" fill="white">
-											<use xlinkHref="#path-3" />
-										</mask>
-										<g id="SVGID_1_" />
-										<polygon
-											id="Path"
-											fill="url(#linearGradient-5)"
-											fillRule="nonzero"
-											mask="url(#mask-4)"
-											points="30.6638281 16.4309659 47 32.8582386 47 17.7272727"
-										></polygon>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-7" fill="white">
-											<use xlinkHref="#path-6" />
-										</mask>
-										<g id="SVGID_1_" />
-										<path
-											d="M11.75,47.2727273 L35.25,47.2727273 L35.25,44.3181818 L11.75,44.3181818 L11.75,47.2727273 Z M11.75,53.1818182 L29.375,53.1818182 L29.375,50.2272727 L11.75,50.2272727 L11.75,53.1818182 Z M11.75,32.5 L11.75,35.4545455 L35.25,35.4545455 L35.25,32.5 L11.75,32.5 Z M11.75,41.3636364 L35.25,41.3636364 L35.25,38.4090909 L11.75,38.4090909 L11.75,41.3636364 Z"
-											id="Shape"
-											fill="#F1F1F1"
-											fillRule="nonzero"
-											mask="url(#mask-7)"
-										/>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-9" fill="white">
-											<use xlinkHref="#path-8" />
-										</mask>
-										<g id="SVGID_1_" />
-										<g id="Group" mask="url(#mask-9)">
-											<g transform="translate(26.437500, -2.954545)">
-												<path
-													d="M2.9375,2.95454545 L2.9375,16.25 C2.9375,18.6985795 4.90929688,20.6818182 7.34375,20.6818182 L20.5625,20.6818182 L2.9375,2.95454545 Z"
-													id="Path"
-													fill="#A1C2FA"
-													fillRule="nonzero"
-												/>
-											</g>
-										</g>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-11" fill="white">
-											<use xlinkHref="#path-10" />
-										</mask>
-										<g id="SVGID_1_" />
-										<path
-											d="M4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,4.80113636 C0,2.36363636 1.9828125,0.369318182 4.40625,0.369318182 L29.375,0.369318182 L29.375,0 L4.40625,0 Z"
-											id="Path"
-											fillOpacity="0.2"
-											fill="#FFFFFF"
-											fillRule="nonzero"
-											mask="url(#mask-11)"
-										/>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-13" fill="white">
-											<use xlinkHref="#path-12" />
-										</mask>
-										<g id="SVGID_1_" />
-										<path
-											d="M42.59375,64.6306818 L4.40625,64.6306818 C1.9828125,64.6306818 0,62.6363636 0,60.1988636 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,60.1988636 C47,62.6363636 45.0171875,64.6306818 42.59375,64.6306818 Z"
-											id="Path"
-											fillOpacity="0.2"
-											fill="#1A237E"
-											fillRule="nonzero"
-											mask="url(#mask-13)"
-										/>
-									</g>
-									<g id="Clipped">
-										<mask id="mask-15" fill="white">
-											<use xlinkHref="#path-14" />
-										</mask>
-										<g id="SVGID_1_" />
-										<path
-											d="M33.78125,17.7272727 C31.3467969,17.7272727 29.375,15.7440341 29.375,13.2954545 L29.375,13.6647727 C29.375,16.1133523 31.3467969,18.0965909 33.78125,18.0965909 L47,18.0965909 L47,17.7272727 L33.78125,17.7272727 Z"
-											id="Path"
-											fillOpacity="0.1"
-											fill="#1A237E"
-											fillRule="nonzero"
-											mask="url(#mask-15)"
-										/>
-									</g>
-								</g>
-								<path
-									d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z"
-									id="Path"
-									fill="url(#radialGradient-16)"
-									fillRule="nonzero"
-								/>
-							</g>
-						</g>
-					</g>
-				</g>
-			</g>
-		</svg>
-	),
-	messenger: () => (
-		<svg width="100" height="100" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-			<radialGradient
-				id="8O3wK6b5ASW2Wn6hRCB5xa_YFbzdUk7Q3F8_gr1"
-				cx="11.087"
-				cy="7.022"
-				r="47.612"
-				gradientTransform="matrix(1 0 0 -1 0 50)"
-				gradientUnits="userSpaceOnUse"
-			>
-				<stop offset="0" stopColor="#1292ff"></stop>
-				<stop offset=".079" stopColor="#2982ff"></stop>
-				<stop offset=".23" stopColor="#4e69ff"></stop>
-				<stop offset=".351" stopColor="#6559ff"></stop>
-				<stop offset=".428" stopColor="#6d53ff"></stop>
-				<stop offset=".754" stopColor="#df47aa"></stop>
-				<stop offset=".946" stopColor="#ff6257"></stop>
-			</radialGradient>
-			<path
-				fill="url(#8O3wK6b5ASW2Wn6hRCB5xa_YFbzdUk7Q3F8_gr1)"
-				d="M44,23.5C44,34.27,35.05,43,24,43c-1.651,0-3.25-0.194-4.784-0.564	c-0.465-0.112-0.951-0.069-1.379,0.145L13.46,44.77C12.33,45.335,11,44.513,11,43.249v-4.025c0-0.575-0.257-1.111-0.681-1.499	C6.425,34.165,4,29.11,4,23.5C4,12.73,12.95,4,24,4S44,12.73,44,23.5z"
-			/>
-			<path
-				d="M34.992,17.292c-0.428,0-0.843,0.142-1.2,0.411l-5.694,4.215	c-0.133,0.1-0.28,0.15-0.435,0.15c-0.15,0-0.291-0.047-0.41-0.136l-3.972-2.99c-0.808-0.601-1.76-0.918-2.757-0.918	c-1.576,0-3.025,0.791-3.876,2.116l-1.211,1.891l-4.12,6.695c-0.392,0.614-0.422,1.372-0.071,2.014	c0.358,0.654,1.034,1.06,1.764,1.06c0.428,0,0.843-0.142,1.2-0.411l5.694-4.215c0.133-0.1,0.28-0.15,0.435-0.15	c0.15,0,0.291,0.047,0.41,0.136l3.972,2.99c0.809,0.602,1.76,0.918,2.757,0.918c1.576,0,3.025-0.791,3.876-2.116l1.211-1.891	l4.12-6.695c0.392-0.614,0.422-1.372,0.071-2.014C36.398,17.698,35.722,17.292,34.992,17.292L34.992,17.292z"
-				opacity=".05"
-			/>
-			<path
-				d="M34.992,17.792c-0.319,0-0.63,0.107-0.899,0.31l-5.697,4.218	c-0.216,0.163-0.468,0.248-0.732,0.248c-0.259,0-0.504-0.082-0.71-0.236l-3.973-2.991c-0.719-0.535-1.568-0.817-2.457-0.817	c-1.405,0-2.696,0.705-3.455,1.887l-1.21,1.891l-4.115,6.688c-0.297,0.465-0.32,1.033-0.058,1.511c0.266,0.486,0.787,0.8,1.325,0.8	c0.319,0,0.63-0.107,0.899-0.31l5.697-4.218c0.216-0.163,0.468-0.248,0.732-0.248c0.259,0,0.504,0.082,0.71,0.236l3.973,2.991	c0.719,0.535,1.568,0.817,2.457,0.817c1.405,0,2.696-0.705,3.455-1.887l1.21-1.891l4.115-6.688c0.297-0.465,0.32-1.033,0.058-1.511	C36.051,18.106,35.531,17.792,34.992,17.792L34.992,17.792z"
-				opacity=".07"
-			/>
-			<path
-				fill="#ffffff"
-				d="M34.394,18.501l-5.7,4.22c-0.61,0.46-1.44,0.46-2.04,0.01L22.68,19.74	c-1.68-1.25-4.06-0.82-5.19,0.94l-1.21,1.89l-4.11,6.68c-0.6,0.94,0.55,2.01,1.44,1.34l5.7-4.22c0.61-0.46,1.44-0.46,2.04-0.01	l3.974,2.991c1.68,1.25,4.06,0.82,5.19-0.94l1.21-1.89l4.11-6.68C36.434,18.901,35.284,17.831,34.394,18.501z"
-			/>
-		</svg>
-	),
 	user: () => (
 		<svg
 			width="24"
@@ -470,46 +214,7 @@ const Icons = {
 			<circle cx="12" cy="7" r="4" />
 		</svg>
 	),
-	browser: () => (
-		<svg
-			width="24"
-			height="24"
-			viewBox="0 0 48 48"
-			version="1.1"
-			xmlns="http://www.w3.org/2000/svg"
-			xmlnsXlink="http://www.w3.org/1999/xlink"
-		>
-			<title>chrome-color</title>
-			<desc>Created with Sketch.</desc>
-			<defs></defs>
-			<g id="Icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-				<g id="Color-" transform="translate(-400.000000, -1043.000000)">
-					<g id="chrome" transform="translate(400.000000, 1043.000000)">
-						<path
-							d="M5.7954035,8.36130434 C16.9522782,-4.62351526 37.639151,-2.06037988 45.3727574,13.1072081 C39.9288251,13.1091897 31.4040328,13.1055761 26.786937,13.1072081 C23.4382318,13.1083738 21.2761308,13.0322537 18.9347285,14.2648621 C16.1820632,15.7138239 14.1051274,18.3997073 13.3801164,21.5544341 L5.7954035,8.36130434 L5.7954035,8.36130434 Z"
-							id="chrome-icon-path"
-							fill="#EA4335"
-						></path>
-						<path
-							d="M16.015461,23.9991346 C16.015461,28.3998753 19.5936811,31.9800817 23.9919804,31.9800817 C28.3901632,31.9800817 31.9683834,28.3998753 31.9683834,23.9991346 C31.9683834,19.5985104 28.3901632,16.0181875 23.9919804,16.0181875 C19.5936811,16.0181875 16.015461,19.5985104 16.015461,23.9991346 L16.015461,23.9991346 Z"
-							id="chrome-icon-path"
-							fill="#4285F4"
-						></path>
-						<path
-							d="M27.0876366,34.4456482 C22.6105798,35.7761751 17.371347,34.3006354 14.5014777,29.3468879 C12.3108329,25.5655987 6.52286114,15.4823164 3.89206021,10.8973955 C-5.32185953,25.0194695 2.61924235,44.2642006 19.3464574,47.5489026 L27.0876366,34.4456482 L27.0876366,34.4456482 Z"
-							id="chrome-icon-path"
-							fill="#34A853"
-						></path>
-						<path
-							d="M31.4014697,16.0181875 C35.1303309,19.4863704 35.9427207,25.102234 33.4168909,29.4566966 C31.5138971,32.7374352 25.4402549,42.9884614 22.4966379,47.9523505 C39.730883,49.0147671 52.2944399,32.1238121 46.6195946,16.0181875 L31.4014697,16.0181875 L31.4014697,16.0181875 Z"
-							id="chrome-icon-path"
-							fill="#FBBC05"
-						></path>
-					</g>
-				</g>
-			</g>
-		</svg>
-	),
+
 	instagram: () => (
 		<svg
 			width="24"
@@ -556,21 +261,6 @@ const Icons = {
 					fill="#ffffff"
 				></path>
 			</g>
-		</svg>
-	),
-	website: () => (
-		<svg
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<circle cx="12" cy="12" r="10" />
-			<path d="M2 12h20" />
-			<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
 		</svg>
 	),
 };

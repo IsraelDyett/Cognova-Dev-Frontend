@@ -1,4 +1,4 @@
-import { FileText, Bot, Share2 } from "lucide-react";
+import { FileText, Bot, Share2, MessageSquare } from "lucide-react";
 import Image from "next/image";
 
 export default function StepsFlowSection() {
@@ -9,7 +9,7 @@ export default function StepsFlowSection() {
 					How It Works
 				</h2>
 				<p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-					Transform Your Business Support in 3 Steps
+					Launch Your AI Sales Agent in 3 Steps
 				</p>
 			</div>
 			<div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -17,31 +17,15 @@ export default function StepsFlowSection() {
 					<div className="flex gap-6">
 						<div className="flex-shrink-0">
 							<div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
-								<FileText className="w-6 h-6 text-primary" />
-							</div>
-						</div>
-						<div>
-							<h4 className="text-xl font-bold mb-2">1. Upload Business Knowledge</h4>
-							<p className="text-gray-600 text-base">
-								Upload your business documents (PDFs, website URLs, product
-								catalogs) to our secure platform. Our AI will learn everything about
-								your products, services, and business processes.
-							</p>
-						</div>
-					</div>
-
-					<div className="flex gap-6">
-						<div className="flex-shrink-0">
-							<div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
 								<Bot className="w-6 h-6 text-primary" />
 							</div>
 						</div>
 						<div>
-							<h4 className="text-xl font-bold mb-2">2. Connect Your Channels</h4>
+							<h4 className="text-xl font-bold mb-2">1. Create Your AI Agent</h4>
 							<p className="text-gray-600 text-base">
-								Connect your WhatsApp Business account and embed our smart chatbot
-								on your website. Your AI assistant is now ready to handle customer
-								inquiries 24/7 across all channels.
+								Set up your AI sales agent with custom personality traits and
+								business knowledge. Define how it should interact with customers and
+								handle different scenarios.
 							</p>
 						</div>
 					</div>
@@ -53,11 +37,27 @@ export default function StepsFlowSection() {
 							</div>
 						</div>
 						<div>
-							<h4 className="text-xl font-bold mb-2">3. Launch & Monitor</h4>
+							<h4 className="text-xl font-bold mb-2">2. Share Your Agent Link</h4>
 							<p className="text-gray-600 text-base">
-								Access your dashboard to monitor conversations, analyze performance,
-								and fine-tune your AI. Watch as your AI handles product inquiries,
-								support questions, and customer engagement automatically.
+								Get a unique chat link for your AI agent and share it with customers
+								through WhatsApp, Instagram, or any other platform. Add it to your
+								social media profiles for easy access.
+							</p>
+						</div>
+					</div>
+
+					<div className="flex gap-6">
+						<div className="flex-shrink-0">
+							<div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
+								<MessageSquare className="w-6 h-6 text-primary" />
+							</div>
+						</div>
+						<div>
+							<h4 className="text-xl font-bold mb-2">3. Monitor & Optimize</h4>
+							<p className="text-gray-600 text-base">
+								Track your AI agent&apos;s performance through our dashboard.
+								Monitor customer interactions, analyze conversation patterns, and
+								optimize your agent&apos;s responses for better results.
 							</p>
 						</div>
 					</div>
@@ -66,32 +66,12 @@ export default function StepsFlowSection() {
 				<div className="grid gap-4">
 					<div className="relative overflow-hidden rounded-2xl shadow-xl bg-white p-0.5">
 						<Image
-							src="/images/demos/dashboard-preview.png"
+							src="https://pub-a345b220415f489cb555bd6733a2e7a9.r2.dev/755shots_so.png"
 							alt="AI Dashboard Analytics"
 							className="h-full w-full"
 							width={1910}
 							height={845}
 						/>
-					</div>
-					<div className="grid grid-cols-2 gap-4">
-						<div className="relative overflow-hidden rounded-2xl shadow-xl bg-white p-0.5">
-							<Image
-								src="/images/demos/whatsapp-integration.png"
-								alt="WhatsApp Integration"
-								className="rounded-xl h-36"
-								width={1351}
-								height={760}
-							/>
-						</div>
-						<div className="relative overflow-hidden rounded-2xl shadow-xl bg-white p-0.5">
-							<Image
-								src="/images/demos/chat-widget-demo.png"
-								alt="Website Chat Widget"
-								className="rounded-xl object-fill h-36"
-								width={678}
-								height={530}
-							/>
-						</div>
 					</div>
 				</div>
 			</div>

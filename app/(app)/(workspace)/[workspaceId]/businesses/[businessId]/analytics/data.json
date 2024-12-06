@@ -1,0 +1,62 @@
+{
+	"business": {
+		"id": "demo-business",
+		"name": "Acme Store",
+		"bots": [
+			{
+				"id": "bot-1",
+				"name": "Sales Bot",
+				"conversations": []
+			},
+			{
+				"id": "bot-2",
+				"name": "Support Bot",
+				"conversations": []
+			}
+		],
+		"products": [
+			{ "id": "p1", "name": "Product 1", "isActive": true },
+			{ "id": "p2", "name": "Product 2", "isActive": true },
+			{ "id": "p3", "name": "Product 3", "isActive": true },
+			{ "id": "p4", "name": "Product 4", "isActive": true },
+			{ "id": "p5", "name": "Product 5", "isActive": false }
+		],
+		"locations": [
+			{ "id": "l1", "name": "New York Store" },
+			{ "id": "l2", "name": "Los Angeles Store" },
+			{ "id": "l3", "name": "Chicago Store" }
+		]
+	},
+	"chatActivity": [
+		{ "date": "2023-12-01", "Sales Bot": 245, "Support Bot": 125 },
+		{ "date": "2023-12-03", "Sales Bot": 180, "Support Bot": 95 },
+		{ "date": "2023-12-05", "Sales Bot": 320, "Support Bot": 145 },
+		{ "date": "2023-12-07", "Sales Bot": 210, "Support Bot": 110 },
+		{ "date": "2023-12-09", "Sales Bot": 280, "Support Bot": 130 },
+		{ "date": "2023-12-11", "Sales Bot": 190, "Support Bot": 98 },
+		{ "date": "2023-12-13", "Sales Bot": 350, "Support Bot": 160 },
+		{ "date": "2023-12-15", "Sales Bot": 220, "Support Bot": 115 },
+		{ "date": "2023-12-17", "Sales Bot": 290, "Support Bot": 140 },
+		{ "date": "2023-12-19", "Sales Bot": 380, "Support Bot": 175 },
+		{ "date": "2023-12-21", "Sales Bot": 260, "Support Bot": 120 },
+		{ "date": "2023-12-23", "Sales Bot": 310, "Support Bot": 150 },
+		{ "date": "2023-12-25", "Sales Bot": 185, "Support Bot": 90 },
+		{ "date": "2023-12-27", "Sales Bot": 340, "Support Bot": 165 },
+		{ "date": "2023-12-29", "Sales Bot": 270, "Support Bot": 135 },
+		{ "date": "2023-12-31", "Sales Bot": 295, "Support Bot": 142 },
+		{ "date": "2024-01-02", "Sales Bot": 360, "Support Bot": 170 },
+		{ "date": "2024-01-04", "Sales Bot": 240, "Support Bot": 118 },
+		{ "date": "2024-01-06", "Sales Bot": 330, "Support Bot": 155 },
+		{ "date": "2024-01-08", "Sales Bot": 275, "Support Bot": 132 },
+		{ "date": "2024-01-10", "Sales Bot": 315, "Support Bot": 148 },
+		{ "date": "2024-01-12", "Sales Bot": 255, "Support Bot": 122 },
+		{ "date": "2024-01-14", "Sales Bot": 345, "Support Bot": 162 },
+		{ "date": "2024-01-16", "Sales Bot": 285, "Support Bot": 138 },
+		{ "date": "2024-01-18", "Sales Bot": 370, "Support Bot": 180 },
+		{ "date": "2024-01-20", "Sales Bot": 250, "Support Bot": 120 },
+		{ "date": "2024-01-22", "Sales Bot": 325, "Support Bot": 152 },
+		{ "date": "2024-01-24", "Sales Bot": 265, "Support Bot": 128 },
+		{ "date": "2024-01-26", "Sales Bot": 355, "Support Bot": 168 },
+		{ "date": "2024-01-28", "Sales Bot": 235, "Support Bot": 112 }
+	]
+}

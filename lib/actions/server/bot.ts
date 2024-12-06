@@ -2,6 +2,7 @@
 
 import { Prisma } from "@prisma/client";
 import BaseServerActionActions from "./base";
+import { removeEmptyKeys } from "@/lib/utils";
 
 class BotServerActions extends BaseServerActionActions {
 	public static async getModels({ include = {} }: { include?: Prisma.ModelInclude }) {
@@ -63,7 +64,7 @@ class BotServerActions extends BaseServerActionActions {
 			() =>
 				this.prisma.bot
 					.create({
-						data: data,
+						data: removeEmptyKeys(data),
 						include,
 					})
 					.then((bot) => {

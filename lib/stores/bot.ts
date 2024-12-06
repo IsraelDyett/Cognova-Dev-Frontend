@@ -64,6 +64,7 @@ export const useBotStore = create<BotState>((set) => ({
 			}));
 			toast.success("Bot created successfully");
 		} else {
+			console.error(error);
 			toast.error("Failed to create Bot");
 		}
 	},

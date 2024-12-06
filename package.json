@@ -55,7 +55,7 @@
 		"cmdk": "^1.0.0",
 		"cookies-js": "^1.2.3",
 		"date-fns": "^3.6.0",
-		"framer-motion": "~11.1.1",
+		"framer-motion": "^11.13.1",
 		"libphonenumber-js": "^1.11.16",
 		"lucide-react": "^0.453.0",
 		"ms": "^2.1.3",

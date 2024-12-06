@@ -1,18 +1,17 @@
 "use client";
 import posthog from "posthog-js";
+import { siteConfig } from "@/lib/site";
 import React, { useEffect } from "react";
 import LoadingDots from "@/components/ui/loading-dots";
-import { removeCookie } from "@/lib/actions/client/cookies";
-import AuthServerActions from "@/lib/actions/server/auth";
 
 export default function SignOutPage() {
-	const cookieKey = AuthServerActions.authCookieKey;
 	useEffect(() => {
 		posthog.capture("Signed Out");
 		if (typeof window !== "undefined") {
-			removeCookie(cookieKey);
+			document.cookie = `auth.session.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+			window.location.replace(siteConfig.domains.root);
 		}
-	}, [cookieKey]);
+	}, []);
 	return (
 		<div className="flex fixed flex-col items-center justify-center h-screen bg-white inset-0">
 			<div className="flex items-end space-x-2">

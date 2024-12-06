@@ -5,25 +5,29 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
 
-const TooltipProvider = ({
-	children,
-	...props
-}: {
-	children: React.ReactNode;
-	delayDuration?: number;
-}) => {
-	const [isTouch, setIsTouch] = React.useState(false);
+const TooltipProvider = TooltipPrimitive.Provider;
 
-	React.useEffect(() => {
-		setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
-	}, []);
-
-	// if (isTouch) return <>{children}</>;
-
-	return <TooltipPrimitive.Provider {...props}>{children}</TooltipPrimitive.Provider>;
+const Tooltip = ({ children, ...props }: TooltipPrimitive.TooltipProps) => {
+	const [isOpen, setIsOpen] = React.useState(false);
+	return (
+		<TooltipPrimitive.Root open={isOpen} {...props}>
+			{React.Children.map(children, (child) => {
+				if (React.isValidElement(child) && child.type === TooltipTrigger) {
+					return React.cloneElement(child, {
+						...child.props,
+						onClick: (e: React.MouseEvent) => {
+							child.props.onClick?.(e);
+							setIsOpen(!isOpen);
+						},
+						onMouseEnter: () => setIsOpen(true),
+						onMouseLeave: () => setIsOpen(false),
+					});
+				}
+				return child;
+			})}
+		</TooltipPrimitive.Root>
+	);
 };
-
-const Tooltip = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 

@@ -1,7 +1,6 @@
 import { prisma } from "@/services/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ChatActivityChart from "./components/chat-activity-chart";
-import { Bot } from "lucide-react";
 
 async function getBusinessAnalytics(businessId: string) {
 	const business = await prisma.business.findUnique({
