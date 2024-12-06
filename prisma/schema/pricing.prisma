@@ -1,16 +1,16 @@
 model Subscription {
-  id           String       @id @default(cuid())
-  workspaceId  String       @unique
+  id           String             @id @default(cuid())
+  workspaceId  String             @unique
   planId       String?
   status       SubscriptionStatus @default(ACTIVE)
   startDate    DateTime
   endDate      DateTime
-  billingCycle BillingCycle @default(MONTHLY)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @default(now()) @updatedAt
+  billingCycle BillingCycle       @default(MONTHLY)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @default(now()) @updatedAt
   payments     Payment[]
-  plan         Plan?        @relation(fields: [planId], references: [id])
-  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan         Plan?              @relation(fields: [planId], references: [id])
+  workspace    Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@index([workspaceId])
   @@map("subscriptions")
@@ -28,7 +28,6 @@ model Plan {
   models        Model[]
   features      PlanFeature[]
   subscriptions Subscription[]
-  techniques    Technique[]
 
   @@map("plans")
 }

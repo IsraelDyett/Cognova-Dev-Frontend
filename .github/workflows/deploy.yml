@@ -1,0 +1,50 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      
+    env:
+      SSH_HOST: ${{ vars.SSH_HOST }}
+      SSH_USER: ${{ vars.SSH_USER }}
+      SSH_USER_PASS: ${{ secrets.SSH_USER_PASS }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      
+    steps:
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client
+        
+      - name: Add SSH known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          password: ${{ env.SSH_USER_PASS }}
+          script: |
+            cd /home/cognova-app/htdocs/app.cognova.io
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Install dependencies
+            npm install
+            
+            # Build the application
+            npm run build
+            
+            # Restart PM2 process
+            pm2 restart ecosystem.config.js

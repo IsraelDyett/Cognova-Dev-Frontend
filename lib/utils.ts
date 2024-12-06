@@ -1,9 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
+}
+export function cloneElement(element: React.ReactElement, classNames: string) {
+	return React.cloneElement(element, {
+		className: twMerge(element.props.className, classNames),
+	});
 }
 
 export function exclude(data: any, ...keys: string[]): typeof data {
@@ -22,32 +28,12 @@ export function includeOnly(data: any, keys: string[]): typeof data {
 export async function delay(ms: number) {
 	return await new Promise((resolve) => setTimeout(resolve, ms));
 }
-export const validateEmail = (email: string) => {
+export const isEmailValid = (email: string) => {
 	return String(email)
 		.toLowerCase()
 		.match(
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 		);
-};
-export const getCurrentWorkspace = () => {
-	if (typeof window !== "undefined") {
-		const workspace = window.location.href.split("/")[3];
-		return workspace;
-	}
-	return "";
-};
-export const getBaseUUIDPath = () => {
-	const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-	if (typeof window !== "undefined") {
-		const url = window.location.href;
-		const uuidMatch = url.match(uuidRegex);
-		if (uuidMatch) {
-			return url.split(uuidMatch?.[0] || "/")?.[0] + (uuidMatch?.[0] || "");
-		} else {
-			return url;
-		}
-	}
-	return "/";
 };
 
 export const toKebabCase = (text: string) =>
@@ -82,10 +68,33 @@ export const debug = (
 };
 
 export function removeEmptyKeys<T extends object>(obj: T): T {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
-        if (value === '' || value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return acc;
-        }
-        return { ...acc, [key]: value };
-    }, {} as T);
+	return Object.entries(obj).reduce((acc, [key, value]) => {
+		if (
+			value === "" ||
+			value === null ||
+			value === undefined ||
+			(Array.isArray(value) && value.length === 0)
+		) {
+			return acc;
+		}
+		return { ...acc, [key]: value };
+	}, {} as T);
 }
+
+export const formatBytes = (bytes: number, format: "B" | "KB" | "MB" | "GB" = "B") => {
+	const sizes = ["B", "KB", "MB", "GB"];
+	const i = Math.floor(Math.log(bytes) / Math.log(1024));
+	return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
+};
+`utm_source: Identifies which site sent the traffic
+Example: utm_source=facebook
+utm_medium: Indicates the marketing medium
+Example: utm_medium=cpc (for paid search), utm_medium=email, utm_medium=social
+utm_campaign: Specifies your campaign name
+Example: utm_campaign=spring_sale
+utm_term: Tracks paid search keywords
+Example: utm_term=marketing+tools
+utm_content: Differentiates similar content or links
+Example: utm_content=headerlink or utm_content=sidebar
+`;
+// https://yourSaaS.com/landing-page?utm_source=twitter&utm_medium=social&utm_campaign=launch&utm_content=tweet1

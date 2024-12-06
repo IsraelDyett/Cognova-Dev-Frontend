@@ -2,12 +2,13 @@ model Chat {
   id             String       @id @default(cuid())
   conversationId String
   role           String
-  content        String
+  content        String       @db.Text()
   toolCalls      Json?
   toolCallId     String?
   tokens         Int
   feedback       ChatFeedback @default(NONE)
-  sourceURLs     String[]
+  reaction       String?
+  extraMetadata  Json?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @default(now()) @updatedAt
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -19,9 +20,6 @@ model Conversation {
   id                String   @id @default(cuid())
   botId             String
   sessionId         String   @default(cuid())
-  browser           String?
-  os                String?
-  device            String?
   countryCode       String?
   generatedCategory String?
   waPhoneNumber     String?

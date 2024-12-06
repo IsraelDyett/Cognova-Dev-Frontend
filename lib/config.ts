@@ -3,7 +3,7 @@ export const CONFIG = {
 };
 export const R2_URL = process.env.NEXT_PUBLIC_STORAGE_BASE_URL as string;
 
-export const PROTOCOL = process.env.NODE_ENV == "development" ? "http" : "https"
+export const PROTOCOL = process.env.NODE_ENV == "development" ? "http" : "https";
 export const DOMAIN = process.env.NODE_ENV == "development" ? "localhost:3000" : "cognova.io";
 
 export const APP_HOSTNAMES = new Set([`app.${DOMAIN}`, "app.localhost:3000"]);

@@ -23,18 +23,22 @@ import {
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./toolbar";
 import { DataTablePagination } from "./pagination";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 export default function DataTable({
 	data,
 	columns,
 	searchField,
 	toolBarChildren,
 	initialPageSize = 10,
+	tableRowLink,
 }: {
 	data: any[];
 	columns: ColumnDef<any>[];
 	searchField: string;
 	toolBarChildren?: React.ReactNode;
 	initialPageSize?: number;
+	tableRowLink?: string;
 }) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -65,6 +69,15 @@ export default function DataTable({
 			rowSelection,
 		},
 	});
+
+	const router = useRouter();
+	const getFormattedLink = (row: any, linkTemplate?: string) => {
+		if (!linkTemplate) return "";
+
+		return linkTemplate.replace(/\{(\w+)\}/g, (_, key) => {
+			return row.original[key]?.toString() || "";
+		});
+	};
 
 	return (
 		<div className="w-full">
@@ -101,6 +114,14 @@ export default function DataTable({
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
+									className={cn(
+										tableRowLink ? "cursor-pointer" : "cursor-default",
+									)}
+									onClick={() => {
+										tableRowLink
+											? router.push(getFormattedLink(row, tableRowLink))
+											: {};
+									}}
 									data-state={row.getIsSelected() && "selected"}
 								>
 									{row.getVisibleCells().map((cell) => (

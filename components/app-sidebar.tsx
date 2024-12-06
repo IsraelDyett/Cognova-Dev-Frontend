@@ -1,42 +1,49 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "./ui/skeleton";
 import { ChevronLeft } from "lucide-react";
-
+import { sidebarData } from "./sidebar-store";
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams, usePathname } from "next/navigation";
+import { NavBusinesses } from "./navigation-menus/nav-business";
 import { NavMain } from "@/components/navigation-menus/nav-main";
 import { NavBots } from "@/components/navigation-menus/nav-bots";
+import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
-import { sidebarData } from "./sidebar-store";
-import { useParams, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { NavBusinesses } from "./navigation-menus/nav-business";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
-import { Skeleton } from "./ui/skeleton";
-import dynamic from "next/dynamic";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
+	useSidebar,
+} from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
+	const { state } = useSidebar();
 	const { botId, businessId } = useParams();
 	const [currentNavbar, setCurrentNavbar] = React.useState<"default" | "bot" | "business">(
 		"default",
 	);
 	React.useEffect(() => {
-		if (businessId) {
-			setCurrentNavbar("business");
-		} else if (botId) {
+		if (botId) {
 			setCurrentNavbar("bot");
+		} else if (businessId) {
+			setCurrentNavbar("business");
 		} else {
 			setCurrentNavbar("default");
 		}
-	}, [pathname]);
+	}, [botId, businessId, pathname]);
 
 	const NavUser = dynamic(() => import("@/components/navigation-menus/nav-user"), { ssr: false });
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
 				<WorkspaceSwitcher />
-				{currentNavbar !== "default" && (
+				{currentNavbar !== "default" && state === "expanded" && (
 					<WorkspaceLink className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center">
 						<ChevronLeft
 							className="h-4 w-4 transition-transform duration-100 hover:-translate-x-0.5"

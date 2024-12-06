@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/sidebar";
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
-import { useWorkspace } from "@/app/(auth)/(workspace)/contexts/workspace-context";
-import { WorkspaceLink } from "@/app/(auth)/(workspace)/components/link";
+import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 
 export function NavBusinesses() {
 	const { workspace, isLoading } = useWorkspace();

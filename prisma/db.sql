@@ -14,3 +14,7 @@ CREATE TABLE "vectors" (
 CREATE INDEX ON vectors USING ivfflat (embedding);
 CREATE INDEX vectors_embedding_idx ON vectors USING ivfflat (embedding vector_cosine_ops);
 CREATE INDEX vectors_content_idx ON vectors USING gin (to_tsvector('english', "chunkContent"));
+
+-- Install pgvector
+-- sudo apt install postgresql-16-pgvector
+-- sudo systemctl restart postgresql

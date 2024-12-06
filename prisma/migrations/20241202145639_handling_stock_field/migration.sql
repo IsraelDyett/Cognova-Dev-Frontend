@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "business_products" ALTER COLUMN "stock" DROP NOT NULL,
+ALTER COLUMN "stock" SET DEFAULT 'IN_STOCK',
+ALTER COLUMN "stock" SET DATA TYPE TEXT;

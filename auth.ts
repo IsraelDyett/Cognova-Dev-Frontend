@@ -1,6 +1,7 @@
-import { setSessionTokenCookie, SignUpOrInAction } from "./app/(guest)/auth/actions";
 import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { type NextAuthConfig } from "next-auth";
+import AuthServerActions from "./lib/actions/server/auth";
+import SessionServerActions from "./lib/actions/server/session";
 
 // Define the expected response type
 interface AuthResponse {
@@ -31,18 +32,24 @@ export const config: NextAuthConfig = {
 			}
 
 			try {
-				const response = (await SignUpOrInAction(
+				const {
+					data: response,
+					success,
+					error,
+				} = await AuthServerActions.signUpOrIn(
 					{
 						email: user.email,
 						name: user.name,
 						password: user.id,
 						image: user.image,
 					},
-					"google",
-				)) as AuthResponse;
-
-				if (response?.data?.sessionToken && response?.data?.expiresAt) {
-					setSessionTokenCookie(response?.data?.sessionToken);
+					"GOOGLE",
+				);
+				if (!success) return false;
+				if (response?.sessionToken.sessionToken && response?.sessionToken.expiresAt) {
+					SessionServerActions.setSessionTokenCookie({
+						sessionToken: response?.sessionToken.sessionToken,
+					});
 					return true;
 				}
 

@@ -17,8 +17,8 @@ import {
 	Stars,
 } from "lucide-react";
 import { Workspace } from "@prisma/client";
-import { getWorkspaces } from "@/app/(auth)/(workspace)/actions";
 import { debug } from "@/lib/utils";
+import { getWorkspaces } from "@/lib/actions/server/workspace";
 
 type LoadingState = "idle" | "loading" | "error" | "success";
 
@@ -96,7 +96,10 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 		setLoading("workspaces");
 
 		try {
-			const workspaces = await getWorkspaces(userId, true);
+			const { data: workspaces } = await getWorkspaces({
+				userId,
+				include: { workspace: true },
+			});
 			set({ workspaces });
 			setSuccess("workspaces");
 		} catch (error) {
@@ -118,16 +121,6 @@ export const sidebarData = {
 			url: "/businesses",
 			icon: Building,
 		},
-		{
-			title: "Bots",
-			url: "/bots",
-			icon: Bot,
-		},
-		{
-			title: "Sources",
-			url: "/sources",
-			icon: Brain,
-		},
 	],
 	businessNavigationMenus: [
 		{
@@ -146,6 +139,11 @@ export const sidebarData = {
 			url: "businesses/{businessId}/products",
 		},
 		{
+			title: "Bots",
+			icon: Bot,
+			url: "businesses/{businessId}/bots",
+		},
+		{
 			title: "Locations",
 			icon: MapPin,
 			url: "businesses/{businessId}/locations",
@@ -162,36 +160,21 @@ export const sidebarData = {
 		},
 	],
 	botNavigationMenus: [
-		// {
-		// 	title: "Sources",
-		// 	url: "bots/{botId}/sources",
-		// 	icon: Brain,
-		// },
 		{
 			title: "Analytics",
-			url: "bots/{botId}/analytics",
+			url: "businesses/{businessId}/bots/{botId}/analytics",
 			icon: ChartArea,
 		},
 		{
 			title: "Playground",
-			url: "bots/{botId}/playground",
+			url: "businesses/{businessId}/bots/{botId}/playground",
 			icon: SquareTerminal,
 		},
 		{
-			title: "Customize",
-			url: "bots/{botId}/customize",
-			icon: Cog,
-		},
-		{
 			title: "Chats",
-			url: "bots/{botId}/chats",
+			url: "businesses/{businessId}/bots/{botId}/chats",
 			icon: MessageSquareText,
 		},
-		// {
-		// 	title: "Embed",
-		// 	url: "bots/{botId}/customize",
-		// 	icon: SquareMousePointer,
-		// },
 	],
 	workspaceNavigationMenus: [
 		{

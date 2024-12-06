@@ -5,7 +5,7 @@ import { prisma } from "@/lib/services/prisma";
 
 const WORKSPACE_CONFIG = {
 	maxNameGenerationAttempts: 5,
-	nameGenerationCharSet: "abcdefghijklmnopqrstuvwxyz0123456789",
+	nameGenerationCharSet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
 } as const;
 
 async function hashPassword<T extends { password: string }>(data: T): Promise<T> {
@@ -38,6 +38,7 @@ function generateRandomString(length: number): string {
 
 async function generateUniqueName(baseName: string, model: string): Promise<string> {
 	const { maxNameGenerationAttempts } = WORKSPACE_CONFIG;
+	const notAllowedNames = ["auth", "api", "chats", "not-found", "error", "onboarding"];
 	let attempts = 0;
 	let isUnique = false;
 	let name = slugify(baseName, {
@@ -53,7 +54,7 @@ async function generateUniqueName(baseName: string, model: string): Promise<stri
 			where: { name },
 		});
 
-		if (!existing) {
+		if (!existing && !notAllowedNames.includes(name)) {
 			isUnique = true;
 		} else {
 			name = `${slugify(baseName, { lower: true, trim: true })}-${generateRandomString(4)}`;

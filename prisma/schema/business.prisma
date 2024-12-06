@@ -1,20 +1,16 @@
 model Business {
-    id             String   @id @default(cuid())
-    workspaceId    String
-    name           String
-    type           String
-    description    String?
-    hasDelivery    Boolean  @default(false)
-    acceptsReturns Boolean  @default(false)
-    hasWarranty    Boolean  @default(false)
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @default(now()) @updatedAt
+    id          String   @id @default(cuid())
+    workspaceId String
+    name        String
+    type        String
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
 
     products       BusinessProduct[]
     locations      BusinessLocation[]
-    categories     BusinessProductsCategory[]
     operatingHours BusinessOperatingHours[]
-    workspace      Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    workspace      Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     configurations BusinessConfig?
     bots           Bot[]
 
@@ -26,10 +22,12 @@ model BusinessConfig {
     businessId               String   @unique
     deliveryFee              Float?
     estimatedDeliveryArrival String?
-    minOrderAmount           Float?
-    taxRate                  Float?
-    returnPeriodDays         Int?
-    warrantyPeriodDays       Int?
+    minDeliveryOrderAmount   Float?
+    returnPeriod             String?
+    warrantyPeriod           String?
+    hasDelivery              Boolean  @default(false)
+    acceptsReturns           Boolean  @default(false)
+    hasWarranty              Boolean  @default(false)
     currency                 String   @default("USD")
     createdAt                DateTime @default(now())
     updatedAt                DateTime @default(now()) @updatedAt
@@ -39,20 +37,6 @@ model BusinessConfig {
     @@map("business_configs")
 }
 
-model BusinessProductsCategory {
-    id          String   @id @default(cuid())
-    businessId  String
-    name        String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @default(now()) @updatedAt
-
-    business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    products BusinessProduct[]
-
-    @@map("business_products_categories")
-}
-
 model BusinessProduct {
     id          String   @id @default(cuid())
     businessId  String
@@ -60,15 +44,14 @@ model BusinessProduct {
     name        String
     description String?
     price       Float
-    stock       Int      @default(0)
-    sku         String?
+    stock       String?  @default("IN_STOCK")
     images      String[]
     isActive    Boolean  @default(true)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now()) @updatedAt
 
-    business Business                 @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    category BusinessProductsCategory? @relation(fields: [categoryId], references: [id])
+    business Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+    category ProductCategory? @relation(fields: [categoryId], references: [id])
 
     @@map("business_products")
 }
@@ -79,9 +62,7 @@ model BusinessLocation {
     name       String
     address    String
     city       String
-    state      String?
     country    String
-    postalCode String?
     phone      String?
     email      String?
     isMain     Boolean  @default(false)
@@ -95,18 +76,29 @@ model BusinessLocation {
 }
 
 model BusinessOperatingHours {
-    id         String   @id @default(cuid())
+    id         String    @id @default(cuid())
     businessId String
     locationId String?
-    dayOfWeek  Int
+    dayOfWeek  WeekDays?
     openTime   String
     closeTime  String
-    isClosed   Boolean  @default(false)
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @default(now()) @updatedAt
+    isClosed   Boolean   @default(false)
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @default(now()) @updatedAt
 
     business Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
     location BusinessLocation? @relation(fields: [locationId], references: [id])
 
     @@map("business_operating_hours")
+}
+
+model ProductCategory {
+    id          String            @id @default(cuid())
+    name        String
+    description String?
+    createdAt   DateTime          @default(now())
+    updatedAt   DateTime          @default(now()) @updatedAt
+    products    BusinessProduct[]
+
+    @@map("product_categories")
 }

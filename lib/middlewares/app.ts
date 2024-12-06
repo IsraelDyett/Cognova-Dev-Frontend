@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = [
-	"/auth/sign-in",
-	"/auth/sign-up",
-	"/not-found",
-	"/auth/sign-out",
-];
+const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/not-found", "/auth/sign-out"];
 
 export async function AppMiddleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
