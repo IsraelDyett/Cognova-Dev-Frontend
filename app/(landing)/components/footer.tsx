@@ -8,11 +8,9 @@ const footerNavigation = {
 		{ name: "AI Chat Widget", href: "#widget" },
 		{ name: "WhatsApp Integration", href: "#whatsapp" },
 		{ name: "Dashboard", href: "#dashboard" },
-		{ name: "Knowledge Base", href: "#knowledge-base" },
 		{ name: "Analytics", href: "#analytics" },
 	],
 	features: [
-		{ name: "Document Processing", href: "#document-processing" },
 		{ name: "Website Crawling", href: "#website-crawling" },
 		{ name: "Business Logic Training", href: "#training" },
 		{ name: "Real-time Chat Analysis", href: "#chat-analysis" },

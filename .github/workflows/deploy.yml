@@ -37,6 +37,10 @@ jobs:
           script: |
             cd /home/cognova-app/htdocs/app.cognova.io
             
+            # Configure Git credentials
+            git config --global credential.helper store
+            echo "https://oauth2:${{ env.GIT_TOKEN }}@github.com" > ~/.git-credentials
+            
             # Pull latest changes
             git pull origin main
             
@@ -48,3 +52,6 @@ jobs:
             
             # Restart PM2 process
             pm2 restart ecosystem.config.js
+            
+            # Clean up credentials for security
+            rm ~/.git-credentials
