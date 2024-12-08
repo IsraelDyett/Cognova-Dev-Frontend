@@ -44,6 +44,9 @@ jobs:
             git config --global credential.helper store
             echo "https://oauth2:${{ env.GIT_TOKEN }}@github.com" > ~/.git-credentials
             
+            # Stash current changes
+            git stash
+
             # Pull latest changes
             git pull origin main
             
