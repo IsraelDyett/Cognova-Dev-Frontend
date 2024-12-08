@@ -42,8 +42,8 @@ export default function BusinessDashboard() {
 						}
 					/>
 				)}
-			</div>
+			</section>
 			<BusinessForm />
-		</section>
+		</>
 	);
 }
