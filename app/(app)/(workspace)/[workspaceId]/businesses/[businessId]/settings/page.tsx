@@ -21,7 +21,7 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 	});
 	if (error) return <div>Something went wrong</div>;
 	return (
-		<div className="container mx-auto p-4">
+		<section>
 			<Card>
 				<CardHeader>
 					<CardTitle>General Settings</CardTitle>
@@ -70,6 +70,6 @@ export default async function BusinessConfigPage(props: WorkspacePageProps) {
 					</AlertDialog>
 				</CardContent>
 			</Card>
-		</div>
+		</section>
 	);
 }
