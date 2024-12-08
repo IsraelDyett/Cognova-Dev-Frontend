@@ -3,7 +3,6 @@ import { APP_HOSTNAMES } from "./lib/config";
 import type { NextRequest } from "next/server";
 import { parse } from "./lib/middlewares/utils";
 import { AppMiddleware } from "@/lib/middlewares/app";
-import { notFound } from "next/navigation";
 
 export async function middleware(request: NextRequest) {
 	const { domain } = parse(request);
