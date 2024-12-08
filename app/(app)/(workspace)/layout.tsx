@@ -3,13 +3,15 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { AuthProvider } from "../contexts/auth-context";
-import AuthServerActions from "@/lib/actions/server/auth";
+import AuthServerActions, { signOut } from "@/lib/actions/server/auth";
 import { WorkspaceProvider } from "../contexts/workspace-context";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { siteConfig } from "@/lib/site";
+import { redirect } from "next/navigation";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 	const { data: user, success } = await AuthServerActions.authUser();
-	if (!success) return AuthServerActions.signOut();
+	if (!success) return redirect(siteConfig.domains.app + "/auth/sign-out");
 	return (
 		<AuthProvider user={user}>
 			<WorkspaceProvider>

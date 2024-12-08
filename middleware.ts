@@ -3,6 +3,7 @@ import { APP_HOSTNAMES } from "./lib/config";
 import type { NextRequest } from "next/server";
 import { parse } from "./lib/middlewares/utils";
 import { AppMiddleware } from "@/lib/middlewares/app";
+import { notFound } from "next/navigation";
 
 export async function middleware(request: NextRequest) {
 	const { domain } = parse(request);
@@ -10,9 +11,11 @@ export async function middleware(request: NextRequest) {
 	if (APP_HOSTNAMES.has(domain)) {
 		return AppMiddleware(request);
 	}
-	// if (ADMIN_HOSTNAMES.has(domain)) {
-	// 	return AdminMiddleware(req);
-	// }
+	const allowedRootUris = ["/", "/chats", "/not-found"];
+	const { pathname } = request.nextUrl;
+	if (!allowedRootUris.includes(pathname)) {
+		return NextResponse.rewrite(new URL("/not-found", request.url));
+	}
 
 	return NextResponse.next();
 }

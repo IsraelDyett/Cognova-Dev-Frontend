@@ -142,6 +142,9 @@ class AuthServerActions extends BaseServerActionActions {
 	}
 }
 
+export async function authUser(...args: Parameters<typeof AuthServerActions.authUser>) {
+	return AuthServerActions.authUser(...args);
+}
 export async function signIn(...args: Parameters<typeof AuthServerActions.signIn>) {
 	return AuthServerActions.signIn(...args);
 }
