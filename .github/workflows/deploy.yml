@@ -38,34 +38,35 @@ jobs:
           username: ${{ env.SSH_USER }}
           password: ${{ env.SSH_USER_PASS }}
           script: |
-            cd /home/cognova-app/htdocs/app.cognova.io
+            set -e  # Exit immediately if a command exits with a non-zero status
+            
+            cd /home/cognova-app/htdocs/app.cognova.io || exit 1
             
             # Configure Git credentials
             git config --global credential.helper store
             echo "https://oauth2:${{ env.GIT_TOKEN }}@github.com" > ~/.git-credentials
             
             # Stash current changes
-            git stash
+            git stash || exit 1
 
             # Pull latest changes
-            git pull origin main
+            git pull origin main || exit 1
             
             # Install dependencies
-            npm install
+            npm install || exit 1
             
             # Build the application
-            npm run build
+            npm run build || exit 1
             
             # Restart PM2 process
-            pm2 restart ecosystem.config.js
+            pm2 restart ecosystem.config.js || exit 1
             
             # Clean up credentials for security
             FILE=~/.git-credentials
 
-            # Check if the file exists
+            # Check if the file exists and remove it
             if [ -f "$FILE" ]; then
-                rm "$FILE"  # Delete the file
-                echo "File '$FILE' has been deleted."
-            else
-                echo "File '$FILE' does not exist."
+                rm "$FILE" || echo "Warning: Failed to delete credentials file"
             fi
+            
+            echo "Deployment completed successfully"
