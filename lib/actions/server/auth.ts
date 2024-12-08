@@ -72,18 +72,9 @@ class AuthServerActions extends BaseServerActionActions {
 		}, "SIGN_UP_OR_IN_FAILED");
 	}
 
-	public static async signOut(
-		returnTo = siteConfig.domains.root,
-		nextResponse?: NextResponse,
-		nextUrl?: NextURL,
-	) {
-		const cookiesManager = nextResponse ? nextResponse.cookies : cookies();
-		const redirector = nextResponse
-			? () => NextResponse.redirect(new URL(returnTo, nextUrl))
-			: () => redirect(returnTo);
-
-		cookiesManager.delete(this.authCookieKey);
-		return redirector();
+	public static async signOut(returnTo = siteConfig.domains.root) {
+		cookies().delete(this.authCookieKey);
+		redirect(returnTo);
 	}
 
 	private static async authenticate(action: "SIGN_UP" | "SIGN_IN", user: User) {

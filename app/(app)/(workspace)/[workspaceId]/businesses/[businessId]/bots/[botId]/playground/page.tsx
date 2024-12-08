@@ -111,57 +111,59 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 						)}
 
 						<div className="py-2 space-y-4">
-							{chats.filter((chat) => chat.content.length > 0).map((chat) => (
-								<div
-									key={chat.id}
-									className={cn(
-										"flex gap-3",
-										chat.role === "assistant"
-											? "justify-start max-w-[80%]"
-											: "justify-end ml-auto max-w-[80%]",
-									)}
-								>
-									{chat.role === "assistant" && (
-										<Avatar>
-											<AvatarFallback>
-												<Bot className="w-5 h-5" />
-											</AvatarFallback>
-										</Avatar>
-									)}
+							{chats
+								.filter((chat) => chat.content.length > 0)
+								.map((chat) => (
+									<div
+										key={chat.id}
+										className={cn(
+											"flex gap-3",
+											chat.role === "assistant"
+												? "justify-start max-w-[80%]"
+												: "justify-end ml-auto max-w-[80%]",
+										)}
+									>
+										{chat.role === "assistant" && (
+											<Avatar>
+												<AvatarFallback>
+													<Bot className="w-5 h-5" />
+												</AvatarFallback>
+											</Avatar>
+										)}
 
-									<div className="flex flex-col">
-										<div
-											className={cn(
-												"rounded-lg px-4 py-2 text-sm h-fit",
-												chat.role === "assistant"
-													? "bg-secondary"
-													: "bg-primary text-primary-foreground",
-											)}
-										>
-											{(chat.content && (
-												<MemoizedReactMarkdown
-													className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
-													remarkPlugins={[remarkGfm, remarkMath]}
-													components={{
-														p({ children }) {
-															return (
-																<p className="mb-2 last:mb-0">
-																	{children}
-																</p>
-															);
-														},
-													}}
-												>
-													{chat.content}
-												</MemoizedReactMarkdown>
-											)) ||
-												(chat.role === "assistant" && isLoading && (
-													<LoadingDots />
-												))}
+										<div className="flex flex-col">
+											<div
+												className={cn(
+													"rounded-lg px-4 py-2 text-sm h-fit",
+													chat.role === "assistant"
+														? "bg-secondary"
+														: "bg-primary text-primary-foreground",
+												)}
+											>
+												{(chat.content && (
+													<MemoizedReactMarkdown
+														className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
+														remarkPlugins={[remarkGfm, remarkMath]}
+														components={{
+															p({ children }) {
+																return (
+																	<p className="mb-2 last:mb-0">
+																		{children}
+																	</p>
+																);
+															},
+														}}
+													>
+														{chat.content}
+													</MemoizedReactMarkdown>
+												)) ||
+													(chat.role === "assistant" && isLoading && (
+														<LoadingDots />
+													))}
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))}
 							<div ref={chatsEndRef} />
 						</div>
 					</ScrollArea>

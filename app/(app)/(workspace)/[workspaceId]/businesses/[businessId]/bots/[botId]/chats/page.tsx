@@ -50,9 +50,11 @@ export default function ChatsPage() {
 			</div>
 			<div className="w-full md:w-[73%]">
 				<ScrollArea className="h-full pl-2 pr-4">
-					{chats.filter((chat) => chat.content.length > 0).map((chat) => (
-						<ChatBubbleCard key={chat.id} chat={chat} />
-					))}
+					{chats
+						.filter((chat) => chat.content.length > 0)
+						.map((chat) => (
+							<ChatBubbleCard key={chat.id} chat={chat} />
+						))}
 				</ScrollArea>
 			</div>
 		</div>

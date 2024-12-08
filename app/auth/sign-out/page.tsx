@@ -11,7 +11,6 @@ export default function SignOutPage() {
 			try {
 				signOut();
 			} catch (error) {
-				console.error(error, "signOut", "SignOutPage");
 				toast.error("Something goes wrong");
 			} finally {
 				posthog.capture("Signed Out");
