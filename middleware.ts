@@ -11,9 +11,9 @@ export async function middleware(request: NextRequest) {
 	if (APP_HOSTNAMES.has(domain)) {
 		return AppMiddleware(request);
 	}
-	const allowedRootUris = ["/", "/chats", "/not-found"];
+	const allowedRootUris = ["/", "/not-found"];
 	const { pathname } = request.nextUrl;
-	if (!allowedRootUris.includes(pathname)) {
+	if (!allowedRootUris.includes(pathname) || pathname.startsWith("/chats")) {
 		return NextResponse.rewrite(new URL("/not-found", request.url));
 	}
 
