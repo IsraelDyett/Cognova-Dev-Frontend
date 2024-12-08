@@ -26,7 +26,7 @@ export default function BusinessDashboard() {
 
 	return (
 		<>
-			<div className="container mx-auto p-4">
+			<section>
 				{businesses.length === 0 && !loading ? (
 					<NoStateComponent title="Business" onOpenCreateForm={onOpenCreateForm} />
 				) : (
@@ -44,6 +44,6 @@ export default function BusinessDashboard() {
 				)}
 			</div>
 			<BusinessForm />
-		</>
+		</section>
 	);
 }
