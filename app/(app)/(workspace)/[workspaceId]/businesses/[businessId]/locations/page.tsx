@@ -29,7 +29,7 @@ export default function BusinessLocationDashboard() {
 
 	return (
 		<>
-			<div className="container mx-auto p-4">
+			<section>
 				{businesslocations.length === 0 && !loading ? (
 					<NoStateComponent title="Location" onOpenCreateForm={onOpenCreateForm} />
 				) : (
@@ -44,7 +44,7 @@ export default function BusinessLocationDashboard() {
 						}
 					/>
 				)}
-			</div>
+			</section>
 
 			{/* CRUD Form Dialog */}
 			<BusinessLocationForm />
