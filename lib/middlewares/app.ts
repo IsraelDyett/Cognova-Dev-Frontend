@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/not-found", "/auth/sign-out"];
+const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/not-found"];
 
 export async function AppMiddleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
 	if (publicPaths.includes(pathname)) {
 		return NextResponse.next();
+	}
+
+	if (pathname === "/auth/sign-out") {
+		const response = NextResponse.next();
+		response.cookies.delete("auth.session.token");
+		return response;
 	}
 
 	const match = pathname.match(/^\/([^/]+)/);
