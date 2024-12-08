@@ -81,21 +81,21 @@ async function mainSeeder() {
 	console.log("Plans created");
 
 	const freePlanFeatures = [
-		"Only WhatsApp Channel",
-		"Basic AI Chatbot",
+		"Web Chat Only",
+		"Basic AI Sales Agent",
 		"Basic Analytics Dashboard",
 		"Email Support",
 	];
 	const businessPlanFeatures = [
-		"WhatsApp & Instagram Channel",
-		"Advanced AI Chatbot",
+		"Web Chat & Instagram Integration",
+		"Advanced AI Sales Agent",
 		"Advanced Analytics & Reporting",
 		"Priority Support",
 		"Multi-language Support",
 	];
 	const enterprisePlanFeatures = [
-		"WhatsApp & Instagram Channel",
-		"Custom & Latest AI Chatbot",
+		"Web Chat & Instagram Integration",
+		"Custom & Latest AI Sales Agent",
 		"Real-time Analytics & API Access",
 		"24/7 Dedicated Support",
 		"Multi-language Support",

@@ -2,19 +2,14 @@ import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site";
 import React, { SVGProps } from "react";
+import { features } from "./features-section";
 
 const footerNavigation = {
 	product: [
 		{ name: "AI Sales Agent", href: "#agent" },
-		{ name: "WhatsApp Business", href: "#whatsapp" },
-		{ name: "Instagram DMs", href: "#instagram" },
+		{ name: "Instagram Integration", href: "#instagram" },
+		{ name: "Web Chat Widget", href: "#webchat" },
 		{ name: "Analytics", href: "#analytics" },
-	],
-	features: [
-		{ name: "Auto Phone Verification", href: "#verification" },
-		{ name: "Business Contact Sharing", href: "#contact-sharing" },
-		{ name: "Chat Management", href: "#chat-management" },
-		{ name: "Custom AI Responses", href: "#responses" },
 	],
 	resources: [
 		{ name: "Documentation", href: "#docs" },
@@ -69,7 +64,12 @@ export default function Footer() {
 		<footer className="mt-32 bg-gray-900 sm:mt-56" aria-labelledby="footer-heading">
 			<div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
 				<div className="xl:grid xl:grid-cols-3 xl:gap-8">
-					<Logo size="xxl" />
+					<div>
+						<Logo size="xxl" />
+						<h1 className="#text-white text-2xl font-bold pt-4 bg-clip-text text-transparent drop-shadow-2xl bg-gradient-to-b from-white/80 to-white/20">
+							{siteConfig.applicationName}
+						</h1>
+					</div>
 					<div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
 						<div className="md:grid md:grid-cols-2 md:gap-8">
 							<div>
@@ -94,10 +94,10 @@ export default function Footer() {
 									Features
 								</h3>
 								<ul role="list" className="mt-6 space-y-4">
-									{footerNavigation.features.map((item) => (
+									{features.map((item) => (
 										<li key={item.name}>
 											<a
-												href={item.href}
+												href={"#features"}
 												className="text-sm leading-6 text-gray-300 hover:text-white"
 											>
 												{item.name}
@@ -151,8 +151,8 @@ export default function Footer() {
 							Stay updated with AI sales innovations
 						</h3>
 						<p className="mt-2 text-sm leading-6 text-gray-300">
-							Get the latest updates about AI sales agents, WhatsApp Business
-							automation, and social media integration features.
+							Get the latest updates about AI sales agents, Instagram automation, and
+							web chat integration features.
 						</p>
 					</div>
 					<form className="mt-6 sm:flex sm:max-w-md lg:mt-0">

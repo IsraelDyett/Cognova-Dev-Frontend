@@ -44,7 +44,7 @@ export default function HeroSection() {
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600">
 						Create your AI sales agent in minutes. Let it handle customer conversations
-						on All Social Medias while you focus on growing your business.
+						on Instagram and your website while you focus on growing your business.
 					</p>
 					<div className="flex mt-10 flex-col sm:flex-row gap-4 justify-center lg:justify-start">
 						<Button size="lg" className="group" asChild>

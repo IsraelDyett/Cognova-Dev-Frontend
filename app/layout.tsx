@@ -1,8 +1,8 @@
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
-import { fontSans } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site";
 import { Metadata, Viewport } from "next";
+import { fontSans, geistSans } from "@/lib/fonts";
 import { Providers } from "@/components/providers";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -19,7 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html suppressHydrationWarning lang="en">
 			<head />
-			<body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
+			<body
+				className={cn(
+					"bg-background font-sans antialiased",
+					fontSans.variable,
+					geistSans.variable,
+				)}
+			>
 				<Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
 					{children}
 				</Providers>

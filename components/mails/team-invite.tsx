@@ -34,7 +34,7 @@ export const InviteEmailTemplate: React.FC<Readonly<InviteEmailTemplateProps>> =
 			Join {workspace} on {siteConfig.applicationName}
 		</Preview>
 		<Tailwind>
-			<Body className="bg-white my-auto mx-auto font-sans px-2">
+			<Body className="bg-white my-auto mx-auto px-2">
 				<Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
 					<Section className="mt-[32px]">
 						<Img

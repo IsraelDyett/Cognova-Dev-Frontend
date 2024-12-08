@@ -11,48 +11,48 @@ import {
 	Users,
 } from "lucide-react";
 
-const features = [
+export const features = [
 	{
 		name: "AI Sales Agents",
 		description:
-			"Create personalized AI agents that represent your business and handle customer interactions professionally across multiple social channels.",
-		href: "#",
+			"Create personalized AI agents that represent your business and handle customer interactions professionally across Instagram and web chat.",
 		icon: Bot,
 	},
 	{
 		name: "Shareable Chat Links",
 		description:
 			"Generate unique chat links for your AI agents that you can share with customers through any platform or add to your social media profiles.",
-		href: "#",
 		icon: Share2,
-	},
-	{
-		name: "WhatsApp Integration",
-		description:
-			"Connect your WhatsApp Business account and let your AI agent handle customer inquiries 24/7, providing instant responses about products and services.",
-		href: "#",
-		icon: MessageSquare,
 	},
 	{
 		name: "Instagram Integration",
 		description:
-			"Extend your AI agent's reach to Instagram DMs, providing seamless customer support and sales assistance on social media.",
-		href: "#",
+			"Connect your Instagram business account and let your AI agent handle customer inquiries 24/7, providing instant responses about products and services.",
 		icon: Instagram,
 	},
 	{
 		name: "Advanced Analytics",
 		description:
 			"Track customer interactions, monitor response times, and gain insights into sales conversations to optimize your AI agent's performance.",
-		href: "#",
 		icon: LineChart,
 	},
 	{
 		name: "Multi-Agent Management",
 		description:
 			"Create and manage multiple AI agents for different products or services, each with its own personality and expertise.",
-		href: "#",
 		icon: Users,
+	},
+	{
+		name: "Product Catalog Integration",
+		description:
+			"Upload your product catalog and let your AI agent provide accurate product information, pricing, and availability in real-time.",
+		icon: ShoppingCart,
+	},
+	{
+		name: "Conversation History",
+		description:
+			"Access complete chat histories and customer interactions to maintain context and provide personalized experiences.",
+		icon: Database,
 	},
 ];
 
@@ -85,14 +85,6 @@ export default function FeaturesSection() {
 							</dt>
 							<dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
 								<p className="flex-auto">{feature.description}</p>
-								<p className="mt-6">
-									<a
-										href={feature.href}
-										className="text-sm font-semibold leading-6 text-primary"
-									>
-										Learn more <span aria-hidden="true">→</span>
-									</a>
-								</p>
 							</dd>
 						</div>
 					))}

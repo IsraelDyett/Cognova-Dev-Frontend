@@ -41,8 +41,8 @@ export default function StepsFlowSection() {
 							<h4 className="text-xl font-bold mb-2">2. Share Your Agent Link</h4>
 							<p className="text-gray-600 text-base">
 								Get a unique chat link for your AI agent and share it with customers
-								through WhatsApp, Instagram, or any other platform. Add it to your
-								social media profiles for easy access.
+								through Instagram or any other platform. Embed it on your website
+								for easy access.
 							</p>
 						</div>
 					</div>

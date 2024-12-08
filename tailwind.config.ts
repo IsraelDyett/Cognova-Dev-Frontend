@@ -7,7 +7,8 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["var(--font-sans)", ...fontFamily.sans],
+				sans: ["var(--font-inter-sans)", ...fontFamily.sans],
+				"geist-sans": ["var(--font-geist-sans)", ...fontFamily.sans],
 			},
 			colors: {
 				background: "hsl(var(--background))",

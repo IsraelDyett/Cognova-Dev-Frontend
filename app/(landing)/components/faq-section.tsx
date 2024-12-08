@@ -9,11 +9,11 @@ import { siteConfig } from "@/lib/site";
 const faqs = [
 	{
 		question: `What is ${siteConfig.applicationName}`,
-		answer: `${siteConfig.applicationName} is an AI-powered sales assistant platform that helps businesses automate customer interactions across social media channels like WhatsApp and Instagram.`,
+		answer: `${siteConfig.applicationName} is an AI-powered sales assistant platform that helps businesses automate customer interactions through Instagram DMs and web-based chat.`,
 	},
 	{
 		question: `How does ${siteConfig.applicationName} work?`,
-		answer: `${siteConfig.applicationName} works in three simple steps:<br/>1) Create your AI sales agent and customize its behavior,<br/>2) Get a unique chat link to share with your customers,<br/>3) Let your AI agent handle customer inquiries and sales conversations 24/7 across WhatsApp and Instagram.`,
+		answer: `${siteConfig.applicationName} works in three simple steps:<br/>1) Create your AI sales agent and customize its behavior,<br/>2) Get a unique chat link to share with your customers,<br/>3) Let your AI agent handle customer inquiries and sales conversations 24/7 through Instagram and web chat.`,
 	},
 	{
 		question: `How can I share my AI agent with customers?`,
@@ -32,16 +32,12 @@ const faqs = [
 		answer: `Yes, ${siteConfig.applicationName} allows you to fully customize your AI agent's personality, tone, and responses. You can train it to match your brand voice and handle specific types of customer interactions.`,
 	},
 	{
-		question: `How does WhatsApp integration work with ${siteConfig.applicationName}?`,
-		answer: `Our platform automatically verifies your WhatsApp Business phone number and handles the integration process. Once verified, your AI agent can manage all conversations, share business contacts, and handle customer inquiries directly through WhatsApp. This means your customers can chat with your AI agent using your official business WhatsApp number.`,
+		question: `How does Instagram integration work with ${siteConfig.applicationName}?`,
+		answer: `Our platform seamlessly connects with your Instagram business account. Once connected, your AI agent can manage all conversations and handle customer inquiries directly through Instagram DMs, providing instant responses about your products and services.`,
 	},
 	{
-		question: `Can my AI agent share business contacts during conversations?`,
-		answer: `Yes! When customers request contact information or during relevant conversations, your AI agent can automatically share verified business contact details through WhatsApp. This includes your business phone number, location, and other important contact information, making it easier for customers to reach you directly when needed.`,
-	},
-	{
-		question: `How does phone number verification work?`,
-		answer: `The process is simple and secure. You provide your business phone number, and our system automatically handles the WhatsApp Business verification process. Once verified, your AI agent can start managing conversations using your official business number, maintaining a professional and trustworthy presence.`,
+		question: `Can I embed the chat widget on my website?`,
+		answer: `Yes! You can easily embed your AI chat widget on any website using our simple embed code. The chat widget maintains your brand's look and feel while providing 24/7 automated customer support.`,
 	},
 ];
 

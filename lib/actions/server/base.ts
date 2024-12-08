@@ -23,8 +23,12 @@ abstract class BaseServerActionActions {
 			const result = await action();
 			return { success: true, data: result, error: null as unknown as string };
 		} catch (error) {
-			console.log("GO ERROR", error, typeof error);
-			const newErrorMessage = error instanceof Error ? error.message : errorMessage;
+			const isPrismaError = /prisma|database|connection|constraint/i.test(String(error));
+			const newErrorMessage = isPrismaError
+				? "Internal server error"
+				: error instanceof Error
+					? error.message
+					: errorMessage;
 			if (onError) onError(error);
 			return { success: false, data: null as T, error: newErrorMessage };
 		}

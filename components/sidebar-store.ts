@@ -129,11 +129,6 @@ export const sidebarData = {
 			url: "businesses/{businessId}/",
 		},
 		{
-			title: "Analytics",
-			icon: ChartBar,
-			url: "businesses/{businessId}/analytics",
-		},
-		{
 			title: "Products",
 			icon: ShoppingBag,
 			url: "businesses/{businessId}/products",
@@ -161,8 +156,8 @@ export const sidebarData = {
 	],
 	botNavigationMenus: [
 		{
-			title: "Analytics",
-			url: "businesses/{businessId}/bots/{botId}/analytics",
+			title: "Overview",
+			url: "businesses/{businessId}/bots/{botId}",
 			icon: ChartArea,
 		},
 		{
