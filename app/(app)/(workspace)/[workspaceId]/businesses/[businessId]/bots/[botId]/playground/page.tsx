@@ -111,7 +111,7 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 						)}
 
 						<div className="py-2 space-y-4">
-							{chats.filter((chat) => chat.content.length > 1).map((chat) => (
+							{chats.filter((chat) => chat.content.length > 0).map((chat) => (
 								<div
 									key={chat.id}
 									className={cn(
