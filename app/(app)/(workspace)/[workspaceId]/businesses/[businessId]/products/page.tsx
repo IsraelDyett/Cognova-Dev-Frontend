@@ -27,7 +27,7 @@ export default function ProductDashboard() {
 	if (error) return <div>Error: {error}</div>;
 
 	return (
-		<div className="container mx-auto p-4">
+		<section>
 			{products.length === 0 && !loading ? (
 				<NoStateComponent title="Product" onOpenCreateForm={onOpenCreateForm} />
 			) : (
@@ -43,6 +43,6 @@ export default function ProductDashboard() {
 				/>
 			)}
 			<ProductForm />
-		</div>
+		</section>
 	);
 }
