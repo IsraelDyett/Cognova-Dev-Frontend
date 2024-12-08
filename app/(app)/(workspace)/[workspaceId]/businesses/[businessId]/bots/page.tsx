@@ -30,7 +30,7 @@ export default function BotDashboard() {
 
 	return (
 		<>
-			<div className="container mx-auto p-4">
+			<section>
 				{bots.length === 0 && !loading ? (
 					<NoStateComponent title="Bot" onOpenCreateForm={onOpenCreateForm} />
 				) : (
@@ -46,7 +46,7 @@ export default function BotDashboard() {
 						}
 					/>
 				)}
-			</div>
+			</section>
 			<Suspense>
 				<BotForm />
 			</Suspense>
