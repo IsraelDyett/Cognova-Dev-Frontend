@@ -4,6 +4,7 @@ import { fontSans } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata: Metadata = siteConfig;
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					{children}
 				</Providers>
 			</body>
+			<GoogleAnalytics gaId="G-VZYF9L974K" />
 		</html>
 	);
 }
