@@ -111,7 +111,7 @@ export function WorkspaceSwitcher() {
 										<Avatar>
 											<AvatarImage
 												alt="Workspace Logo"
-												src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURI(ws?.name || "loading")}&backgroundType=gradientLinear,solid&backgroundRotation=-310,-240&fontFamily=Courier%20New&fontWeight=600`}
+												src={"#"}
 												onError={(e) =>
 													(e.currentTarget.style.display = "none")
 												}

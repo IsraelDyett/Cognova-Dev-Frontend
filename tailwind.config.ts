@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config: Config = {
-	darkMode: ["class"],
+	// darkMode: ["selector"],
 	content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
 	theme: {
 		extend: {
@@ -68,11 +68,6 @@ const config: Config = {
 					border: "hsl(var(--sidebar-border))",
 					ring: "hsl(var(--sidebar-ring))",
 				},
-				"rainbow-color-1": "hsl(var(--rainbow-color-1))",
-				"rainbow-color-2": "hsl(var(--rainbow-color-2))",
-				"rainbow-color-3": "hsl(var(--rainbow-color-3))",
-				"rainbow-color-4": "hsl(var(--rainbow-color-4))",
-				"rainbow-color-5": "hsl(var(--rainbow-color-5))",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -116,7 +111,6 @@ const config: Config = {
 				},
 			},
 			animation: {
-				rainbow: "rainbow var(--rainbow-speed, 2s) infinite linear",
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				orbit: "orbit calc(var(--duration)*1s) linear infinite",

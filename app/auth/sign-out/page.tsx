@@ -1,15 +1,22 @@
 "use client";
+import { toast } from "sonner";
 import posthog from "posthog-js";
 import { siteConfig } from "@/lib/site";
 import React, { useEffect } from "react";
 import LoadingDots from "@/components/ui/loading-dots";
+import { signOut } from "@/lib/actions/server/auth";
 
 export default function SignOutPage() {
 	useEffect(() => {
-		posthog.capture("Signed Out");
 		if (typeof window !== "undefined") {
-			document.cookie = `auth.session.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-			window.location.replace(siteConfig.domains.root);
+			try {
+				signOut(siteConfig.domains.root);
+			} catch (error) {
+				console.error(error, "signOut", "SignOutPage");
+				toast.error("Something goes wrong");
+			} finally {
+				posthog.capture("Signed Out");
+			}
 		}
 	}, []);
 	return (

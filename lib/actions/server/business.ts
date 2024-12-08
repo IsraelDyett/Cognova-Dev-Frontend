@@ -37,7 +37,17 @@ class BusinessServerActions extends BaseServerActionActions {
 
 	public static async createBusiness({ data }: { data: Prisma.BusinessUncheckedCreateInput }) {
 		return this.executeAction(
-			() => this.prisma.business.create({ data }),
+			() =>
+				this.prisma.business.create({
+					data: {
+						...data,
+						configurations: {
+							create: {
+								currency: "USD",
+							},
+						},
+					},
+				}),
 			"Failed to create business",
 		);
 	}

@@ -4,14 +4,14 @@ import { fontSans } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = siteConfig;
 
 export const viewport: Viewport = {
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
+		{ media: "(prefers-color-scheme: light)", color: "var(--foreground)" },
+		{ media: "(prefers-color-scheme: dark)", color: "var(--foreground)" },
 	],
 };
 

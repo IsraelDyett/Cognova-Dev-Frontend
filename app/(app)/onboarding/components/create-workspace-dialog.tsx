@@ -17,6 +17,7 @@ import { Role } from "@prisma/client";
 import { getRoles } from "@/lib/actions/server/auth";
 import posthog from "posthog-js";
 import { initializeWorkspace } from "@/lib/actions/server/workspace";
+import { Label } from "@/components/ui/label";
 
 interface FormData {
 	displayName: string;
@@ -123,7 +124,7 @@ export default function CreateWorkspaceDialog({
 
 				<div className="space-y-6">
 					<div className="space-y-2">
-						<label className="text-sm font-medium">Workspace Name</label>
+						<Label>Workspace Name</Label>
 						<Input
 							placeholder="Enter workspace name"
 							value={formData.displayName}
@@ -139,7 +140,9 @@ export default function CreateWorkspaceDialog({
 					</div>
 
 					<div className="space-y-4">
-						<label className="text-sm font-medium">Team Members</label>
+						<Label helpText="Team members are people who can make changes to your workspace">
+							Team Members (Optional)
+						</Label>
 						<InviteToWorkspaceForm roles={roles} onAddMember={addTeamMember} />
 						<div className="space-y-2">
 							{formData.team.map((member) => (

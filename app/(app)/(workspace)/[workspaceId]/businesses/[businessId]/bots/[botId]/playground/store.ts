@@ -40,7 +40,7 @@ export const useChatStore = create<ChatStore>((set) => ({
 		debug("CLIENT", "initializeConversation", "STORE");
 		const { data: conversation } = await retrieveOrCreateConversation({ botId });
 		if (!conversation) {
-			toast.error("You're accessing the invalid chatbot");
+			toast.error("You're accessing the invalid bot");
 			return;
 		}
 		set({ currentConversationId: conversation.id });

@@ -245,7 +245,6 @@ async function mainSeeder() {
 	// 	data: {
 	// 		name: "Acme Store",
 	// 		workspaceId: SYSTEM_WORKSPACE_ID,
-	// 		waPhoneNumber: "+250729882416",
 	// 		type: "SALES_ASSISTANT",
 	// 		modelId: gpt4Model.id,
 	// 		description: "Virtual sales assistant for Acme Store",

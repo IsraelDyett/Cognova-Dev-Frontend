@@ -48,6 +48,10 @@ export default function InviteToWorkspaceForm({ roles, onAddMember }: InviteForm
 					className="h-9"
 					placeholder="Email address"
 				/>
+
+				<p className="text-xs text-muted-foreground pt-1">
+					After adding email hit + Button
+				</p>
 				{error && <p className="text-xs text-destructive pt-1">{error}</p>}
 			</div>
 			<div className="flex space-x-2">

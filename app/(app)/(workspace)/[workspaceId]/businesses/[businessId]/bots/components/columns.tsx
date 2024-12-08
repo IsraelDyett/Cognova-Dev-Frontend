@@ -38,15 +38,6 @@ export const columns: ColumnDef<Bot>[] = [
 		},
 	},
 	{
-		accessorKey: "waPhoneNumber",
-		header: ({ column }) => {
-			return <DataTableColumnHeader column={column} title="Wa Phone Number" />;
-		},
-		cell: ({ row }) => {
-			return <div className="font-medium">{row.getValue("waPhoneNumber")}</div>;
-		},
-	},
-	{
 		accessorKey: "createdAt",
 		header: ({ column }) => {
 			return <DataTableColumnHeader column={column} title="CreatedAt" />;

@@ -8,23 +8,23 @@ const botBaseSchema = z.object({
 	language: z.string().optional(),
 	systemMessage: z.string().optional(),
 	modelId: z.string().cuid("Invalid selected model"),
-	waPhoneNumber: z
-		.string()
-		.refine(async (value) => {
-			if (!value) return true;
-			const cleaned = value.replace(/[^\d]/g, "");
+	// waPhoneNumber: z
+	// 	.string()
+	// 	.refine(async (value) => {
+	// 		if (!value) return true;
+	// 		const cleaned = value.replace(/[^\d]/g, "");
 
-			try {
-				const parsePhoneNumber = await import("libphonenumber-js");
-				const phoneNumber = parsePhoneNumber.isValidPhoneNumber(
-					"+" + cleaned.replaceAll("+", "").trim(),
-				);
-				return !!phoneNumber;
-			} catch (error) {
-				return false;
-			}
-		}, "Please enter a valid phone number in international format without + prefix (e.g. 18005551234 for United States)")
-		.optional(),
+	// 		try {
+	// 			const parsePhoneNumber = await import("libphonenumber-js");
+	// 			const phoneNumber = parsePhoneNumber.isValidPhoneNumber(
+	// 				"+" + cleaned.replaceAll("+", "").trim(),
+	// 			);
+	// 			return !!phoneNumber;
+	// 		} catch (error) {
+	// 			return false;
+	// 		}
+	// 	}, "Please enter a valid phone number in international format without + prefix (e.g. 18005551234 for United States)")
+	// 	.optional(),
 });
 
 export const createBotSchema = botBaseSchema;

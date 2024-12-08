@@ -22,9 +22,6 @@ model Conversation {
   sessionId         String   @default(cuid())
   countryCode       String?
   generatedCategory String?
-  waPhoneNumber     String?
-  waProfilePicture  String?
-  waProfileName     String?
   extraMetadata     Json?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now()) @updatedAt

@@ -7,16 +7,15 @@ import SessionServerActions from "./session";
 
 class ChatServerActions extends BaseServerActionActions {
 	public static async getChats({ conversationId }: { conversationId: string }) {
-		return this.executeAction(
-			() =>
-				this.prisma.chat.findMany({
-					where: {
-						conversationId: conversationId,
-					},
-					orderBy: { createdAt: "asc" },
-				}),
-			"Failed to get chats",
-		);
+		return this.executeAction(async () => {
+			const chats = await this.prisma.chat.findMany({
+				where: {
+					conversationId: conversationId,
+				},
+				orderBy: { createdAt: "asc" },
+			});
+			return chats.filter((chat) => ["assistant", "user"].includes(chat.role));
+		}, "Failed to get chats");
 	}
 	public static async getConversations({
 		botId,

@@ -40,7 +40,6 @@ const defaultValues = {
 	language: "en",
 	starterQuestions: [],
 	modelId: "",
-	waPhoneNumber: "",
 };
 export function BotForm() {
 	const {
@@ -90,7 +89,6 @@ export function BotForm() {
 				language: initialCrudFormData?.language || "",
 				systemMessage: initialCrudFormData?.systemMessage || "",
 				modelId: initialCrudFormData?.modelId || "",
-				waPhoneNumber: initialCrudFormData?.waPhoneNumber || "",
 			});
 		} else if (isOpenCrudForm) {
 			form.reset(defaultValues);
@@ -185,25 +183,6 @@ export function BotForm() {
 							}}
 							itemLabelKey="displayName"
 							idKey="modelId"
-						/>
-						<FormField
-							control={form.control}
-							name="waPhoneNumber"
-							render={({ field }) => (
-								<FormItem className="md:col-span-1 col-span-full">
-									<FormLabel helpText="When integrating on whatsapp you can chose this bot to handle all message sent to this number">
-										Wa Phone Number
-									</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter WhatsApp Phone Number"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
 						/>
 
 						<FormField
