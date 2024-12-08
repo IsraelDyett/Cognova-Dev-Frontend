@@ -6,6 +6,8 @@ import { z } from "zod";
 import { initializeWorkspaceSchema } from "@/lib/zod";
 import AuthServerActions from "./auth";
 import { generateUniqueName } from "./prisma";
+import ms from "ms";
+import { addMonths } from "date-fns";
 
 class WorkspaceServerActions extends BaseServerActionActions {
 	public static async getWorkspaces({
@@ -66,7 +68,26 @@ class WorkspaceServerActions extends BaseServerActionActions {
 		include?: Prisma.WorkspaceInclude;
 	}) {
 		return this.executeAction(
-			() => this.prisma.workspace.create({ data, include }),
+			() =>
+				this.prisma.workspace.create({
+					data: {
+						...data,
+						subscription: {
+							create: {
+								status: "ACTIVE",
+								startDate: new Date(),
+								endDate: addMonths(new Date(), 1),
+								billingCycle: "MONTHLY",
+								plan: {
+									connect: {
+										name: "free",
+									},
+								},
+							},
+						},
+					},
+					include,
+				}),
 			"Failed to create workspace",
 		);
 	}

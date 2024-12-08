@@ -1,24 +1,22 @@
 model Bot {
-  id                 String            @id @default(cuid())
-  workspaceId        String
-  businessId         String
-  name               String
-  description        String?
-  language           String?
-  systemMessage      String?
-  modelId            String?
-  waPhoneNumber      String?           @unique
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @default(now()) @updatedAt
-  type               BotTypes          @default(SALES_ASSISTANT)
-  model              Model?            @relation(fields: [modelId], references: [id], onDelete: SetNull)
-  workspace          Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  conversations      Conversation[]
-  business           Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  id            String         @id @default(cuid())
+  workspaceId   String
+  businessId    String
+  name          String
+  description   String?
+  language      String?
+  systemMessage String?
+  modelId       String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  type          BotTypes       @default(SALES_ASSISTANT)
+  model         Model?         @relation(fields: [modelId], references: [id], onDelete: SetNull)
+  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+  business      Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@map("bots")
 }
-
 
 model Model {
   id           String      @id @default(cuid())
