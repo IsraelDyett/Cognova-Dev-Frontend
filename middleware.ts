@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 	}
 	const allowedRootUris = ["/", "/not-found"];
 	const { pathname } = request.nextUrl;
-	if (!allowedRootUris.includes(pathname) || pathname.startsWith("/chats")) {
+	if (!allowedRootUris.includes(pathname) && !pathname.startsWith("/chats")) {
 		return NextResponse.rewrite(new URL("/not-found", request.url));
 	}
 
