@@ -112,7 +112,7 @@ export function BusinessForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 grid-cols-2">
+					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 grid-cols-1 md:grid-cols-2">
 						<FormField
 							control={form.control}
 							name="name"
