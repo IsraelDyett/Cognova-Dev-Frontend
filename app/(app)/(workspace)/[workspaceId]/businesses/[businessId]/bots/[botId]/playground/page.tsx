@@ -8,7 +8,7 @@ import LoadingDots from "@/components/ui/loading-dots";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { handlePrompt, streamChat } from "./actions";
-import { Send, AlertCircle, Bot, Loader2 } from "lucide-react";
+import { Send, AlertCircle, Bot, Loader2, ExternalLink } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { WorkspacePageProps } from "@/types";
@@ -95,6 +95,14 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 			setIsLoading(false);
 		}
 	};
+
+	const extractImagesFromMarkdown = (content: string) => {
+		const imgRegex = /!\[.*?\]\((.*?)\)/g;
+		const images = [...content.matchAll(imgRegex)].map((match) => match[1]);
+		const textParts = content.split(imgRegex);
+		return { images, textParts };
+	};
+
 	return (
 		<div
 			className={`flex-1 flex ${props.searchParams["embed"] || props.searchParams["chat"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
@@ -113,57 +121,94 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 						<div className="py-2 space-y-4">
 							{chats
 								.filter((chat) => chat.content.length > 0)
-								.map((chat) => (
-									<div
-										key={chat.id}
-										className={cn(
-											"flex gap-3",
-											chat.role === "assistant"
-												? "justify-start max-w-[80%]"
-												: "justify-end ml-auto max-w-[80%]",
-										)}
-									>
-										{chat.role === "assistant" && (
-											<Avatar>
-												<AvatarFallback>
-													<Bot className="w-5 h-5" />
-												</AvatarFallback>
-											</Avatar>
-										)}
+								.map((chat) => {
+									const { images, textParts } = extractImagesFromMarkdown(
+										chat.content,
+									);
 
-										<div className="flex flex-col">
-											<div
-												className={cn(
-													"rounded-lg px-4 py-2 text-sm h-fit",
-													chat.role === "assistant"
-														? "bg-secondary"
-														: "bg-primary text-primary-foreground",
-												)}
-											>
-												{(chat.content && (
-													<MemoizedReactMarkdown
-														className="prose break-words prose-p:leading-relaxed prose-pre:p-0"
-														remarkPlugins={[remarkGfm, remarkMath]}
-														components={{
-															p({ children }) {
-																return (
-																	<p className="mb-2 last:mb-0">
-																		{children}
-																	</p>
-																);
-															},
-														}}
-													>
-														{chat.content}
-													</MemoizedReactMarkdown>
-												)) ||
-													(chat.role === "assistant" && isLoading && (
+									return (
+										<div
+											key={chat.id}
+											className={cn(
+												"flex gap-3",
+												chat.role === "assistant"
+													? "justify-start max-w-[80%]"
+													: "justify-end ml-auto max-w-[80%]",
+											)}
+										>
+											{chat.role === "assistant" && (
+												<Avatar>
+													<AvatarFallback>
+														<Bot className="w-5 h-5" />
+													</AvatarFallback>
+												</Avatar>
+											)}
+
+											<div className="flex flex-col">
+												<div
+													className={cn(
+														"rounded-lg px-4 py-2 text-sm h-fit",
+														chat.role === "assistant"
+															? "bg-secondary"
+															: "bg-primary text-primary-foreground",
+													)}
+												>
+													{chat.content &&
+														textParts.map((text, index) => (
+															<React.Fragment key={index}>
+																{text && (
+																	<MemoizedReactMarkdown
+																		className="prose break-words prose-p:leading-relaxed prose-pre:p-0 [&_a]:inline-flex [&_a]:items-center [&_a]:gap-1 [&_a]:rounded-md [&_a]:bg-secondary [&_a]:px-2 [&_a]:py-1 [&_a]:text-xs [&_a]:no-underline hover:[&_a]:bg-secondary/80"
+																		remarkPlugins={[
+																			remarkGfm,
+																			remarkMath,
+																		]}
+																		components={{
+																			p({ children }) {
+																				return (
+																					<p className="mb-2 last:mb-0">
+																						{children}
+																					</p>
+																				);
+																			},
+																			a({ children, href }) {
+																				return (
+																					<a
+																						href={href}
+																						className="truncate"
+																						target="_blank"
+																						rel="noopener noreferrer"
+																					>
+																						{children}
+																						<ExternalLink className="h-3 w-3" />
+																					</a>
+																				);
+																			},
+																		}}
+																	>
+																		{text}
+																	</MemoizedReactMarkdown>
+																)}
+																{images[index] && (
+																	<div className="w-full my-2">
+																		{/* eslint-disable-next-line @next/next/no-img-element */}
+																		<img
+																			src={images[index]}
+																			alt={`Image ${index + 1}`}
+																			className="w-full aspect-[16/9] rounded-md shadow-md object-cover"
+																		/>
+																	</div>
+																)}
+															</React.Fragment>
+														))}
+													{chat.role === "assistant" && isLoading && (
 														<LoadingDots />
-													))}
+													)}
+												</div>
 											</div>
 										</div>
-									</div>
-								))}
+									);
+								})}
 							<div ref={chatsEndRef} />
 						</div>
 					</ScrollArea>

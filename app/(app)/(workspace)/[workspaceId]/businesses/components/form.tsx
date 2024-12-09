@@ -50,7 +50,7 @@ const BUSINESS_TYPES = [
 	{ id: "music_instruments", name: "Musical Instruments" },
 	{ id: "office_supplies", name: "Office Supplies" },
 	{ id: "garden_outdoor", name: "Garden & Outdoor" },
-	{ id: "electronics_repair", name: "Electronics Repair" }
+	{ id: "electronics_repair", name: "Electronics Repair" },
 ];
 
 const formSchema = z.object({
@@ -122,7 +122,10 @@ export function BusinessForm() {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 grid-cols-1 md:grid-cols-2">
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4 grid-cols-1 md:grid-cols-2"
+					>
 						<FormField
 							control={form.control}
 							name="name"

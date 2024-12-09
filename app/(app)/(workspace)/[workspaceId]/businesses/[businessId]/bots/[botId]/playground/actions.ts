@@ -56,7 +56,7 @@ export const handlePrompt = async ({
 			"Content-Type": "application/json",
 			Accept: "text/event-stream",
 		},
-		body: JSON.stringify({ prompt: chat }),
+		body: JSON.stringify({ prompt: chat, chat_mode: "web" }),
 	});
 
 	if (!response.ok) {
