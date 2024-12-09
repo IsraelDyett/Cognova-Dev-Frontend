@@ -8,9 +8,9 @@ import LoadingDots from "@/components/ui/loading-dots";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { handlePrompt, streamChat } from "./actions";
-import { Send, AlertCircle, Bot, Loader2, ExternalLink } from "lucide-react";
+import { Send, AlertCircle, Bot, Loader2, ExternalLink, Phone } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { WorkspacePageProps } from "@/types";
 import { MemoizedReactMarkdown } from "@/components/ui/markdown";
 import remarkGfm from "remark-gfm";
@@ -19,7 +19,174 @@ import ShareButton from "@/components/share-button";
 import { siteConfig } from "@/lib/site";
 import Logo from "@/components/logo";
 
-export default function PlaygroundPage(props: WorkspacePageProps & { share?: boolean }) {
+const processMessageContent = (content: string) => {
+	// Split content into segments that preserve order
+	const segments: Array<{
+		type: "text" | "phone" | "image";
+		content: string;
+		data?: { text?: string; number?: string };
+	}> = [];
+
+	let lastIndex = 0;
+
+	// Find all special content (images and phone numbers) while preserving order
+	const regex = /(!?\[([^\]]+)\]\((?:tel:)?([^)]+)\))/g;
+	let match;
+
+	while ((match = regex.exec(content)) !== null) {
+		// Add any text before this match
+		const textBefore = content.slice(lastIndex, match.index);
+		if (textBefore) {
+			segments.push({ type: "text", content: textBefore });
+		}
+
+		// Determine if this is an image or phone number
+		if (match[0].startsWith("!")) {
+			segments.push({
+				type: "image",
+				content: match[3], // the URL
+			});
+		} else {
+			segments.push({
+				type: "phone",
+				content: match[0],
+				data: {
+					text: match[2],
+					number: match[3],
+				},
+			});
+		}
+
+		lastIndex = match.index + match[0].length;
+	}
+
+	// Add any remaining text
+	const textAfter = content.slice(lastIndex);
+	if (textAfter) {
+		segments.push({ type: "text", content: textAfter });
+	}
+
+	return segments;
+};
+
+const ChatMessage = ({
+	content,
+	role,
+	isLatestAssistantMessage,
+	isLoading,
+}: {
+	content: string;
+	role: string;
+	isLatestAssistantMessage: boolean;
+	isLoading: boolean;
+}) => {
+	const segments = processMessageContent(content);
+
+	return (
+		<div
+			className={cn(
+				"flex gap-3",
+				role === "assistant"
+					? "justify-start max-w-[80%]"
+					: "justify-end ml-auto max-w-[80%]",
+			)}
+		>
+			{role === "assistant" && (
+				<Avatar>
+					<AvatarImage src={siteConfig.r2.logoUrl} />
+					<AvatarFallback>
+						<Bot className="w-5 h-5" />
+					</AvatarFallback>
+				</Avatar>
+			)}
+
+			<div className="flex flex-col">
+				<div
+					className={cn(
+						"rounded-lg px-4 py-2 text-sm h-fit",
+						role === "assistant"
+							? "bg-secondary"
+							: "bg-primary text-primary-foreground",
+					)}
+				>
+					{segments.map((segment, index) => (
+						<React.Fragment key={index}>
+							{segment.type === "text" && (
+								<MemoizedReactMarkdown
+									className="prose break-words prose-p:leading-relaxed prose-pre:p-0 [&_a]:inline-flex [&_a]:items-center [&_a]:gap-1 [&_a]:rounded-md [&_a]:bg-secondary [&_a]:px-2 [&_a]:py-1 [&_a]:text-xs [&_a]:no-underline hover:[&_a]:bg-secondary/80"
+									remarkPlugins={[remarkGfm, remarkMath]}
+									components={{
+										p({ children }) {
+											return <p className="mb-2 last:mb-0">{children}</p>;
+										},
+										a(props) {
+											if (props.href?.startsWith("tel:")) return null;
+											return (
+												<a
+													href={props.href}
+													className="truncate"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													{props.children}
+													<ExternalLink className="h-3 w-3" />
+												</a>
+											);
+										},
+										img() {
+											return null;
+										},
+									}}
+								>
+									{segment.content.replace(/- \*\*Phone:\*\*/, "")}
+								</MemoizedReactMarkdown>
+							)}
+							{segment.type === "phone" && segment.data && (
+								<Button
+									variant="outline"
+									size="sm"
+									className="gap-2 my-1"
+									onClick={() => window.open(`tel:${segment.data?.number}`)}
+								>
+									<Phone className="h-3 w-3" />
+									{segment.data.text}
+								</Button>
+							)}
+							{segment.type === "image" && (
+								<div className="w-full my-2 flex flex-col gap-2">
+									{/* eslint-disable-next-line @next/next/no-img-element */}
+									<img
+										src={segment.content}
+										alt="Inline image"
+										className="w-full aspect-[16/9] rounded-md shadow-md object-cover"
+									/>
+									<a
+										href={segment.content}
+										className="truncate flex items-center gap-1 text-primary w-fit"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										View image
+										<ExternalLink className="h-3 w-3" />
+									</a>
+								</div>
+							)}
+						</React.Fragment>
+					))}
+
+					{/* Loading indicator */}
+					{role === "assistant" && isLoading && isLatestAssistantMessage && (
+						<LoadingDots />
+					)}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default function PlaygroundPage(
+	props: WorkspacePageProps & { share?: boolean; isolate?: boolean },
+) {
 	const botId = props.params.botId;
 	const inputRef = useRef<HTMLInputElement>(null);
 	const chatsEndRef = useRef<HTMLDivElement>(null);
@@ -86,28 +253,22 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 					reader: reader,
 					botChatId: botChatId,
 					updateChat: updateChat,
+					onFinish: () => {
+						setIsLoading(false);
+					},
 				});
 			}
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Failed to get response");
 			removeChat(botChatId);
-		} finally {
-			setIsLoading(false);
 		}
-	};
-
-	const extractImagesFromMarkdown = (content: string) => {
-		const imgRegex = /!\[.*?\]\((.*?)\)/g;
-		const images = [...content.matchAll(imgRegex)].map((match) => match[1]);
-		const textParts = content.split(imgRegex);
-		return { images, textParts };
 	};
 
 	return (
 		<div
-			className={`flex-1 flex ${props.searchParams["embed"] || props.searchParams["chat"] || props.share ? "h-[100dvh]" : "h-[calc(100dvh-100px)]"} md:items-center  md:justify-center`}
+			className={`flex-1 flex ${props.searchParams["embed"] || props.isolate ? "pb-0" : "md:[&_div]:max-h-[calc(100dvh-80px)]"} h-[100dvh] md:items-center md:justify-center`}
 		>
-			<Card className={`max-w-2xl w-full overflow-hidden mx-auto h-full`}>
+			<Card className="max-w-3xl w-full overflow-hidden mx-auto h-full">
 				<CardContent className="flex flex-col h-full p-0 w-full">
 					<ScrollArea className="px-3 pb-4 sm:px-2">
 						{error && (
@@ -119,99 +280,22 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 						)}
 
 						<div className="py-2 space-y-4">
-							{chats
-								.filter((chat) => chat.content.length > 0)
-								.map((chat) => {
-									const { images, textParts } = extractImagesFromMarkdown(
-										chat.content,
-									);
-
-									return (
-										<div
-											key={chat.id}
-											className={cn(
-												"flex gap-3",
-												chat.role === "assistant"
-													? "justify-start max-w-[80%]"
-													: "justify-end ml-auto max-w-[80%]",
-											)}
-										>
-											{chat.role === "assistant" && (
-												<Avatar>
-													<AvatarFallback>
-														<Bot className="w-5 h-5" />
-													</AvatarFallback>
-												</Avatar>
-											)}
-
-											<div className="flex flex-col">
-												<div
-													className={cn(
-														"rounded-lg px-4 py-2 text-sm h-fit",
-														chat.role === "assistant"
-															? "bg-secondary"
-															: "bg-primary text-primary-foreground",
-													)}
-												>
-													{chat.content &&
-														textParts.map((text, index) => (
-															<React.Fragment key={index}>
-																{text && (
-																	<MemoizedReactMarkdown
-																		className="prose break-words prose-p:leading-relaxed prose-pre:p-0 [&_a]:inline-flex [&_a]:items-center [&_a]:gap-1 [&_a]:rounded-md [&_a]:bg-secondary [&_a]:px-2 [&_a]:py-1 [&_a]:text-xs [&_a]:no-underline hover:[&_a]:bg-secondary/80"
-																		remarkPlugins={[
-																			remarkGfm,
-																			remarkMath,
-																		]}
-																		components={{
-																			p({ children }) {
-																				return (
-																					<p className="mb-2 last:mb-0">
-																						{children}
-																					</p>
-																				);
-																			},
-																			a({ children, href }) {
-																				return (
-																					<a
-																						href={href}
-																						className="truncate"
-																						target="_blank"
-																						rel="noopener noreferrer"
-																					>
-																						{children}
-																						<ExternalLink className="h-3 w-3" />
-																					</a>
-																				);
-																			},
-																		}}
-																	>
-																		{text}
-																	</MemoizedReactMarkdown>
-																)}
-																{images[index] && (
-																	<div className="w-full my-2">
-																		{/* eslint-disable-next-line @next/next/no-img-element */}
-																		<img
-																			src={images[index]}
-																			alt={`Image ${index + 1}`}
-																			className="w-full aspect-[16/9] rounded-md shadow-md object-cover"
-																		/>
-																	</div>
-																)}
-															</React.Fragment>
-														))}
-													{chat.role === "assistant" && isLoading && (
-														<LoadingDots />
-													)}
-												</div>
-											</div>
-										</div>
-									);
-								})}
+							{chats.map((chat) => (
+								<ChatMessage
+									key={chat.id}
+									content={chat.content}
+									role={chat.role}
+									isLatestAssistantMessage={
+										chats[chats.length - 1].id === chat.id
+									}
+									isLoading={isLoading}
+								/>
+							))}
 							<div ref={chatsEndRef} />
 						</div>
 					</ScrollArea>
+
+					{/* Input form */}
 					<div className="px-3 pt-3 pb-2 mt-auto border-t">
 						<form onSubmit={handleSubmit} className="flex gap-2">
 							<Input
@@ -229,6 +313,13 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 							</Button>
 						</form>
 					</div>
+					{props.share && (
+						<div className="px-3 pt-3 pb-2">
+							{/* @ts-ignore */}
+							<ShareButton bot={bot} disabled={isLoading || !currentConversationId} />
+						</div>
+					)}
+					{/* Footer components */}
 					{props.searchParams["embed"] && (
 						<div className="w-full py-2 text-muted-foreground flex justify-center items-center text-center text-sm font-normal">
 							Powered by
@@ -241,12 +332,6 @@ export default function PlaygroundPage(props: WorkspacePageProps & { share?: boo
 									{siteConfig.applicationName}
 								</a>
 							</div>
-						</div>
-					)}
-					{props.share && (
-						<div className="px-3 pt-3 pb-2">
-							{/* @ts-ignore */}
-							<ShareButton bot={bot} disabled={isLoading || !currentConversationId} />
 						</div>
 					)}
 				</CardContent>

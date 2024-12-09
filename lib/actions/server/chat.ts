@@ -11,6 +11,11 @@ class ChatServerActions extends BaseServerActionActions {
 			const chats = await this.prisma.chat.findMany({
 				where: {
 					conversationId: conversationId,
+					content: {
+						not: {
+							equals: "",
+						},
+					},
 				},
 				orderBy: { createdAt: "asc" },
 			});

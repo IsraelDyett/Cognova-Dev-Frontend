@@ -4,10 +4,12 @@ export const streamChat = async ({
 	reader,
 	updateChat,
 	botChatId,
+	onFinish,
 }: {
 	reader: ReadableStreamDefaultReader<Uint8Array>;
 	updateChat: (id: string, content: string, questionSuggestions?: string[]) => void;
 	botChatId: string;
+	onFinish: () => void;
 }) => {
 	debug("CLIENT", "streamChat", "UTILS-FUNC");
 	let fullContent = "";
@@ -28,6 +30,7 @@ export const streamChat = async ({
 					updateChat(botChatId, fullContent, questionSuggestions);
 				}
 				if ("error" in data) {
+					onFinish();
 					throw new Error(data.error);
 				}
 				if ("question_suggestions" in data) {
@@ -37,6 +40,7 @@ export const streamChat = async ({
 			}
 		}
 	}
+	onFinish();
 };
 
 export const handlePrompt = async ({
