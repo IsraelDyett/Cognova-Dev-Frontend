@@ -93,8 +93,8 @@ export default async function Page({ params }: { params: { businessId: string } 
 	);
 
 	return (
-		<div className="space-y-8 p-8">
-			<h1 className="text-3xl font-bold">{business.name} Analytics</h1>
+		<div className="space-y-8">
+			<h1 className="text-2xl font-bold">{business.name}</h1>
 
 			{/* Key Metrics */}
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

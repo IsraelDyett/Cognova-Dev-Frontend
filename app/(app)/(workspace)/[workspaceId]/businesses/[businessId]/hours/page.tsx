@@ -27,7 +27,7 @@ export default function HourDashboard() {
 	if (error) return <div>Error: {error}</div>;
 	return (
 		<>
-			<div className="container mx-auto p-4">
+			<section>
 				{hours.length === 0 && !loading ? (
 					<NoStateComponent title="Hour" onOpenCreateForm={onOpenCreateForm} />
 				) : (
@@ -42,7 +42,7 @@ export default function HourDashboard() {
 						}
 					/>
 				)}
-			</div>
+			</section>
 			<HourForm />
 		</>
 	);
