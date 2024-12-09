@@ -41,6 +41,16 @@ const BUSINESS_TYPES = [
 	{ id: "books_stationery", name: "Books & Stationery" },
 	{ id: "home_improvement", name: "Home Improvement" },
 	{ id: "beauty_cosmetics", name: "Beauty & Cosmetics" },
+	{ id: "food_delivery", name: "Food Delivery" },
+	{ id: "grocery_store", name: "Grocery Store" },
+	{ id: "pharmacy", name: "Pharmacy" },
+	{ id: "pet_supplies", name: "Pet Supplies" },
+	{ id: "auto_parts", name: "Auto Parts" },
+	{ id: "arts_crafts", name: "Arts & Crafts" },
+	{ id: "music_instruments", name: "Musical Instruments" },
+	{ id: "office_supplies", name: "Office Supplies" },
+	{ id: "garden_outdoor", name: "Garden & Outdoor" },
+	{ id: "electronics_repair", name: "Electronics Repair" }
 ];
 
 const formSchema = z.object({
