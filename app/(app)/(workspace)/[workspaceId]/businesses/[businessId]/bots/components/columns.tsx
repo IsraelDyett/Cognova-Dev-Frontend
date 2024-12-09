@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2, Eye, Forward } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
 	DropdownMenu,
@@ -26,6 +26,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useBotStore } from "@/lib/stores/bot";
+import { shareBot } from "@/components/share-button";
 
 export const columns: ColumnDef<Bot>[] = [
 	{
@@ -67,6 +68,10 @@ export const columns: ColumnDef<Bot>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuItem onClick={() => shareBot(bot)}>
+							<Forward className="text-muted-foreground" />
+							<span>Share Bot</span>
+						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<WorkspaceLink href={`/businesses/${bot.businessId}/bots/${bot.id}`}>
 								<Eye className="h-4 w-4" />
