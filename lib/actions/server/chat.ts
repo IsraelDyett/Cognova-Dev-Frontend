@@ -1,6 +1,6 @@
 "use server";
 
-import { Prisma } from "@prisma/client";
+import { ChatFeedback, Prisma } from "@prisma/client";
 import BaseServerActionActions from "./base";
 import { headers } from "next/headers";
 import SessionServerActions from "./session";
@@ -21,6 +21,24 @@ class ChatServerActions extends BaseServerActionActions {
 			});
 			return chats.filter((chat) => ["assistant", "user"].includes(chat.role));
 		}, "Failed to get chats");
+	}
+	public static async addFeedback({
+		chatId,
+		feedback,
+	}: {
+		chatId: string;
+		feedback: ChatFeedback;
+	}) {
+		return this.executeAction(async () => {
+			await this.prisma.chat.update({
+				where: {
+					id: chatId,
+				},
+				data: {
+					feedback: feedback,
+				},
+			});
+		}, "Failed to add feedback");
 	}
 	public static async getConversations({
 		botId,
@@ -106,5 +124,8 @@ export async function retrieveOrCreateConversation(
 	...args: Parameters<typeof ChatServerActions.retrieveOrCreateConversation>
 ) {
 	return ChatServerActions.retrieveOrCreateConversation(...args);
+}
+export async function addFeedback(...args: Parameters<typeof ChatServerActions.addFeedback>) {
+	return ChatServerActions.addFeedback(...args);
 }
 export default ChatServerActions;

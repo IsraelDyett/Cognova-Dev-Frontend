@@ -29,6 +29,6 @@ export const config = {
 		 * 4. Metadata files: favicon.ico, sitemap.xml, robots.txt, manifest.webmanifest, .well-known
 		 * 5. embed.js for web chat support
 		 */
-		"/((?!api/|_next/|_proxy/|favicon.ico|embed.js|sitemap.xml|robots.txt|manifest.webmanifest|.well-known).*)",
+		"/((?!api/|_next/|_proxy/|images/*|favicon.ico|embed.js|sitemap.xml|robots.txt|manifest.webmanifest|.well-known/).*)",
 	],
 };

@@ -1,4 +1,3 @@
-"use client";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCardProps } from "../types";

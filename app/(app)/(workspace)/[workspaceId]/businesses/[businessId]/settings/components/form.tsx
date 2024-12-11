@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { useParams } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import MoneyInput from "@/components/ui/money-input";
+import Currencies from "@/resources/currencies.json";
 
 const businessConfigSchema = z.object({
 	deliveryFee: z.number().min(0).optional(),
@@ -157,9 +158,20 @@ export function BusinessConfigForm({ businessConfig }: { businessConfig: Busines
 										</div>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value="USD">USD</SelectItem>
-										<SelectItem value="RWF">RWF</SelectItem>
-										<SelectItem value="GBP">GBP</SelectItem>
+										{Currencies.map((currency, idx) => {
+											return (
+												<SelectItem key={idx} value={currency.code}>
+													<div className="flex">
+														<div className="w-9 text-start">
+															<b>{currency.symbol}</b>
+														</div>
+														<span className="pl-2">
+															{currency.name}
+														</span>
+													</div>
+												</SelectItem>
+											);
+										})}
 									</SelectContent>
 								</Select>
 								<FormDescription>

@@ -86,6 +86,15 @@ export const formatBytes = (bytes: number, format: "B" | "KB" | "MB" | "GB" = "B
 	const i = Math.floor(Math.log(bytes) / Math.log(1024));
 	return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
 };
+export const formatBigInt = (num: number): string => {
+	const lookup = [
+		{ value: 1e6, symbol: "M" },
+		{ value: 1e3, symbol: "K" },
+	];
+	const item = lookup.find((item) => num >= item.value);
+	return item ? `${(num / item.value).toFixed(1)}${item.symbol}` : num.toString();
+};
+
 `utm_source: Identifies which site sent the traffic
 Example: utm_source=facebook
 utm_medium: Indicates the marketing medium

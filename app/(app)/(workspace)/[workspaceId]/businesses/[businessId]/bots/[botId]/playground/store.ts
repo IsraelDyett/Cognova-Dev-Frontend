@@ -1,21 +1,10 @@
 import { debug } from "@/lib/utils";
 import { createCuid } from "@/lib/actions/server/session";
-import { Bot, ChatFeedback } from "@prisma/client";
+import { Bot, Chat, ChatFeedback } from "@prisma/client";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { getChats, retrieveOrCreateConversation } from "@/lib/actions/server/chat";
 
-interface Chat {
-	id: string;
-	conversationId?: string;
-	role: "user" | "assistant" | "tool" | string;
-	content: string;
-	tokens?: number;
-	feedback?: ChatFeedback;
-	questionSuggestions?: string[];
-	createdAt?: Date;
-	updatedAt?: Date;
-}
 interface ChatStore {
 	chats: Chat[];
 	isLoading: boolean;
