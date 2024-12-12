@@ -1,30 +1,32 @@
-import { debug } from "@/lib/utils";
-import { createCuid } from "@/lib/actions/server/session";
-import { Bot, Chat, ChatFeedback } from "@prisma/client";
 import { toast } from "sonner";
 import { create } from "zustand";
+import { Bot, Chat } from "@prisma/client";
+import { debug, createCuid } from "@/lib/utils";
 import { getChats, retrieveOrCreateConversation } from "@/lib/actions/server/chat";
 
 interface ChatStore {
 	chats: Chat[];
-	isLoading: boolean;
-	error: string | null;
 	bot: Bot | null;
+	action: "checking-inventory" | null;
+	suggestions: string[] | null;
+	isLoading: boolean;
 	currentConversationId: string | null;
 	initializeConversation: (botId: string) => Promise<void>;
 	addChat: (chat: Omit<Chat, "id" | "timestamp">) => string; // returns id
-	updateChat: (id: string, content: string, questionSuggestions?: string[]) => void;
-	setError: (error: string | null) => void;
+	updateChat: (id: string, content: string) => void;
+	setSuggestions: (suggestions: string[]) => void;
 	setIsLoading: (isLoading: boolean) => void;
+	setAction: (action: any) => void;
 	removeChat: (id: string) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
 	chats: [],
 	isLoading: false,
-	error: null,
 	currentConversationId: null,
 	bot: null,
+	action: null,
+	suggestions: null,
 	initializeConversation: async (botId: string) => {
 		debug("CLIENT", "initializeConversation", "STORE");
 		const { data: conversation } = await retrieveOrCreateConversation({ botId });
@@ -51,16 +53,15 @@ export const useChatStore = create<ChatStore>((set) => ({
 		}));
 		return id;
 	},
-	updateChat: (id, content, questionSuggestions) =>
+	updateChat: (id, content) =>
 		set((state) => ({
-			chats: state.chats.map((chat) =>
-				chat.id === id ? { ...chat, content, questionSuggestions } : chat,
-			),
+			chats: state.chats.map((chat) => (chat.id === id ? { ...chat, content } : chat)),
 		})),
 	removeChat: (id) =>
 		set((state) => ({
 			chats: state.chats.filter((chat) => chat.id !== id),
 		})),
-	setError: (error) => set({ error }),
 	setIsLoading: (isLoading) => set({ isLoading }),
+	setAction: (action) => set({ action }),
+	setSuggestions: (suggestions) => set({ suggestions }),
 }));

@@ -15,15 +15,19 @@ export const FeedbackSection = ({
 	const [inlineCurrentFeedback, setCurrentFeedback] = useState(currentFeedback);
 	const addChatFeedback = async (feedback: ChatFeedback) => {
 		setCurrentFeedback(feedback);
-		const { data, success } = await addFeedback({
+		const { success } = await addFeedback({
 			feedback,
 			chatId,
 		});
+		if (!success) {
+			setCurrentFeedback("NONE");
+		}
 	};
 	return (
 		<div className="sm:flex sm:justify-between">
 			<div className="inline-flex border border-gray-200 rounded-full p-0.5">
 				<button
+					title="Good response"
 					type="button"
 					onClick={() => {
 						["NONE", "DOWNVOTED"].includes(inlineCurrentFeedback)
@@ -40,6 +44,7 @@ export const FeedbackSection = ({
 					<ThumbsUp className="shrink-0 size-4" />
 				</button>
 				<button
+					title="Bad response"
 					type="button"
 					onClick={() => {
 						["UPVOTED", "NONE"].includes(inlineCurrentFeedback)

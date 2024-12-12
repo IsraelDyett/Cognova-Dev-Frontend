@@ -10,23 +10,23 @@ export const ChatMessage = ({
 	chatId,
 	currentFeedback,
 	isLatestAssistantMessage,
-	isLoading,
+	addToChat,
 }: {
 	content: string;
 	role: string;
 	currentFeedback: ChatFeedback;
 	chatId: string;
+	addToChat: (userChat: string) => Promise<void>;
 	isLatestAssistantMessage: boolean;
-	isLoading: boolean;
 }) => {
 	return (
 		<>
 			{role === "assistant" ? (
 				<AssistantBubble
 					content={content}
-					isLoading={isLoading}
 					isLastMessage={isLatestAssistantMessage}
 					chatId={chatId}
+					addToChat={addToChat}
 					currentFeedback={currentFeedback}
 				/>
 			) : (

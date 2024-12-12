@@ -4,16 +4,19 @@ export const streamChat = async ({
 	reader,
 	updateChat,
 	botChatId,
+	setAction,
+	setSuggestions,
 	onFinish,
 }: {
 	reader: ReadableStreamDefaultReader<Uint8Array>;
-	updateChat: (id: string, content: string, questionSuggestions?: string[]) => void;
+	setAction: (action: any) => void;
+	setSuggestions: (suggestions: string[]) => void;
+	updateChat: (id: string, content: string) => void;
 	botChatId: string;
 	onFinish: () => void;
 }) => {
 	debug("CLIENT", "streamChat", "UTILS-FUNC");
 	let fullContent = "";
-	let questionSuggestions: string[] | undefined;
 
 	const decoder = new TextDecoder();
 	while (true) {
@@ -27,15 +30,20 @@ export const streamChat = async ({
 				const data = JSON.parse(line.slice(5));
 				if ("token" in data) {
 					fullContent += data.token;
-					updateChat(botChatId, fullContent, questionSuggestions);
+					updateChat(botChatId, fullContent);
+				}
+				if ("action" in data) {
+					setAction(data.action);
+				}
+				if ("complete" in data) {
+					onFinish();
 				}
 				if ("error" in data) {
 					onFinish();
 					throw new Error(data.error);
 				}
-				if ("question_suggestions" in data) {
-					questionSuggestions = data.question_suggestions;
-					updateChat(botChatId, fullContent, questionSuggestions);
+				if ("suggestions" in data) {
+					setSuggestions(data.suggestions);
 				}
 			}
 		}
@@ -64,6 +72,7 @@ export const handlePrompt = async ({
 	});
 
 	if (!response.ok) {
+		console.error("ERROR", response);
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
 

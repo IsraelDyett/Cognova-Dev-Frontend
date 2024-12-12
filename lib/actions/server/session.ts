@@ -3,15 +3,10 @@ import ms from "ms";
 import { DOMAIN } from "@/lib/config";
 import { User } from "@prisma/client";
 import { userAgent } from "next/server";
-import { init } from "@paralleldrive/cuid2";
 import BaseServerActionActions from "./base";
 import { redis } from "@/lib/services/redis";
 import { cookies, headers } from "next/headers";
-
-export const createCuid = init({
-	random: Math.random,
-	length: 25,
-});
+import { createCuid } from "@/lib/utils";
 
 class SessionServerActions extends BaseServerActionActions {
 	public static authCookieKey = "auth.session.token";

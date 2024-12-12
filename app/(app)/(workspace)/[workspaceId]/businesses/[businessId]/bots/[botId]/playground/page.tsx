@@ -10,27 +10,36 @@ import { handlePrompt, streamChat } from "./actions";
 import { ChatMessage } from "./components/chat-message";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Chat } from "@prisma/client";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?: boolean }) {
 	const botId = props.params.botId;
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const chatsEndRef = useRef<HTMLLIElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	// @ts-ignore
+	const streamingReaderRef: React.MutableRefObject<
+		ReadableStreamDefaultReader<Uint8Array> | undefined
+	> = useRef(null);
 
 	const {
+		bot,
 		chats,
+		suggestions,
 		isLoading,
 		addChat,
 		updateChat,
 		removeChat,
-		setError,
 		setIsLoading,
+		setAction,
+		setSuggestions,
 		currentConversationId,
 		initializeConversation,
 	} = useChatStore();
 
 	useEffect(() => {
 		chatsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [chats]);
+	}, [chats, suggestions]);
 
 	const initialChatRetrieved = React.useRef(false);
 	useEffect(() => {
@@ -40,19 +49,13 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 		}
 	}, [botId, initializeConversation]);
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!textareaRef.current?.value.trim() || isLoading) return;
-
-		const userChat = textareaRef.current.value;
-		textareaRef.current.value = "";
-
+	const addToChat = async (userChat: string) => {
 		addChat({ content: userChat, role: "user" } as Chat);
 
 		const botChatId = addChat({ content: "", role: "assistant" } as Chat);
 
 		setIsLoading(true);
-		setError(null);
+		setSuggestions([]);
 
 		try {
 			if (currentConversationId) {
@@ -61,24 +64,36 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 					chat: userChat,
 					conversationId: currentConversationId,
 				});
-				const reader = response.body?.getReader();
-
-				if (!reader) {
+				streamingReaderRef.current = response.body?.getReader();
+				if (!streamingReaderRef.current) {
 					throw new Error("No response body");
 				}
 				await streamChat({
-					reader: reader,
+					reader: streamingReaderRef.current,
 					botChatId: botChatId,
 					updateChat: updateChat,
+					setSuggestions: setSuggestions,
+					setAction: setAction,
 					onFinish: () => {
+						setAction(null);
 						setIsLoading(false);
 					},
 				});
 			}
 		} catch (err) {
-			setError(err instanceof Error ? err.message : "Failed to get response");
+			setIsLoading(false);
+			console.error(err);
+			toast.error("Something went wrong");
 			removeChat(botChatId);
 		}
+	};
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!textareaRef.current?.value.trim() || isLoading) return;
+
+		const userChat = textareaRef.current.value;
+		textareaRef.current.value = "";
+		addToChat(userChat);
 	};
 	useEffect(() => {
 		if (textareaRef.current) {
@@ -87,28 +102,51 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 	}, []);
 	return (
 		<div className="flex-1 font-geist-sans  h-[100dvh]">
-			<div className="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto">
-				<ScrollArea>
-					<ul className="space-y-5 pr-4 h-[calc(100dvh-150px)] pt-4">
-						{chats.map((chat) => (
-							<ChatMessage
-								chatId={chat.id}
-								key={chat.id}
-								currentFeedback={chat.feedback}
-								content={chat.content}
-								role={chat.role}
-								isLatestAssistantMessage={chats[chats.length - 1].id === chat.id}
-								isLoading={isLoading}
-							/>
-						))}
-						<li ref={chatsEndRef} />
-					</ul>
-				</ScrollArea>
+			<div
+				className={`px-4 sm:px-6 lg:px-8 mx-auto ${chats.length == 0 ? "flex justify-between sm:justify-center flex-col h-dvh max-w-3xl" : "max-w-4xl "}`}
+			>
+				{chats.length == 0 ? (
+					<div className="w-full flex-1 sm:flex-none text-center flex items-center justify-center">
+						<div>
+							<h1 className="text-2xl sm:text-3xl font-medium text-gray-800 md:text-4xl">
+								Welcome {bot && `to ${bot?.name}`}
+							</h1>
+							<p className="mt-3 text-gray-600">{bot?.description}</p>
+						</div>
+					</div>
+				) : (
+					<ScrollArea>
+						<ul
+							className={cn(
+								isLoading ? "h-[calc(100dvh-180px)]" : "h-[calc(100dvh-150px)]",
+								"space-y-5 sm:pr-4  pt-4",
+							)}
+						>
+							{chats.map((chat) => (
+								<ChatMessage
+									key={chat.id}
+									chatId={chat.id}
+									role={chat.role}
+									addToChat={addToChat}
+									currentFeedback={chat.feedback}
+									content={chat.content}
+									isLatestAssistantMessage={
+										chats[chats.length - 1].id === chat.id
+									}
+								/>
+							))}
+							<li ref={chatsEndRef} />
+						</ul>
+					</ScrollArea>
+				)}
 				<div className="w-full bg-background pt-2 pb-4">
 					<div className="flex justify-end items-center mb-3">
 						{isLoading && (
 							<button
 								type="button"
+								onClick={() => {
+									streamingReaderRef.current?.cancel("User cancelled response");
+								}}
 								className="py-1.5 px-2 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
 							>
 								<svg

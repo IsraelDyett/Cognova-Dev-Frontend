@@ -8,6 +8,9 @@ import { ExternalLink, Phone } from "lucide-react";
 import LoadingDots from "@/components/ui/loading-dots";
 import { FeedbackSection } from "./chat-feedback-section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useChatStore } from "../store";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toKebabCase } from "@/lib/utils";
 
 const processMessageContent = (content: string) => {
 	const segments: Array<{
@@ -57,18 +60,17 @@ const processMessageContent = (content: string) => {
 export const AssistantBubble = ({
 	chatId,
 	content,
-	isLoading,
 	isLastMessage,
-	suggestions = [],
 	currentFeedback,
+	addToChat,
 }: {
 	chatId: string;
 	content: string;
-	isLoading: boolean;
 	isLastMessage: boolean;
-	suggestions?: string[];
 	currentFeedback: ChatFeedback;
+	addToChat: (userChat: string) => Promise<void>;
 }) => {
+	const { isLoading, action, suggestions } = useChatStore();
 	const segments = processMessageContent(content);
 	return (
 		<>
@@ -77,8 +79,15 @@ export const AssistantBubble = ({
 					<AvatarImage src={siteConfig.r2.logoUrl} />
 					<AvatarFallback>Co</AvatarFallback>
 				</Avatar>
-				<div className="p-4 space-y-3">
-					{isLoading && isLastMessage && content.length < 1 && <LoadingDots />}
+				<div className="space-y-3">
+					{action && isLastMessage && content.length < 1 && (
+						<div className="p-2 bg-transparent animate-pulse">
+							<span className="text-sm capitalize bg-clip-text text-transparent drop-shadow-2xl bg-gradient-to-b from-black/80 to-black/20">
+								{toKebabCase(action).replaceAll("-", " ")}
+							</span>
+						</div>
+					)}
+					{isLoading && !action && isLastMessage && content.length < 1 && <LoadingDots />}
 					{segments.map((segment, index) => (
 						<React.Fragment key={index}>
 							{segment.type === "text" && <MdContent content={segment.content} />}
@@ -95,7 +104,7 @@ export const AssistantBubble = ({
 							)}
 							{segment.type === "image" && (
 								<div className="w-full my-2 flex flex-col gap-2 ">
-									<div className="aspect-w-16 aspect-h-6 max-w-[500px]">
+									<div className="aspect-w-16 aspect-h-9 max-w-[500px]">
 										{/* eslint-disable-next-line @next/next/no-img-element */}
 										<img
 											src={segment.content}
@@ -119,21 +128,20 @@ export const AssistantBubble = ({
 					<FeedbackSection currentFeedback={currentFeedback} chatId={chatId} />
 				</div>
 			</li>
-			{suggestions.length > 0 && (
-				<li className="flex justify-start gap-x-2 sm:gap-x-4 -mt-2">
-					<div>
-						<div className="text-end">
-							{suggestions.map((q, i) => (
-								<button
-									key={i}
-									type="button"
-									className="p-1.5 inline-flex justify-center items-center gap-x-2 rounded-lg border border-primary bg-white text-primary align-middle hover:bg-blue-50 focus:outline-none focus:bg-blue-50 text-xs"
-								>
-									{q}
-								</button>
-							))}
-						</div>
-					</div>
+			{suggestions && suggestions.length > 0 && isLastMessage && (
+				<li className="gap-2 grid grid-cols-1 sm:grid-cols-3">
+					{suggestions.map((q, i) => (
+						<button
+							key={i}
+							onClick={() => {
+								addToChat(q.replaceAll('"', ""));
+							}}
+							type="button"
+							className="p-1 text-start inline-flex justify-center items-center rounded-md border border-primary/40 bg-background text-primary hover:bg-blue-50 focus:outline-none focus:bg-blue-50 text-xs"
+						>
+							{q.replaceAll('"', "")}
+						</button>
+					))}
 				</li>
 			)}
 		</>

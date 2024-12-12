@@ -1,11 +1,17 @@
-import { clsx, type ClassValue } from "clsx";
-import { format } from "date-fns";
 import React from "react";
+import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+import { init } from "@paralleldrive/cuid2";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
+
+export const createCuid = init({
+	random: Math.random,
+	length: 25,
+});
 export function cloneElement(element: React.ReactElement, classNames: string) {
 	return React.cloneElement(element, {
 		className: twMerge(element.props.className, classNames),

@@ -92,14 +92,6 @@ const config: Config = {
 						height: "0",
 					},
 				},
-				rainbow: {
-					"0%": {
-						"background-position": "0%",
-					},
-					"100%": {
-						"background-position": "200%",
-					},
-				},
 				orbit: {
 					"0%": {
 						transform:

@@ -51,7 +51,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarHeader>
 				<WorkspaceSwitcher />
 				{currentNavbar !== "default" && state === "expanded" && (
-					<WorkspaceLink className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center">
+					<WorkspaceLink
+						href={
+							currentNavbar == "bot"
+								? "/bots"
+								: currentNavbar == "business"
+									? "/businesses"
+									: undefined
+						}
+						className="space-x-4 group hover:text-muted-foreground flex py-2 text-sm w-full  items-center"
+					>
 						<ChevronLeft
 							className="h-4 w-4 transition-transform duration-100 hover:-translate-x-0.5"
 							strokeWidth={2}
