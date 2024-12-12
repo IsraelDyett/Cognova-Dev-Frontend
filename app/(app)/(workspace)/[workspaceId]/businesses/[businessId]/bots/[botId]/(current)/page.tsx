@@ -43,6 +43,18 @@ const AnalyticsDashboard = async (props: WorkspacePageProps) => {
 					description={`${formatBigInt(chatMetrics.downvotedChats)} downvoted`}
 					icon={ThumbsDown}
 				/>
+				<MetricCard
+					title="Total Chats"
+					value={`${chatMetrics.totalChats.toFixed(1)}%`}
+					description={`Total chats received`}
+					icon={ThumbsDown}
+				/>
+				<MetricCard
+					title="Average chats per Conversations"
+					value={`${formatBigInt(conversationMetrics.averageChatsPerConversation)}`}
+					description="Average chats per conversation"
+					icon={MessageSquare}
+				/>
 			</div>
 
 			<div className="grid grid-cols-1">

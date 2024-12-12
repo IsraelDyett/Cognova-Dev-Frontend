@@ -17,6 +17,7 @@ import {
 	Form,
 	FormAction,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -163,10 +164,13 @@ export function BotForm() {
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
-											placeholder="Enter description"
+											placeholder="I am your AI Assistant..."
 											{...field}
 										/>
 									</FormControl>
+									<FormDescription>
+										This description helps your customers to know about this bot
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -191,12 +195,12 @@ export function BotForm() {
 							render={({ field }) => (
 								<FormItem className="col-span-full">
 									<FormLabel helpText="Give bot the rules to follow or guidelines">
-										System Message
+										Instruct your AI
 									</FormLabel>
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
-											placeholder="Enter systemMessage"
+											placeholder="You can do this..., you can't do this..., when asked..do this..."
 											{...field}
 										/>
 									</FormControl>

@@ -23,6 +23,7 @@ export default function DynamicSelector({
 	itemKey = "id",
 	itemLabelKey,
 	label,
+	placeholder,
 	description,
 	labelProps,
 	...props
@@ -33,6 +34,7 @@ export default function DynamicSelector({
 	itemKey?: string | number;
 	itemLabelKey: string;
 	label: string;
+	placeholder?: string;
 	description?: string;
 	labelProps?: React.ComponentProps<typeof FormLabel>;
 }) {
@@ -51,7 +53,9 @@ export default function DynamicSelector({
 					>
 						<FormControl>
 							<SelectTrigger>
-								<SelectValue placeholder={`Select ${label.toLowerCase()}`} />
+								<SelectValue
+									placeholder={`${placeholder ? placeholder : `Select ${label.toLowerCase()}`}`}
+								/>
 							</SelectTrigger>
 						</FormControl>
 						<SelectContent>

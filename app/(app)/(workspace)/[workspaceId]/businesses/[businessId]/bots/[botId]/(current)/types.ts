@@ -13,10 +13,6 @@ export interface PrismaDistributionCount {
 	_count: bigint;
 }
 
-export interface PrismaCountryDistribution extends PrismaDistributionCount {
-	countryCode: string;
-}
-
 // Processed types for frontend
 export interface QueryPerDay {
 	date: string;
@@ -44,7 +40,6 @@ export interface AnalyticsResponse {
 	conversationMetrics: ConversationMetrics;
 	chatMetrics: ChatMetrics;
 	queriesPerDay: QueryPerDay[];
-	countryDistribution: DistributionItem[];
 }
 
 export interface MetricCardProps {

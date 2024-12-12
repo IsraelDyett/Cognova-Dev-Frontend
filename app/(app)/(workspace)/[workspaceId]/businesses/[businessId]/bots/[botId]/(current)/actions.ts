@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@/lib/services/prisma";
-import { AnalyticsResponse, PrismaQueryPerDay, PrismaCountryDistribution } from "./types";
+import { AnalyticsResponse, PrismaQueryPerDay } from "./types";
 
 const bigIntToNumber = (value: bigint): number => {
 	try {
@@ -12,7 +12,7 @@ const bigIntToNumber = (value: bigint): number => {
 };
 
 export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
-	const [conversationData, chatData, queriesPerDay, countryDistribution] = await Promise.all([
+	const [conversationData, chatData, queriesPerDay] = await Promise.all([
 		// Conversation metrics
 		prisma.$transaction(async (tx) => {
 			const totalConversations = await tx.conversation.count({
@@ -98,16 +98,6 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
             ORDER BY
               date Desc
         `,
-
-		// @ts-ignore Country distribution
-		prisma.conversation.groupBy({
-			by: ["countryCode"],
-			where: {
-				botId,
-				countryCode: { not: null },
-			},
-			_count: true,
-		}) as Promise<PrismaCountryDistribution[]>,
 	]);
 
 	// Transform the data
@@ -122,9 +112,5 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
 		},
 		chatMetrics: chatData,
 		queriesPerDay: processedQueriesPerDay,
-		countryDistribution: countryDistribution.map((item) => ({
-			name: item.countryCode,
-			value: bigIntToNumber(item._count),
-		})),
 	};
 }
