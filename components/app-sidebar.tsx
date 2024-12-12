@@ -54,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<WorkspaceLink
 						href={
 							currentNavbar == "bot"
-								? "/bots"
+								? "/{businessId}/bots"
 								: currentNavbar == "business"
 									? "/businesses"
 									: undefined
