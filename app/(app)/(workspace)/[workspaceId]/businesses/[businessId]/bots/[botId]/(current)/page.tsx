@@ -6,7 +6,7 @@ import { WorkspacePageProps } from "@/types";
 import MetricCard from "./_charts/metric-card";
 import ShareButton from "@/components/share-button";
 import { retrieveBot } from "@/lib/actions/server/bot";
-import { Users, MessageSquare, ThumbsDown } from "lucide-react";
+import { Users, MessageSquare, ThumbsDown, MessageCircleMoreIcon, MessageSquareDotIcon } from "lucide-react";
 import QueryTrendsChart from "./_charts/query-trends-bar-chart";
 
 const AnalyticsDashboard = async (props: WorkspacePageProps) => {
@@ -45,15 +45,15 @@ const AnalyticsDashboard = async (props: WorkspacePageProps) => {
 				/>
 				<MetricCard
 					title="Total Chats"
-					value={`${chatMetrics.totalChats.toFixed(1)}%`}
+					value={`${chatMetrics.totalChats.toFixed(1)}`}
 					description={`Total chats received`}
-					icon={ThumbsDown}
+					icon={MessageCircleMoreIcon}
 				/>
 				<MetricCard
 					title="Average chats per Conversations"
 					value={`${formatBigInt(conversationMetrics.averageChatsPerConversation)}`}
 					description="Average chats per conversation"
-					icon={MessageSquare}
+					icon={MessageSquareDotIcon}
 				/>
 			</div>
 

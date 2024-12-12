@@ -46,7 +46,7 @@ export async function getAnalytics(botId: string): Promise<AnalyticsResponse> {
 
 			return {
 				totalConversations,
-				averageChatsPerConversation: totalChats / totalConversations || 0,
+				averageChatsPerConversation: Math.ceil(totalChats / totalConversations || 0),
 				uniqueUsers: uniqueUsers.length,
 			};
 		}),
