@@ -45,7 +45,7 @@ const AnalyticsDashboard = async (props: WorkspacePageProps) => {
 				/>
 				<MetricCard
 					title="Total Chats"
-					value={`${chatMetrics.totalChats.toFixed(1)}`}
+					value={`${Math.ceil(chatMetrics.totalChats)}`}
 					description={`Total chats received`}
 					icon={MessageCircleMoreIcon}
 				/>
