@@ -119,7 +119,7 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 						<ul
 							className={cn(
 								isLoading ? "h-[calc(100dvh-180px)]" : "h-[calc(100dvh-150px)]",
-								"space-y-5 sm:pr-4  pt-4",
+								"space-y-5 pr-3 sm:pr-4  pt-4",
 							)}
 						>
 							{chats.map((chat) => (
