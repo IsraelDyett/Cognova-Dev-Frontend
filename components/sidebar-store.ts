@@ -24,6 +24,8 @@ import {
 import { Workspace } from "@prisma/client";
 import { debug } from "@/lib/utils";
 import { getWorkspaces } from "@/lib/actions/server/workspace";
+import { siteConfig } from "@/lib/site";
+import { FaDiscord } from "react-icons/fa";
 
 type LoadingState = "idle" | "loading" | "error" | "success";
 
@@ -245,6 +247,12 @@ export const sidebarData = {
 			title: "Affiliate Program (20%)",
 			url: "/affiliate",
 			icon: Share2,
+			isolate: true,
+		},
+		{
+			title: "Discord channel",
+			url: siteConfig.links.discord,
+			icon: FaDiscord as typeof Share2,
 			isolate: true,
 		},
 	],
