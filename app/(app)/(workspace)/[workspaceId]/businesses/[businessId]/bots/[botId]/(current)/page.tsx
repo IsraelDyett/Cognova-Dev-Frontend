@@ -6,7 +6,13 @@ import { WorkspacePageProps } from "@/types";
 import MetricCard from "./_charts/metric-card";
 import ShareButton from "@/components/share-button";
 import { retrieveBot } from "@/lib/actions/server/bot";
-import { Users, MessageSquare, ThumbsDown, MessageCircleMoreIcon, MessageSquareDotIcon } from "lucide-react";
+import {
+	Users,
+	MessageSquare,
+	ThumbsDown,
+	MessageCircleMoreIcon,
+	MessageSquareDotIcon,
+} from "lucide-react";
 import QueryTrendsChart from "./_charts/query-trends-bar-chart";
 
 const AnalyticsDashboard = async (props: WorkspacePageProps) => {

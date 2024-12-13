@@ -17,6 +17,7 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarHeader,
+	SidebarSeparator,
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "./ui/button";
@@ -87,6 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								title="Workspace"
 								items={sidebarData.workspaceNavigationMenus}
 							/>
+							<NavMain title="Community" items={sidebarData.baseAppNavigationMenus} />
 						</motion.div>
 					)}
 					{currentNavbar == "business" && (

@@ -52,4 +52,9 @@ export const siteConfig = {
 		app: APP_ORIGIN,
 		root: ROOT_ORIGIN,
 	},
+	links: {
+		x: "https://x.com/cognovaio",
+		mail: "mailto:cognova.io@gmail.com",
+		discord: "https://discord.gg/PEYd3YFY",
+	},
 };

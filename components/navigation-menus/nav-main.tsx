@@ -12,35 +12,72 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
+	SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { WorkspaceLink } from "@/app/(app)/(workspace)/components/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import React from "react";
 
-export function NavMain({
-	items,
-	title = "Platform",
-}: {
-	items: {
-		title: string;
-		url: string;
-		icon?: LucideIcon;
-		isActive?: boolean;
-		items?: {
+type NavItem =
+	| {
 			title: string;
 			url: string;
-		}[];
-	}[];
-	title?: string;
-}) {
+			icon?: LucideIcon;
+			isActive?: boolean;
+			isolate?: boolean;
+			items?: {
+				title: string;
+				url: string;
+			}[];
+	  }
+	| {
+			separatedItems: {
+				label: string;
+				items: {
+					title: string;
+					url: string;
+					icon: LucideIcon;
+				}[];
+			};
+	  };
+
+export function NavMain({ items, title = "Platform" }: { items: NavItem[]; title?: string }) {
 	const { workspace } = useWorkspace();
 
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>{title}</SidebarGroupLabel>
 			<SidebarMenu>
-				{items.map((item) => {
+				{items.map((item, index) => {
+					if ("separatedItems" in item) {
+						return (
+							<React.Fragment key={`separated-${index}`}>
+								<span className="text-xs text-muted-foreground pl-2 pt-4">
+									{item.separatedItems.label}
+								</span>
+								<SidebarSeparator />
+								{item.separatedItems.items.map((separatedItem) => (
+									<SidebarMenuItem key={separatedItem.title}>
+										<SidebarMenuButton
+											className={cn(
+												separatedItem.url == "#" && "text-muted-foreground",
+											)}
+											tooltip={separatedItem.title}
+											asChild
+										>
+											<WorkspaceLink href={separatedItem.url}>
+												{separatedItem.icon && <separatedItem.icon />}
+												<span>{separatedItem.title}</span>
+											</WorkspaceLink>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								))}
+							</React.Fragment>
+						);
+					}
+
 					return (
 						<Collapsible
 							key={item.title}
@@ -58,14 +95,28 @@ export function NavMain({
 										</SidebarMenuButton>
 									</CollapsibleTrigger>
 								) : (
-									<SidebarMenuButton tooltip={item.title} asChild>
-										<WorkspaceLink href={item.url}>
-											{item.icon && <item.icon />}
-											<span>{item.title}</span>
-											{item.items && (
-												<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-											)}
-										</WorkspaceLink>
+									<SidebarMenuButton
+										className={cn(item.url == "#" && "text-muted-foreground")}
+										tooltip={item.title}
+										asChild
+									>
+										{!item.isolate ? (
+											<WorkspaceLink href={item.url}>
+												{item.icon && <item.icon />}
+												<span>{item.title}</span>
+												{item.items && (
+													<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+												)}
+											</WorkspaceLink>
+										) : (
+											<a href={item.url}>
+												{item.icon && <item.icon />}
+												<span>{item.title}</span>
+												{item.items && (
+													<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+												)}
+											</a>
+										)}
 									</SidebarMenuButton>
 								)}
 								<CollapsibleContent>

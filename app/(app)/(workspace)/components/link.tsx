@@ -45,7 +45,7 @@ export function WorkspaceLink({
 	return (
 		<NextLink
 			className={cn(isActive && "text-primary", className)}
-			href={`/${workspaceId}/${formattedHref}`}
+			href={href == "#" ? "#" : `/${workspaceId}/${formattedHref}`}
 			{...props}
 		>
 			{children}

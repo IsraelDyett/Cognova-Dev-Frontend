@@ -15,6 +15,11 @@ import {
 	Settings,
 	Bot,
 	Stars,
+	Blocks,
+	Webhook,
+	Feather,
+	Share2,
+	GemIcon,
 } from "lucide-react";
 import { Workspace } from "@prisma/client";
 import { debug } from "@/lib/utils";
@@ -153,6 +158,25 @@ export const sidebarData = {
 			icon: Settings,
 			url: "businesses/{businessId}/settings",
 		},
+		{
+			separatedItems: {
+				label: "Upcoming Features",
+				items: [
+					{
+						title: "Integrations (Coming Soon)",
+						// url: "businesses/{businessId}/bots/{botId}/integrations",
+						url: "#",
+						icon: Webhook,
+					},
+					{
+						title: "Product Promotions (Coming Soon)",
+						// url: "businesses/{businessId}/bots/{botId}/integrations",
+						url: "#",
+						icon: GemIcon,
+					},
+				],
+			},
+		},
 	],
 	botNavigationMenus: [
 		{
@@ -169,6 +193,25 @@ export const sidebarData = {
 			title: "Chats",
 			url: "businesses/{businessId}/bots/{botId}/chats",
 			icon: MessageSquareText,
+		},
+		{
+			separatedItems: {
+				label: "Upcoming Features",
+				items: [
+					{
+						title: "Embed on site (Coming Soon)",
+						// url: "businesses/{businessId}/bots/{botId}/embed",
+						url: "#",
+						icon: SquareMousePointer,
+					},
+					{
+						title: "Add ons (Coming Soon)",
+						// url: "businesses/{businessId}/bots/{botId}/add_ons",
+						url: "#",
+						icon: Blocks,
+					},
+				],
+			},
 		},
 	],
 	workspaceNavigationMenus: [
@@ -190,6 +233,19 @@ export const sidebarData = {
 					url: "#",
 				},
 			],
+		},
+	],
+	baseAppNavigationMenus: [
+		{
+			title: "Request a feature",
+			url: "/featurebase",
+			icon: Feather,
+		},
+		{
+			title: "Affiliate Program (20%)",
+			url: "/affiliate",
+			icon: Share2,
+			isolate: true,
 		},
 	],
 	slideVariants: {

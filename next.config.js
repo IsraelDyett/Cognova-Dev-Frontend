@@ -18,6 +18,15 @@ const nextConfig = {
 			hmrRefreshes: true,
 		},
 	},
+	async redirects() {
+		return [
+			{
+				source: "/affiliate",
+				destination: "https://cognova.tolt.io/",
+				permanent: false,
+			},
+		];
+	},
 };
 
 module.exports = nextConfig;

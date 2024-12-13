@@ -49,7 +49,7 @@ export default function Header() {
 									"/auth/sign-up?utm_source=landing&utm_medium=header&utm_campaign=sign-up"
 								}
 							>
-								Sign Up
+								Start for free
 							</Link>
 						)}
 					</Button>
