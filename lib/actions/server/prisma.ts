@@ -38,7 +38,7 @@ function generateRandomString(length: number): string {
 
 async function generateUniqueName(baseName: string, model: string): Promise<string> {
 	const { maxNameGenerationAttempts } = WORKSPACE_CONFIG;
-	const notAllowedNames = ["auth", "api", "chats", "not-found", "error", "onboarding"];
+	const notAllowedNames = ["/", "affiliate", "auth", "api", "chats", "not-found", "error", "onboarding"];
 	let attempts = 0;
 	let isUnique = false;
 	let name = slugify(baseName, {
