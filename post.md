@@ -59,3 +59,6 @@ We built Remention to save time and make social media work for us, not the other
 
 Feel free to ask any questions or share your experiences with social media engagement. Let's give your product the visibility it deserves with Remention! 🌟
 
+
+
+dinah.pembe@intouch.co.rw
