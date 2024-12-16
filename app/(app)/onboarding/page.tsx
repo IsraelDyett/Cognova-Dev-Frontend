@@ -86,8 +86,8 @@ export default function OnBoardingPage() {
 	};
 
 	return (
-		<div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-			<div>
+		<div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+			<div className="order-last lg:order-first">
 				<h1 className="text-2xl font-bold mb-2">Set up your AI Sales Agent</h1>
 				<p className="text-gray-500 mb-8">
 					Complete these steps to create your AI-powered sales assistant
