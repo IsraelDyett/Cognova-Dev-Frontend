@@ -52,8 +52,6 @@ export default function BotDashboard(props: WorkspacePageProps) {
 						}
 					/>
 				)}
-				{bots.length}
-				{loading}
 			</section>
 			<Suspense>
 				<BotForm />
