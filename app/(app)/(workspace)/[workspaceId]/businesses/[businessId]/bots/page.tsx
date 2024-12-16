@@ -15,16 +15,15 @@ import { WorkspacePageProps } from "@/types";
 const BotForm = dynamic(() => import("./components/form").then((mod) => mod.BotForm));
 
 export default function BotDashboard(props: WorkspacePageProps) {
-	const { workspace } = useWorkspace();
 	const { bots, loading, error, fetchBots, onOpenCreateForm } = useBotStore();
 
 	const alreadyMounted = useRef(false);
 	useEffect(() => {
-		if (!alreadyMounted.current && workspace) {
-			fetchBots(workspace.id);
+		if (!alreadyMounted.current && props.params.businessId) {
+			fetchBots(props.params.businessId);
 			alreadyMounted.current = true;
 		}
-	}, [workspace, fetchBots]);
+	}, [props, fetchBots]);
 
 	useEffect(() => {
 		if (props.searchParams.open) {
@@ -45,7 +44,7 @@ export default function BotDashboard(props: WorkspacePageProps) {
 						columns={columns}
 						data={bots}
 						searchField="name"
-						tableRowLink={`/${workspace?.name}/businesses/{businessId}/bots/{id}`}
+						tableRowLink={`/${props.params.workspaceId}/businesses/${props.params.businessId}/bots/{id}`}
 						toolBarChildren={
 							<Button onClick={onOpenCreateForm}>
 								<PlusIcon className="mr-2 h-4 w-4" /> Add New Bot
@@ -53,6 +52,8 @@ export default function BotDashboard(props: WorkspacePageProps) {
 						}
 					/>
 				)}
+				{bots.length}
+				{loading}
 			</section>
 			<Suspense>
 				<BotForm />

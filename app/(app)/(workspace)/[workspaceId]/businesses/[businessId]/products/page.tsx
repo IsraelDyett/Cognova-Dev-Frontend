@@ -3,26 +3,22 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import { useProductStore } from "./store";
 import { columns } from "./components/columns";
 import DataTable from "@/components/ui/data-table";
-import { useParams } from "next/navigation";
 import { ProductForm } from "./components/form";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
 import { WorkspacePageProps } from "@/types";
 
 export default function ProductDashboard(props: WorkspacePageProps) {
-	const { businessId } = useParams();
-	const { workspace } = useWorkspace();
 	const { products, loading, error, fetchProducts, onOpenCreateForm } = useProductStore();
 
 	useEffect(() => {
-		if (workspace && businessId) {
-			fetchProducts(`${businessId}`);
+		if (props.params.businessId) {
+			fetchProducts(props.params.businessId);
 		}
-	}, [workspace, fetchProducts, businessId]);
+	}, [props, fetchProducts]);
 
 	useEffect(() => {
 		if (props.searchParams.open) {
@@ -49,7 +45,7 @@ export default function ProductDashboard(props: WorkspacePageProps) {
 					}
 				/>
 			)}
-			<ProductForm />
+			<ProductForm wrapInDialog={true} />
 		</section>
 	);
 }

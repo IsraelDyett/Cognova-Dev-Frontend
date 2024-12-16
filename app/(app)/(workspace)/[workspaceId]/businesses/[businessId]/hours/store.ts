@@ -13,7 +13,7 @@ interface HourState {
 	initialCrudFormData?: Hour | null;
 	isOpenCrudForm: boolean;
 
-	fetchHours: (workspaceId: string) => Promise<void>;
+	fetchHours: (businessId: string) => Promise<void>;
 	createHour: (data: Omit<Hour, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 	updateHour: (id: string, data: Partial<Hour>) => Promise<void>;
 	deleteHour: (id: string) => Promise<void>;

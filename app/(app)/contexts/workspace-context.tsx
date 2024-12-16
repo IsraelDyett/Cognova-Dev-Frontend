@@ -24,17 +24,21 @@ export interface WorkspaceContextType {
 
 const WorkspaceContext = createContext<WorkspaceContextType>(DefaultProps);
 
-export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const WorkspaceProvider: React.FC<{
+	children: React.ReactNode;
+	overrideWorkspaceId?: string;
+}> = ({ children, overrideWorkspaceId }) => {
 	const { workspaceId } = useParams();
 	const alreadyMounted = React.useRef(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [workspace, setWorkspace] = useState<ExtendedWorkspace | null>(null);
 
 	const fetchWorkspace = useCallback(async () => {
-		if (workspaceId) {
+		const idToUse = overrideWorkspaceId || workspaceId;
+		if (idToUse) {
 			debug("CLIENT", "fetchWorkspace", "CONTEXT");
 			const { data: retrievedWorkspace } = await retrieveWorkspace({
-				workspaceId: `${workspaceId}`,
+				workspaceId: `${idToUse}`,
 				include: {
 					businesses: {
 						include: {
@@ -54,17 +58,17 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 				setIsLoading(false);
 			}
 		}
-	}, [workspaceId]);
+	}, [workspaceId, overrideWorkspaceId]);
 
 	useEffect(() => {
-		if (!alreadyMounted.current && workspaceId) {
+		if (!alreadyMounted.current && (workspaceId || overrideWorkspaceId)) {
 			fetchWorkspace().catch((err) => {
 				console.error("Error fetching workspace:", err);
 				alreadyMounted.current = false;
 			});
 			alreadyMounted.current = true;
 		}
-	}, [fetchWorkspace, workspaceId]);
+	}, [fetchWorkspace, workspaceId, overrideWorkspaceId]);
 
 	return (
 		<WorkspaceContext.Provider

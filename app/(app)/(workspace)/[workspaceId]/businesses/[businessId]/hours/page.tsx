@@ -10,18 +10,18 @@ import DataTable from "@/components/ui/data-table";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { useParams } from "next/navigation";
 import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
+import { WorkspacePageProps } from "@/types";
 
-export default function HourDashboard() {
-	const { businessId } = useParams();
+export default function HourDashboard(props: WorkspacePageProps) {
 	const { hours, loading, error, fetchHours, onOpenCreateForm } = useHourStore();
 
 	const alreadyMounted = useRef(false);
 	useEffect(() => {
-		if (!alreadyMounted.current && businessId) {
-			fetchHours(`${businessId}`);
+		if (!alreadyMounted.current && props.params.businessId) {
+			fetchHours(props.params.businessId);
 			alreadyMounted.current = true;
 		}
-	}, [businessId, fetchHours]);
+	}, [props, fetchHours]);
 
 	if (loading) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;

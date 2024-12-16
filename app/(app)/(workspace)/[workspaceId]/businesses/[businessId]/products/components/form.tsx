@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
 import {
 	Form,
 	FormAction,
@@ -33,6 +25,8 @@ import MoneyInput from "@/components/ui/money-input";
 import ImageUploader from "@/components/image-uploader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { siteConfig } from "@/lib/site";
+import DialogForm from "@/app/(app)/(workspace)/[workspaceId]/businesses/components/dialog-form";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -47,7 +41,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function ProductForm() {
+export function ProductForm({
+	wrapInDialog = true,
+	onComplete,
+}: {
+	wrapInDialog?: boolean;
+	onComplete?: (data?: any) => void;
+}) {
 	const {
 		createProduct,
 		fetchCategories,
@@ -85,8 +85,14 @@ export function ProductForm() {
 			} else {
 				// @ts-ignore
 				await createProduct(values).then(() => {
-					if (params.get("preview") && params.get("then")) {
-						router.push(`${siteConfig.domains.root}/chats/${params.get("preview")}`);
+					if (onComplete) {
+						onComplete();
+					} else {
+						if (params.get("preview") && params.get("then")) {
+							router.push(
+								`${siteConfig.domains.root}/chats/${params.get("preview")}`,
+							);
+						}
 					}
 				});
 			}
@@ -98,11 +104,14 @@ export function ProductForm() {
 		}
 	};
 
-	const { workspace } = useWorkspace();
+	const { workspace, refreshCurrentWorkspace } = useWorkspace();
 
 	useEffect(() => {
 		if (categories.length == 0) {
 			fetchCategories();
+		}
+		if (onComplete) {
+			refreshCurrentWorkspace();
 		}
 		if (isOpenCrudForm) {
 			if (initialCrudFormData) {
@@ -130,156 +139,154 @@ export function ProductForm() {
 		categories.length,
 		fetchCategories,
 		defaultValues,
+		refreshCurrentWorkspace,
+		onComplete,
 	]);
-	return (
-		<Dialog open={isOpenCrudForm} onOpenChange={onCloseCrudForm}>
-			<DialogContent size="4xl">
-				<DialogHeader>
-					<DialogTitle>{initialCrudFormData ? "Edit" : "Create"} Product</DialogTitle>
-					<DialogDescription>
-						{initialCrudFormData ? "Make changes to the" : "Add a new"} product.
-					</DialogDescription>
-				</DialogHeader>
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="gap-4 grid grid-cols-1 sm:grid-cols-2"
-					>
-						{/* NEEDS TO BE REMOVED */}
-						<DynamicSelector
-							label="Business"
-							form={form}
-							items={workspace?.businesses || []}
-							itemKey="id"
-							itemLabelKey="name"
-							idKey="businessId"
-						/>
-						<DynamicSelector
-							label="Category"
-							form={form}
-							items={categories}
-							itemKey="id"
-							itemLabelKey="name"
-							idKey="categoryId"
-						/>
 
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Name</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter name"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<MoneyInput
-							name="price"
-							placeholder="Enter Price"
-							label="Price"
-							form={form}
-						/>
+	const formContent = (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="gap-4 grid grid-cols-1 sm:grid-cols-2"
+			>
+				<DynamicSelector
+					label="Business"
+					form={form}
+					items={workspace?.businesses || []}
+					itemKey="id"
+					itemLabelKey="name"
+					idKey="businessId"
+				/>
+				<DynamicSelector
+					label="Category"
+					form={form}
+					items={categories}
+					itemKey="id"
+					itemLabelKey="name"
+					idKey="categoryId"
+				/>
 
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem className="col-span-full">
-									<FormLabel>Description (Optional)</FormLabel>
-									<FormControl>
-										<Textarea
-											disabled={isLoading}
-											placeholder="Enter description"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Name</FormLabel>
+							<FormControl>
+								<Input disabled={isLoading} placeholder="Enter name" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<MoneyInput name="price" placeholder="Enter Price" label="Price" form={form} />
 
-						<FormField
-							control={form.control}
-							name="stock"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel helpText="Enter the quantity available. Select 'IN_STOCK' if you always have this product ready at your location">
-										Stock
-									</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter stock"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="isActive"
-							render={({ field }) => (
-								<FormItem className="flex flex-col">
-									<FormLabel
-										helpText="Product availability status when active can be retrieved in the conversation"
-										className="text-base"
-									>
-										Available
-									</FormLabel>
-									<FormControl>
-										<Switch
-											checked={field.value}
-											onCheckedChange={field.onChange}
-										/>
-									</FormControl>
-								</FormItem>
-							)}
-						/>
-						<div className="col-span-full">
-							<FormField
-								control={form.control}
-								name="images"
-								render={() => (
-									<FormItem>
-										<FormLabel>Images</FormLabel>
-										<FormControl>
-											<ImageUploader
-												uploadedImages={uploadedImages}
-												setUploadedImages={setUploadedImages}
-												form={form}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
+				<FormField
+					control={form.control}
+					name="description"
+					render={({ field }) => (
+						<FormItem className="col-span-full">
+							<FormLabel>Description (Optional)</FormLabel>
+							<FormControl>
+								<Textarea
+									disabled={isLoading}
+									placeholder="Enter description"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
-						<DialogFooter className="col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit">
-							<Button
-								disabled={isLoading}
-								variant="outline"
-								onClick={onCloseCrudForm}
-								type="button"
+				<FormField
+					control={form.control}
+					name="stock"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel helpText="Enter the quantity available. Select 'IN_STOCK' if you always have this product ready at your location">
+								Stock
+							</FormLabel>
+							<FormControl>
+								<Input disabled={isLoading} placeholder="Enter stock" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="isActive"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
+							<FormLabel
+								helpText="Product availability status when active can be retrieved in the conversation"
+								className="text-base"
 							>
-								Cancel
-							</Button>
-							<FormAction className="w-fit mt-0">
-								{initialCrudFormData ? "Save changes" : "Create"}
-							</FormAction>
-						</DialogFooter>
-					</form>
-				</Form>
-			</DialogContent>
-		</Dialog>
+								Available
+							</FormLabel>
+							<FormControl>
+								<Switch checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<div className="col-span-full">
+					<FormField
+						control={form.control}
+						name="images"
+						render={() => (
+							<FormItem>
+								<FormLabel>Images</FormLabel>
+								<FormControl>
+									<ImageUploader
+										uploadedImages={uploadedImages}
+										setUploadedImages={setUploadedImages}
+										form={form}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+
+				<div
+					className={cn(
+						"flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+						"col-span-full gap-2 [&>*]:!w-full sm:[&>*]:!w-fit",
+					)}
+				>
+					{wrapInDialog && (
+						<Button
+							disabled={isLoading}
+							variant="outline"
+							onClick={onCloseCrudForm}
+							type="button"
+						>
+							Cancel
+						</Button>
+					)}
+					<FormAction className="w-fit mt-0">
+						{initialCrudFormData ? "Save changes" : "Create"}
+					</FormAction>
+				</div>
+			</form>
+		</Form>
+	);
+
+	if (!wrapInDialog) {
+		return formContent;
+	}
+
+	return (
+		<DialogForm
+			isOpenCrudForm={isOpenCrudForm}
+			onCloseCrudForm={onCloseCrudForm}
+			title={`${initialCrudFormData ? "Edit" : "Create"} Product`}
+			description={`${initialCrudFormData ? "Make changes to the" : "Add a new"} product.`}
+		>
+			{formContent}
+		</DialogForm>
 	);
 }

@@ -1,43 +1,36 @@
 import React from "react";
 import { Metadata } from "next";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
 	title: "Onboarding",
 	description: "Get started by creating the workspace",
 };
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="font-geist-sans flex items-center min-h-[100dvh] justify-center relative">
-			<svg
-				className="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
-				aria-hidden="true"
-			>
-				<defs>
-					<pattern
-						id="83fd4e5a-9d52-42fc-97b6-718e5d7ee527"
-						width={200}
-						height={200}
-						x="50%"
-						y={-1}
-						patternUnits="userSpaceOnUse"
-					>
-						<path d="M100 200V.5M.5 .5H200" fill="none" />
-					</pattern>
-				</defs>
-				<svg x="50%" y={-1} className="overflow-visible fill-gray-50">
-					<path
-						d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z"
-						strokeWidth={0}
-					/>
-				</svg>
-				<rect
-					width="100%"
-					height="100%"
-					strokeWidth={0}
-					fill="url(#83fd4e5a-9d52-42fc-97b6-718e5d7ee527)"
+		<div className="grid grid-cols-1 lg:grid-cols-3 min-h-[100dvh] bg-primary fixed">
+			<div className="flex-1 col-span-2 flex items-center justify-center p-8 bg-background lg:rounded-xl lg:m-4">
+				{children}
+			</div>
+
+			<div className="hidden relative col-span-1 lg:flex flex-1 items-end p-12">
+				{/* eslint-disable-next-line @next/next/no-img-element */}
+				<img
+					src={siteConfig.r2.logoUrl}
+					alt=""
+					className="absolute -top-32 -right-32 [200px] opacity-5"
 				/>
-			</svg>
-			{children}
+				<div className="text-primary-foreground space-y-4 z-10 relative">
+					<blockquote className="text-lg italic">
+						&ldquo;The AI sales agent has been a game-changer for our business. It
+						handles customer inquiries 24/7, understands our products perfectly, and
+						converts leads better than we expected. The time and resources we&apos;ve
+						saved are incredible.&rdquo;
+					</blockquote>
+					<footer className="text-sm font-medium">- Sarah M., E-commerce Director</footer>
+				</div>
+			</div>
 		</div>
 	);
 }
