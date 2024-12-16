@@ -13,11 +13,13 @@ class BotServerActions extends BaseServerActionActions {
 	}
 
 	public static async getBots({
-		workspaceId,
+		businessId,
+		workspaceId = "",
 		include = {},
 		where = {},
 	}: {
-		workspaceId: string;
+		workspaceId?: string;
+		businessId: string;
 		include?: Prisma.BotInclude;
 		where?: Prisma.BotWhereInput;
 	}) {
@@ -26,9 +28,12 @@ class BotServerActions extends BaseServerActionActions {
 				this.prisma.bot.findMany({
 					where: {
 						...where,
-						workspace: {
-							OR: [{ id: workspaceId }, { name: workspaceId }],
+						business: {
+							OR: [{ id: businessId }],
 						},
+						...(workspaceId
+							? { workspace: { OR: [{ id: workspaceId }, { name: workspaceId }] } }
+							: {}),
 					},
 					include,
 				}),

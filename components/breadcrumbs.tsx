@@ -8,9 +8,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import pluralize from "pluralize";
 import { useParams, usePathname } from "next/navigation";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function Breadcrumbs() {
 	const pathName = usePathname();
@@ -39,16 +39,30 @@ export default function Breadcrumbs() {
 							<BreadcrumbSeparator className="md:block" />
 							<BreadcrumbItem className="md:block">
 								{index !== paths.length - 2 ? (
-									<BreadcrumbLink
-										href={`/${paths.slice(0, index + 2).join("/")}`}
-										className="capitalize truncate"
-									>
-										{path.startsWith("cm")
-											? `[${pluralize.singular(paths[paths.indexOf(path) - 1])}]`
-											: path}
-									</BreadcrumbLink>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<BreadcrumbLink
+												href={`/${paths.slice(0, index + 2).join("/")}`}
+												className="capitalize truncate"
+											>
+												{path.startsWith("cm") ? `[ID]` : path}
+											</BreadcrumbLink>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p className="capitalize">{path}</p>
+										</TooltipContent>
+									</Tooltip>
 								) : (
-									<BreadcrumbPage className="capitalize">{path}</BreadcrumbPage>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<BreadcrumbPage className="capitalize">
+												{path.startsWith("cm") ? `[ID]` : path}
+											</BreadcrumbPage>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p className="capitalize">{path}</p>
+										</TooltipContent>
+									</Tooltip>
 								)}
 							</BreadcrumbItem>
 						</React.Fragment>

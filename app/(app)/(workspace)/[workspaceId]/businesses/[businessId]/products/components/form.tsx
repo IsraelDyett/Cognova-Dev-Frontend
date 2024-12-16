@@ -31,6 +31,8 @@ import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
 import MoneyInput from "@/components/ui/money-input";
 import ImageUploader from "@/components/image-uploader";
+import { useRouter, useSearchParams } from "next/navigation";
+import { siteConfig } from "@/lib/site";
 
 const formSchema = z.object({
 	businessId: z.string().cuid(),
@@ -72,6 +74,8 @@ export function ProductForm() {
 		defaultValues,
 	});
 
+	const params = useSearchParams();
+	const router = useRouter();
 	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: FormValues) => {
@@ -80,7 +84,11 @@ export function ProductForm() {
 				await updateProduct(initialCrudFormData.id, values);
 			} else {
 				// @ts-ignore
-				await createProduct(values);
+				await createProduct(values).then(() => {
+					if (params.get("preview") && params.get("then")) {
+						router.push(`${siteConfig.domains.root}/chats/${params.get("preview")}`);
+					}
+				});
 			}
 			onCloseCrudForm();
 			setUploadedImages([]);

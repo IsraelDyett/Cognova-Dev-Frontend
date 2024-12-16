@@ -11,8 +11,9 @@ import { useParams } from "next/navigation";
 import { ProductForm } from "./components/form";
 import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
+import { WorkspacePageProps } from "@/types";
 
-export default function ProductDashboard() {
+export default function ProductDashboard(props: WorkspacePageProps) {
 	const { businessId } = useParams();
 	const { workspace } = useWorkspace();
 	const { products, loading, error, fetchProducts, onOpenCreateForm } = useProductStore();
@@ -22,6 +23,12 @@ export default function ProductDashboard() {
 			fetchProducts(`${businessId}`);
 		}
 	}, [workspace, fetchProducts, businessId]);
+
+	useEffect(() => {
+		if (props.searchParams.open) {
+			onOpenCreateForm();
+		}
+	}, [props.searchParams.open, onOpenCreateForm]);
 
 	if (loading) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;

@@ -24,7 +24,7 @@ export function NavBusinesses() {
 			<SidebarMenu>
 				{isLoading ? (
 					<>
-						{Array.from({ length: 3 }).map((_, index) => (
+						{Array.from({ length: 2 }).map((_, index) => (
 							<SidebarMenuItem key={index}>
 								<SidebarMenuButton asChild>
 									<div className="flex">

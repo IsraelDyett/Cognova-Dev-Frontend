@@ -18,7 +18,7 @@ interface BusinessState {
 	isOpenCrudForm: boolean;
 
 	fetchBusinesses: (workspaceId: string) => Promise<void>;
-	createBusiness: (data: Omit<Business, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+	createBusiness: (data: Omit<Business, "id" | "createdAt" | "updatedAt">) => Promise<any>;
 	updateBusiness: (id: string, data: Partial<Business>) => Promise<void>;
 	deleteBusiness: (id: string) => Promise<void>;
 
@@ -60,6 +60,7 @@ export const useBusinessStore = create<BusinessState>((set) => ({
 			console.error(response.error);
 			toast.error("Failed to create Business");
 		}
+		return response.data;
 	},
 
 	updateBusiness: async (id, data) => {

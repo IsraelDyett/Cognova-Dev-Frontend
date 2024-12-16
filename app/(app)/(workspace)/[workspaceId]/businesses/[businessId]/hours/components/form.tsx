@@ -153,22 +153,38 @@ export function HourForm() {
 							idKey="dayOfWeek"
 						/>
 
-						<FormField
-							control={form.control}
-							name="openTime"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Open Time</FormLabel>
-									<FormControl>
-										<Input
-											disabled={isLoading}
-											placeholder="Enter openTime"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+						<DynamicSelector
+							label="Open Time"
+							form={form}
+							items={[
+								{ id: "00:00", name: "00:00 AM" },
+								{ id: "01:00", name: "01:00 AM" },
+								{ id: "02:00", name: "02:00 AM" },
+								{ id: "03:00", name: "03:00 AM" },
+								{ id: "04:00", name: "04:00 AM" },
+								{ id: "05:00", name: "05:00 AM" },
+								{ id: "06:00", name: "06:00 AM" },
+								{ id: "07:00", name: "07:00 AM" },
+								{ id: "08:00", name: "08:00 AM" },
+								{ id: "09:00", name: "09:00 AM" },
+								{ id: "10:00", name: "10:00 AM" },
+								{ id: "11:00", name: "11:00 AM" },
+								{ id: "12:00", name: "12:00 PM" },
+								{ id: "13:00", name: "13:00 PM" },
+								{ id: "14:00", name: "14:00 PM" },
+								{ id: "15:00", name: "15:00 PM" },
+								{ id: "16:00", name: "16:00 PM" },
+								{ id: "17:00", name: "17:00 PM" },
+								{ id: "18:00", name: "18:00 PM" },
+								{ id: "19:00", name: "19:00 PM" },
+								{ id: "20:00", name: "20:00 PM" },
+								{ id: "21:00", name: "21:00 PM" },
+								{ id: "22:00", name: "22:00 PM" },
+								{ id: "23:00", name: "23: PM" },
+							]}
+							itemKey="id"
+							itemLabelKey="name"
+							idKey="openTime"
 						/>
 
 						<FormField

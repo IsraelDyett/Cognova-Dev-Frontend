@@ -28,12 +28,12 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-export const columns: ColumnDef<Hour & { location: BusinessLocation }>[] = [
+export const columns: ColumnDef<Hour & { location?: BusinessLocation }>[] = [
 	{
 		accessorKey: "location",
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
 		cell: ({ row }) => {
-			const location = row.original.location.name;
+			const location = row.original?.location?.name || "-";
 			return <span className="font-medium">{location}</span>;
 		},
 	},

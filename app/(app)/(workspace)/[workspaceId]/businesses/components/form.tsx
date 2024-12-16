@@ -29,6 +29,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import DynamicSelector from "@/components/ui/dynamic-selector";
 import { useWorkspace } from "../../../../contexts/workspace-context";
+import { useBotStore } from "@/lib/stores/bot";
+import { useRouter } from "next/navigation";
 
 const BUSINESS_TYPES = [
 	{ id: "retail_store", name: "Retail Store" },
@@ -76,6 +78,7 @@ export function BusinessForm() {
 		useBusinessStore();
 	const { refreshCurrentWorkspace, workspace } = useWorkspace();
 
+	const router = useRouter();
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues,
@@ -91,9 +94,14 @@ export function BusinessForm() {
 				);
 			} else {
 				// @ts-ignore
-				await createBusiness(values).then(() => refreshCurrentWorkspace());
+				await createBusiness(values).then((business) => {
+					onCloseCrudForm();
+					refreshCurrentWorkspace();
+					router.push(
+						`/${workspace?.name}/businesses/${business.id}/bots?open=true&then=products`,
+					);
+				});
 			}
-			onCloseCrudForm();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}
@@ -171,7 +179,7 @@ export function BusinessForm() {
 									<FormControl>
 										<Textarea
 											disabled={isLoading}
-											placeholder="Enter description"
+											placeholder="We are a local store that sells electronics..."
 											{...field}
 										/>
 									</FormControl>

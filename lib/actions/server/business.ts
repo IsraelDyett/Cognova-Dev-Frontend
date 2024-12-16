@@ -46,6 +46,52 @@ class BusinessServerActions extends BaseServerActionActions {
 								currency: "USD",
 							},
 						},
+						operatingHours: {
+							create: [
+								{
+									dayOfWeek: "MONDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: false,
+								},
+								{
+									dayOfWeek: "TUESDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: false,
+								},
+								{
+									dayOfWeek: "WEDNESDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: false,
+								},
+								{
+									dayOfWeek: "THURSDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: false,
+								},
+								{
+									dayOfWeek: "FRIDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: false,
+								},
+								{
+									dayOfWeek: "SATURDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: true,
+								},
+								{
+									dayOfWeek: "SUNDAY",
+									openTime: "09:00",
+									closeTime: "17:00",
+									isClosed: true,
+								},
+							],
+						},
 					},
 				}),
 			"Failed to create business",

@@ -30,6 +30,7 @@ import DynamicSelector from "@/components/ui/dynamic-selector";
 import { createBotSchema } from "@/lib/zod/schemas/bot";
 import { useBotStore } from "@/lib/stores/bot";
 import { useWorkspace } from "@/app/(app)/contexts/workspace-context";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type FormValues = z.infer<typeof createBotSchema>;
 
@@ -58,8 +59,12 @@ export function BotForm() {
 		defaultValues,
 	});
 
+	const router = useRouter();
+	const params = useSearchParams();
+
 	const isLoading = form.formState.isSubmitting;
 
+	const { workspace } = useWorkspace();
 	const onSubmit = async (values: FormValues) => {
 		try {
 			if (initialCrudFormData) {
@@ -68,14 +73,20 @@ export function BotForm() {
 				);
 			} else {
 				// @ts-ignore
-				await createBot(values).then(() => refreshCurrentWorkspace());
+				await createBot(values).then((bot) => {
+					refreshCurrentWorkspace();
+					if (params.get("then")) {
+						router.push(
+							`/${workspace?.name}/businesses/${values.businessId}/${params.get("then")}?open=true&then=preview&preview=${bot.id}`,
+						);
+					}
+				});
 			}
 			onCloseCrudForm();
 		} catch (error) {
 			toast.error("Something went wrong");
 		}
 	};
-	const { workspace } = useWorkspace();
 
 	useEffect(() => {
 		if (models.length == 0) {

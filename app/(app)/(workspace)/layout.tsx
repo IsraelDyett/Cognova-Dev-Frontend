@@ -9,7 +9,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { siteConfig } from "@/lib/site";
 import { redirect } from "next/navigation";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children, ...props }: { children: React.ReactNode }) {
 	const { data: user, success } = await AuthServerActions.authUser();
 	if (!success) return redirect(siteConfig.domains.app + "/auth/sign-out");
 	return (

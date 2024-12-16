@@ -15,7 +15,7 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
 	return (
 		<NextThemesProvider {...themeProps}>
-			<Toaster position="bottom-right" />
+			<Toaster position="bottom-right" richColors />
 			<TooltipProvider>
 				<PostHogProvider>{children}</PostHogProvider>
 			</TooltipProvider>

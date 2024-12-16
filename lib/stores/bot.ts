@@ -15,9 +15,9 @@ interface BotState {
 
 	fetchModels: () => Promise<void>;
 	deleteBot: (id: string) => Promise<void>;
-	fetchBots: (workspaceId: string) => Promise<void>;
+	fetchBots: (businessId: string) => Promise<void>;
 	updateBot: (id: string, data: Partial<Bot>) => Promise<void>;
-	createBot: (data: Omit<Bot, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+	createBot: (data: Omit<Bot, "id" | "createdAt" | "updatedAt">) => Promise<Bot>;
 
 	onCloseCrudForm: () => void;
 	onOpenCreateForm: () => void;
@@ -33,10 +33,10 @@ export const useBotStore = create<BotState>((set) => ({
 	isOpenCrudForm: false,
 	initialCrudFormData: null,
 
-	fetchBots: async (workspaceId: string) => {
+	fetchBots: async (businessId: string) => {
 		debug("CLIENT", "fetchBots", "STORE");
 		set({ loading: "bots", error: null });
-		const { data: bots, success, error } = await getBots({ workspaceId: workspaceId });
+		const { data: bots, success, error } = await getBots({ businessId });
 		if (success) {
 			set({ bots: bots });
 		} else {
@@ -67,6 +67,7 @@ export const useBotStore = create<BotState>((set) => ({
 			console.error(error);
 			toast.error("Failed to create Bot");
 		}
+		return createdBotData.bot;
 	},
 
 	updateBot: async (id, data) => {

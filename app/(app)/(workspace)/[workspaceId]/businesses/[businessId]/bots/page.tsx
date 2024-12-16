@@ -10,10 +10,11 @@ import LoadingPageSpinner from "@/components/skeletons/loading-page-spinner";
 import { useBotStore } from "@/lib/stores/bot";
 import dynamic from "next/dynamic";
 import { NoStateComponent } from "@/app/(app)/(workspace)/components/no-state";
+import { WorkspacePageProps } from "@/types";
 
 const BotForm = dynamic(() => import("./components/form").then((mod) => mod.BotForm));
 
-export default function BotDashboard() {
+export default function BotDashboard(props: WorkspacePageProps) {
 	const { workspace } = useWorkspace();
 	const { bots, loading, error, fetchBots, onOpenCreateForm } = useBotStore();
 
@@ -25,13 +26,19 @@ export default function BotDashboard() {
 		}
 	}, [workspace, fetchBots]);
 
+	useEffect(() => {
+		if (props.searchParams.open) {
+			onOpenCreateForm();
+		}
+	}, [props.searchParams.open, onOpenCreateForm]);
+
 	if (["bots", "initial"].includes(loading)) return <LoadingPageSpinner />;
 	if (error) return <div>Error: {error}</div>;
 
 	return (
 		<>
 			<section>
-				{bots.length === 0 && !loading ? (
+				{bots.length === 0 && loading === "none" ? (
 					<NoStateComponent title="Bot" onOpenCreateForm={onOpenCreateForm} />
 				) : (
 					<DataTable
