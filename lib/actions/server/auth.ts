@@ -78,7 +78,7 @@ class AuthServerActions extends BaseServerActionActions {
 		cookies().delete({
 			name: this.authCookieKey,
 			httpOnly: true,
-			domain:  rootDomain,
+			domain: rootDomain,
 		});
 		redirect(returnTo);
 	}
