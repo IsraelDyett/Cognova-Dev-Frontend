@@ -23,7 +23,6 @@ abstract class BaseServerActionActions {
 			const result = await action();
 			return { success: true, data: result, error: null as unknown as string };
 		} catch (error) {
-			console.error("Server Error", actionName);
 			const isPrismaError = /prisma|database|connection|constraint/i.test(String(error));
 			const newErrorMessage = isPrismaError
 				? "Internal server error"

@@ -13,6 +13,7 @@ import { redis } from "@/lib/services/redis";
 import { SignInSchema, SignUpSchema } from "@/lib/zod";
 import { NextURL } from "next/dist/server/web/next-url";
 import { comparePassword, hashPassword } from "./prisma";
+import { DOMAIN } from "@/lib/config";
 
 class AuthServerActions extends BaseServerActionActions {
 	public static authCookieKey = "auth.session.token";
@@ -73,7 +74,12 @@ class AuthServerActions extends BaseServerActionActions {
 	}
 
 	public static async signOut(returnTo = siteConfig.domains.root) {
-		cookies().delete(this.authCookieKey);
+		const rootDomain = process.env.NODE_ENV === "development" ? ".app.localhost" : `.${DOMAIN}`;
+		cookies().delete({
+			name: this.authCookieKey,
+			httpOnly: true,
+			domain:  rootDomain,
+		});
 		redirect(returnTo);
 	}
 

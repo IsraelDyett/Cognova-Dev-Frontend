@@ -55,7 +55,7 @@ class SessionServerActions extends BaseServerActionActions {
 	}
 
 	public static setSessionTokenCookie({ sessionToken }: { sessionToken: string }) {
-		const rootDomain = process.env.NODE_ENV === "development" ? "app.localhost" : `.${DOMAIN}`;
+		const rootDomain = process.env.NODE_ENV === "development" ? ".app.localhost" : `.${DOMAIN}`;
 		cookies().set(this.authCookieKey, sessionToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
