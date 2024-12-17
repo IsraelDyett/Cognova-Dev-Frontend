@@ -139,7 +139,7 @@ export const AssistantBubble = ({
 					<FeedbackSection currentFeedback={currentFeedback} chatId={chatId} />
 				</div>
 			</li>
-			{suggestions && suggestions.length > 0 && isLastMessage && (
+			{suggestions && suggestions.length > 0 && isLastMessage && !isLoading &&  (
 				<li className="gap-2 grid grid-cols-1 sm:grid-cols-3">
 					{suggestions.map((q, i) => (
 						<button
