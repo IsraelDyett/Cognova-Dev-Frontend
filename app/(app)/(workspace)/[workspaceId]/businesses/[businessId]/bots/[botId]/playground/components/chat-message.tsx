@@ -21,11 +21,7 @@ export const ChatMessage = ({
 	isLatestAssistantMessage: boolean;
 }) => {
 	return (
-		<motion.div
-			initial={{ y: 5, opacity: 0 }}
-			animate={{ y: 0, opacity: 1 }}
-			data-role={role}
-		>
+		<motion.div initial={{ y: 5, opacity: 0 }} animate={{ y: 0, opacity: 1 }} data-role={role}>
 			{role === "assistant" ? (
 				<AssistantBubble
 					content={content}

@@ -29,7 +29,7 @@ export function ProgressSteps({ currentStep }: { currentStep: number }) {
 	];
 
 	return (
-		<div className="space-y-8">
+		<div className="space-y-8 hidden lg:block">
 			{steps.map((step, index) => (
 				<div key={step.number} className="flex items-start gap-4">
 					<div
