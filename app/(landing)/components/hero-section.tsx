@@ -4,6 +4,7 @@ import StatsSection from "./stats-section";
 import { Button } from "@/components/ui/button";
 import Iphone15Pro from "@/components/ui/iphone-15-pro";
 import { Bot, MessageSquare, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 export default function HeroSection() {
 	return (
@@ -40,6 +41,38 @@ export default function HeroSection() {
 			<div className="lg:flex lg:items-center lg:gap-x-10">
 				<div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
 					<h1 className="mt-10 max-w-lg text-4xl font-bold tracking-tight bg-clip-text text-transparent drop-shadow-2xl bg-gradient-to-b from-black/80 to-black/20 sm:text-6xl">
+						<a
+							href="https://www.producthunt.com/posts/cognova"
+							target="_blank"
+							className="relative top-0 left-0 inline-block transform -translate-y-6 sm:-ml-2 -rotate-2 group"
+						>
+							<span className="relative z-20 w-full h-full pr-3 pl-6 py-1.5 text-[0.6rem] sm:text-xs font-bold leading-tight tracking-wide text-center uppercase bg-white border-2 rounded text-[#ff6154] border-[#ff6154] group-hover:bg-[#ff6154] group-hover:text-white flex items-center">
+								<Image
+									alt="Product hunt"
+									width={36}
+									height={36}
+									src="https://cdn.devdojo.com/images/june2023/product-hunt-logo-orange-240.png"
+									className="absolute left-0 mr-3 -translate-x-3 -translate-y-3 border-4 border-white rounded-full w-9 h-9"
+								/>
+								<span>Give us a vote on ProductHunt</span>
+								<svg
+									className="w-4 h-4 ml-1.5"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+								>
+									<g fill="none" stroke="none">
+										<path
+											d="M19 13.013v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2h4m8 0v4m0-4h-4m4 0l-7 7"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										></path>
+									</g>
+								</svg>
+							</span>
+							<span className="absolute inset-0 z-10 group-hover:ml-0 group-hover:mt-0 ease-out duration-300 w-full h-full block mt-0.5 ml-0.5 bg-[#ff6154] rounded"></span>
+						</a>
 						Transform Your Customer Support with AI Chat
 					</h1>
 					<p className="mt-6 text-lg leading-8 text-gray-600">
