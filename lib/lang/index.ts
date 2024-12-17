@@ -5,7 +5,7 @@ export const messages = {
 		USER_NOT_FOUND:
 			"We couldn't find an account with that email. Would you like to create one?",
 		INVALID_PASSWORD: "The password you entered doesn't match our records. Please try again.",
-		SIGN_IN: "Welcome back! You've successfully signed in.",
+		SIGN_IN: "Welcome back!",
 		SESSION_CREATION_FAILED: "We had trouble logging you in. Please try again.",
 		USER_ALREADY_EXISTS:
 			"An account with this email already exists. Would you like to sign in instead?",

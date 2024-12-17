@@ -87,9 +87,15 @@ export default function OnBoardingPage() {
 
 	return (
 		<div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-			<div>
+			<div className={currentStep == 1 ? "block" : "hidden lg:block"}>
 				<h1 className="text-2xl font-bold mb-2">Set up your AI Sales Agent</h1>
-				<p className="text-gray-500 mb-8">
+				<p
+					className={
+						currentStep == 1
+							? "hidden lg:block text-gray-500 mb-8"
+							: "text-gray-500 mb-8"
+					}
+				>
 					Complete these steps to create your AI-powered sales assistant
 				</p>
 				<ProgressSteps currentStep={currentStep} />

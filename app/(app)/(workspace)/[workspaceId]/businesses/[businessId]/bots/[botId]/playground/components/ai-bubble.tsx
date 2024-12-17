@@ -21,13 +21,22 @@ const processMessageContent = (content: string) => {
 
 	let lastIndex = 0;
 
+	const formatText = (text: string) => {
+		return text
+			.replace(/(.*)- ([^-]*)$/, "$1$2")
+			.replace("[Call Now]", "")
+			.trim();
+	};
+
 	const regex = /(!?\[([^\]]+)\]\((?:tel:)?([^)]+)\))/g;
 	let match;
 
 	while ((match = regex.exec(content)) !== null) {
 		const textBefore = content.slice(lastIndex, match.index);
 		if (textBefore) {
-			segments.push({ type: "text", content: textBefore });
+			// Replace last hyphen with empty string
+			const processedText = formatText(textBefore);
+			segments.push({ type: "text", content: processedText });
 		}
 
 		// Determine if this is an image or phone number
@@ -51,7 +60,9 @@ const processMessageContent = (content: string) => {
 	}
 	const textAfter = content.slice(lastIndex);
 	if (textAfter) {
-		segments.push({ type: "text", content: textAfter });
+		// Replace last hyphen with empty string
+		const processedText = formatText(textAfter);
+		segments.push({ type: "text", content: processedText });
 	}
 
 	return segments;
@@ -134,7 +145,10 @@ export const AssistantBubble = ({
 						<button
 							key={i}
 							onClick={() => {
-								addToChat(q.replaceAll('"', ""));
+								addToChat(
+									q.replaceAll('"', "").split(".")[1].trim() ||
+										q.replaceAll('"', "").trim(),
+								);
 							}}
 							type="button"
 							className="p-1 text-start inline-flex justify-center items-center rounded-md border border-primary/40 bg-background text-primary hover:bg-blue-50 focus:outline-none focus:bg-blue-50 text-xs"
