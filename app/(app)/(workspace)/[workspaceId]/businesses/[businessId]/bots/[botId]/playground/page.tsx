@@ -101,7 +101,7 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 		}
 	}, []);
 	return (
-		<div className="flex-1 font-geist-sans  h-[100dvh]">
+		<div className="flex-1 font-sans  h-[100dvh]">
 			<div
 				className={`px-4 sm:px-6 lg:px-8 mx-auto ${chats.length == 0 ? "flex justify-between sm:justify-center flex-col h-dvh max-w-3xl" : "max-w-4xl "}`}
 			>

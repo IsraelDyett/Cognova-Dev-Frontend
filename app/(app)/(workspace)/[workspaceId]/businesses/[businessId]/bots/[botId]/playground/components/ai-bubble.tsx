@@ -109,7 +109,7 @@ export const AssistantBubble = ({
 										<img
 											src={segment.content}
 											alt="Inline image"
-											className=" w-full object-cover shadow-md ring-muted ring-2 rounded-xl"
+											className="w-full object-cover shadow-md ring-muted ring-2 rounded-xl"
 										/>
 									</div>
 									<a

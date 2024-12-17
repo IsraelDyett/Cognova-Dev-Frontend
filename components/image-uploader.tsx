@@ -144,7 +144,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 									<XIcon className="h-4 w-4" />
 								</Button>
 							</div>
-							<div className="p-2 aspect-h-10">
+							<div className="p-2 aspect-h-10 aspect-w-10">
 								{/* eslint-disable-next-line @next/next/no-img-element  */}
 								<img
 									src={file.fileUrl}

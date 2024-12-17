@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { UserBubble } from "./user-bubble";
 import { ChatFeedback } from "@prisma/client";
 import { AssistantBubble } from "./ai-bubble";
+import { motion } from "framer-motion";
 
 export const ChatMessage = ({
 	content,
@@ -20,7 +21,11 @@ export const ChatMessage = ({
 	isLatestAssistantMessage: boolean;
 }) => {
 	return (
-		<>
+		<motion.div
+			initial={{ y: 5, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			data-role={role}
+		>
 			{role === "assistant" ? (
 				<AssistantBubble
 					content={content}
@@ -32,6 +37,6 @@ export const ChatMessage = ({
 			) : (
 				<UserBubble content={content} />
 			)}
-		</>
+		</motion.div>
 	);
 };
