@@ -47,7 +47,10 @@ export default function SignInForm() {
 		const { success, error, data: resultData } = await signIn(data);
 		if (success) {
 			const user = exclude(resultData.user, "password");
-			posthog.people.set({ ...user });
+			posthog.identify(resultData.user.id, {
+				email: resultData.user.email,
+				name: resultData.user.name,
+			});
 			posthog.capture("Signed In", { ...user });
 			toast.success(getMessage(resultData.action));
 			router.push(searchParams.get("redirect") ?? "/");

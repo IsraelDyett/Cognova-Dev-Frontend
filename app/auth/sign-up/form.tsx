@@ -39,7 +39,7 @@ export default function SignUpForm() {
 		const { success, data: result, error } = await signUp(data);
 		if (success) {
 			const user = exclude(result.user, "password");
-			posthog.people.set({ ...user });
+			posthog.identify(result.user.id, { email: result.user.email, name: result.user.name });
 			posthog.capture("Signed Up", { ...user });
 			toast.success(getMessage(result.action));
 			router.push(searchParams.get("redirect") || "/onboarding");

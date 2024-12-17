@@ -71,6 +71,7 @@ export default function Iphone15Pro({
 						autoPlay
 						muted
 						playsInline
+						loop
 						disablePictureInPicture
 						controlsList="nodownload nofullscreen noremoteplayback"
 						controls={false}

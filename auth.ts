@@ -2,6 +2,7 @@ import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import AuthServerActions from "./lib/actions/server/auth";
 import SessionServerActions from "./lib/actions/server/session";
+import posthog from "posthog-js";
 
 // Define the expected response type
 interface AuthResponse {
@@ -50,6 +51,11 @@ export const config: NextAuthConfig = {
 					SessionServerActions.setSessionTokenCookie({
 						sessionToken: response?.sessionToken.sessionToken,
 					});
+					try {
+						posthog.identify(user.id, { email: user.email, name: user.name });
+					} catch (error) {
+						console.error("Error setting user with posthog in auth");
+					}
 					return true;
 				}
 
