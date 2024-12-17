@@ -47,6 +47,7 @@ export const siteConfig = {
 		logoUrl: `${R2_URL}/logo.png`,
 		arrowUrl: `${R2_URL}/vercel-arrow.png`,
 		waDemoVideo: `${R2_URL}/wa-demo-video.mp4`,
+		webDemoVideo: `${R2_URL}/web-demo-video.mp4`
 	},
 	domains: {
 		app: APP_ORIGIN,
