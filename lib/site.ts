@@ -78,6 +78,6 @@ export const siteConfig = {
 	links: {
 		x: "https://x.com/cognovaio",
 		mail: "mailto:cognova.io@gmail.com",
-		discord: "https://discord.gg/PEYd3YFY",
+		discord: "https://discord.gg/tDdn4F2dS3",
 	},
 };
