@@ -22,12 +22,12 @@ const nextConfig = {
 		return [
 			{
 				source: "/affiliate",
-				destination: "https://cognova.tolt.io/",
+				destination: "https://cognova.tolt.io",
 				permanent: false,
 			},
 			{
 				source: "/discord",
-				destination: "https://discord.gg/tDdn4F2dS3/",
+				destination: "https://discord.gg/tDdn4F2dS3",
 				permanent: false,
 			},
 		];
