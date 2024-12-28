@@ -239,7 +239,7 @@ export const sidebarData = {
 	],
 	baseAppNavigationMenus: [
 		{
-			title: "Request a feature",
+			title: "Add feedback",
 			url: "/featurebase",
 			icon: Feather,
 		},
@@ -251,7 +251,7 @@ export const sidebarData = {
 		},
 		{
 			title: "Discord channel",
-			url: siteConfig.links.discord,
+			url: "/discord",
 			icon: FaDiscord as typeof Share2,
 			isolate: true,
 		},

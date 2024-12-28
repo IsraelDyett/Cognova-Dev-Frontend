@@ -25,6 +25,11 @@ const nextConfig = {
 				destination: "https://cognova.tolt.io/",
 				permanent: false,
 			},
+			{
+				source: "/discord",
+				destination: "https://discord.gg/tDdn4F2dS3/",
+				permanent: false,
+			},
 		];
 	},
 };
