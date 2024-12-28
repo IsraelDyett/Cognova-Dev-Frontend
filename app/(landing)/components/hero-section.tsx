@@ -103,7 +103,7 @@ export default function HeroSection() {
 						</div>
 						<div className="flex items-center">
 							<Bot className="h-5 w-5 text-primary mr-2" />
-							<span className="text-sm text-gray-600">GPT-4 Powered</span>
+							<span className="text-sm text-gray-600">GPT-4 & Mistral AI Powered</span>
 						</div>
 					</div>
 				</div>
