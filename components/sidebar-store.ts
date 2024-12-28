@@ -250,7 +250,7 @@ export const sidebarData = {
 			isolate: true,
 		},
 		{
-			title: "Discord channel",
+			title: "Discord server",
 			url: "/discord",
 			icon: FaDiscord as typeof Share2,
 			isolate: true,
