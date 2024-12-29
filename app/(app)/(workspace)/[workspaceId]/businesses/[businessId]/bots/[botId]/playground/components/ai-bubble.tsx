@@ -146,8 +146,8 @@ export const AssistantBubble = ({
 							key={i}
 							onClick={() => {
 								addToChat(
-									q.replaceAll('"', "").split(".")[1].trim() ||
-										q.replaceAll('"', "").trim(),
+									q.replaceAll('"', "")?.split(".")?.[1]?.trim() ||
+										q.replaceAll('"', "")?.trim(),
 								);
 							}}
 							type="button"
