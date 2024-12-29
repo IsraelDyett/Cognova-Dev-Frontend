@@ -9,12 +9,12 @@ export const metadata: Metadata = {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="grid grid-cols-1 font-geist-sans lg:grid-cols-3 min-h-[100dvh] bg-primary #lg:fixed">
+		<div className="grid grid-cols-1 font-geist-sans lg:grid-cols-3 min-h-[100dvh] bg-primary #lg:fixed overflow-x-hidden">
 			<div className="flex-1 col-span-2 flex items-center justify-center p-4 lg:p-8 bg-background lg:shadow-xl lg:rounded-xl lg:m-4">
 				{children}
 			</div>
 
-			<div className="hidden relative col-span-1 lg:flex flex-1 items-end p-12">
+			<div className="hidden relative overflow-hidden col-span-1 lg:flex flex-1 items-end p-12">
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
 					src={siteConfig.r2.logoUrl}
