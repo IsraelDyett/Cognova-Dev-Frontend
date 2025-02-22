@@ -176,7 +176,7 @@ export default function PlaygroundScreen(props: WorkspacePageProps & { isolate?:
 							disabled={isLoading || !currentConversationId}
 							className="p-4 block w-full max-h-[300px] overflow-hidden resize-none"
 						/>
-						<div className="flex justify-end items-center absolute bottom-px inset-x-px p-1">
+						<div className="flex justify-end items-center w-fit absolute bottom-px right-0 p-1">
 							<Button
 								type="submit"
 								disabled={isLoading || !currentConversationId}
