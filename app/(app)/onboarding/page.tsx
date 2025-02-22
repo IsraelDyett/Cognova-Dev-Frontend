@@ -206,30 +206,13 @@ export default function OnBoardingPage() {
 										Preview Bot
 									</Button>
 									<Button
-										onClick={async () => {
-											try {
-												await window.navigator.clipboard
-													.writeText(
-														`${siteConfig.domains.root}/chats/${onboardingData.botId}`,
-													)
-													.then(() => {
-														// Clear localStorage on successful share
-														localStorage.removeItem("onboardingData");
-														localStorage.removeItem("currentStep");
-														toast.success(
-															"Bot link copied to clipboard",
-														);
-													});
-											} catch (error) {
-												toast.error(
-													"Error sharing or copying the bot link",
-												);
-											}
+										onClick={() => {
+											router.push(siteConfig.domains.app);
 										}}
 										variant="outline"
 										className="flex-1"
 									>
-										Share Bot
+										Dashboard
 									</Button>
 								</div>
 							</div>
