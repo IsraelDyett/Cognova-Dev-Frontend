@@ -186,8 +186,8 @@ export default function OnBoardingPage() {
 										Your AI Sales Agent is ready!
 									</h3>
 									<p className="text-gray-500">
-										You can now preview your AI agent and share it with your
-										customers. They&apos;ll be able to ask questions about your
+										You can now preview your AI agent and access your
+										Dashboard for adding more products and share your bot link so users will be able to ask questions about your
 										products and get instant responses.
 									</p>
 								</div>
