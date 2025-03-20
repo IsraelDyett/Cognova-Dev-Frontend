@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 const extraFeatures = [
 	{
 		name: "free",
-		messageLimit: "50",
+		messageLimit: "100",
 		dataLimit: "1GB",
 	},
 	{
