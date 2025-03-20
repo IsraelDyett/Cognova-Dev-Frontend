@@ -50,7 +50,7 @@ export default function PricingSection() {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-					{pricingPlans.map((plan, index) => (
+					{pricingPlans.sort((a, b) => a.annuallyPrice - b.annuallyPrice).map((plan, index) => (
 						<div
 							key={index}
 							className={`relative rounded-2xl border ${
