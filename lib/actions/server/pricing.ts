@@ -5,8 +5,16 @@ import BaseServerActionActions from "./base";
 
 class PricingServerActions extends BaseServerActionActions {
 	public static async getPlans({ include = {} }: { include?: Prisma.PlanInclude }) {
+		// return this.executeAction(
+		// 	() => this.prisma.plan.findMany({ include }),
+		// 	"Failed to get plans",
+		// );
 		return this.executeAction(
-			() => this.prisma.plan.findMany({ include }),
+			() =>
+				this.prisma.plan.findMany({
+					where: { visible: true }, // ✅ Only fetch visible plans
+					include,
+				}),
 			"Failed to get plans",
 		);
 	}

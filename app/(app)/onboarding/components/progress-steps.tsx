@@ -11,11 +11,11 @@ export function ProgressSteps({ currentStep }: { currentStep: number }) {
 			title: "Business Details",
 			subtitle: "Tell us about your business",
 		},
-		{
-			number: 3,
-			title: "Add Products",
-			subtitle: "Add products your AI can sell",
-		},
+		// {
+		// 	number: 3,
+		// 	title: "Add Products",
+		// 	subtitle: "Add products your AI can sell",
+		// },
 		{
 			number: 4,
 			title: "Configure AI Agent",

@@ -21,6 +21,7 @@ model Plan {
   displayName   String
   name          String         @unique
   description   String?        @db.Text
+   visible       Boolean        @default(true) 
   monthlyPrice  Float          @default(0)
   annuallyPrice Float          @default(0)
   createdAt     DateTime       @default(now())

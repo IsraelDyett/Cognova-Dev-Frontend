@@ -18,7 +18,7 @@ export default function OauthButtons() {
 				variant="outline"
 				onClick={() =>
 					signIn("google", {
-						redirectTo: "/",
+						redirectTo: "https://buy.stripe.com/8wMcPK1lm4E3436dQQ",
 						redirect: false,
 					})
 				}

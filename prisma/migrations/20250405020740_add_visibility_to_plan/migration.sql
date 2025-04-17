@@ -1,7 +1,7 @@
 /*
   Warnings:
 
-  - You are about to drop the `business_products_categories` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `business_product_categories` table. If the table is not empty, all the data it contains will be lost.
   - Made the column `businessId` on table `bots` required. This step will fail if there are existing NULL values in that column.
 
 */
@@ -9,16 +9,19 @@
 ALTER TABLE "bots" DROP CONSTRAINT "bots_businessId_fkey";
 
 -- DropForeignKey
-ALTER TABLE "business_products" DROP CONSTRAINT "business_products_categoryId_fkey";
+ALTER TABLE "business_product_categories" DROP CONSTRAINT "business_product_categories_businessId_fkey";
 
 -- DropForeignKey
-ALTER TABLE "business_products_categories" DROP CONSTRAINT "business_products_categories_businessId_fkey";
+ALTER TABLE "business_products" DROP CONSTRAINT "business_products_categoryId_fkey";
 
 -- AlterTable
 ALTER TABLE "bots" ALTER COLUMN "businessId" SET NOT NULL;
 
+-- AlterTable
+ALTER TABLE "plans" ADD COLUMN     "visible" BOOLEAN NOT NULL DEFAULT true;
+
 -- DropTable
-DROP TABLE "business_products_categories";
+DROP TABLE "business_product_categories";
 
 -- CreateTable
 CREATE TABLE "product_categories" (

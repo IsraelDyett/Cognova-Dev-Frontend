@@ -125,7 +125,8 @@ export default function OnBoardingPage() {
 									<CreateBusinessModal
 										wrapInDialog={false}
 										onComplete={(business) => {
-											setCurrentStep(3);
+											setCurrentStep(3);	
+											setCurrentStep(4); //skip the product section
 											setOnboardingData({
 												...onboardingData,
 												businessId: business?.id,
@@ -137,7 +138,7 @@ export default function OnBoardingPage() {
 						)}
 						{currentStep === 3 && (
 							<>
-								<div className="space-y-2">
+								{/* <div className="space-y-2">
 									<h2 className="text-xl font-semibold">Add your products</h2>
 									<p className="text-gray-500">
 										Add products for your AI to showcase and discuss with
@@ -149,7 +150,7 @@ export default function OnBoardingPage() {
 										wrapInDialog={false}
 										onComplete={() => setCurrentStep(4)}
 									/>
-								</div>
+								</div> */}
 							</>
 						)}
 						{currentStep === 4 && (

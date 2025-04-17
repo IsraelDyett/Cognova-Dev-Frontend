@@ -42,14 +42,21 @@ export default function PricingSection() {
 				<p className="text-xl text-gray-600 mb-8">
 					Scale your customer support with AI-powered WhatsApp automation
 				</p>
-
-				<div className="flex items-center justify-center space-x-4 mb-8">
+				{/*** start  */}
+				{/* <div className="flex items-center justify-center space-x-4 mb-8">
 					<span className={`text-lg ${!yearlyBilling ? "font-bold" : ""}`}>Monthly</span>
 					<Switch checked={yearlyBilling} onCheckedChange={setYearlyBilling} />
 					<span className={`text-lg ${yearlyBilling ? "font-bold" : ""}`}>Yearly</span>
-				</div>
-
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+				</div> */}
+			
+				{/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"> */}
+				<div
+						className={`${
+							pricingPlans.length === 1
+								? "flex justify-center"
+								: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+						} gap-8 max-w-7xl mx-auto`}
+					>
 					{pricingPlans.sort((a, b) => a.annuallyPrice - b.annuallyPrice).map((plan, index) => (
 						<div
 							key={index}
@@ -133,7 +140,7 @@ export default function PricingSection() {
 							</div>
 						</div>
 					))}
-				</div>
+				</div> {/*** end  */}
 			</div>
 		</section>
 	);

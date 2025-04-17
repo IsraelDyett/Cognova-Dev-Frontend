@@ -144,14 +144,23 @@ export function BusinessForm({
 					control={form.control}
 					name="type"
 					render={({ field }) => (
-						<DynamicSelector
-							form={form}
-							idKey="type"
-							items={BUSINESS_TYPES}
-							itemKey="id"
-							itemLabelKey="name"
-							label="Business Type"
-							description="Select the type of business you operate"
+						// <DynamicSelector
+						// 	form={form}
+						// 	idKey="type"
+						// 	items={BUSINESS_TYPES}
+						// 	itemKey="id"
+						// 	itemLabelKey="name"
+						// 	label="Business Type"
+						// 	description="Select the type of business you operate"
+						// />
+
+						<input
+							{...field}
+							type="text"
+							placeholder="Enter Your Organization Type"
+							value={field.value || ""}
+							onChange={field.onChange}
+							className="input-classname" // replace with your desired styling
 						/>
 					)}
 				/>
