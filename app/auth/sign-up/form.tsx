@@ -42,8 +42,8 @@ export default function SignUpForm() {
 			posthog.identify(result.user.id, { email: result.user.email, name: result.user.name });
 			posthog.capture("Signed Up", { ...user });
 			toast.success(getMessage(result.action));
-			router.push(searchParams.get("redirect") || "/onboarding"); //https://app.cognova.io/onboarding
-			//window.location.href = "https://buy.stripe.com/8wMcPK1lm4E3436dQQ";
+			//router.push(searchParams.get("redirect") || "/onboarding"); //https://app.cognova.io/onboarding
+			window.location.href = "https://buy.stripe.com/8wMcPK1lm4E3436dQQ";
 		} else {
 			console.error(error);
 			form.setError("email", {
