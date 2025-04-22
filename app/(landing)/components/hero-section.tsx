@@ -87,7 +87,7 @@ export default function HeroSection() {
 									"/auth/sign-up?utm_source=landing&utm_medium=hero-section&utm_campaign=get-started"
 								}
 							>
-								<span>Get Started Free</span>
+								<span>Get Started Now</span>
 								<Sparkles className="ml-2 h-4 w-4 group-hover:animate-pulse" />
 							</a>
 						</Button>
