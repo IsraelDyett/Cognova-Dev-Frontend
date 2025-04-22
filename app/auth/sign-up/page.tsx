@@ -15,7 +15,7 @@ export default function SignUpPage() {
 				<CardDescription>Enter your email below to create your account</CardDescription>
 			</CardHeader>
 			<CardContent className="grid gap-4">
-				<OauthButtons />
+				{/* <OauthButtons /> */}
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t" />
