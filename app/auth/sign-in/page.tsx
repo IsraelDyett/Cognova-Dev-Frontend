@@ -16,7 +16,7 @@ export default function SignInPage() {
 				<CardDescription>Welcome back! Please sign in to continue</CardDescription>
 			</CardHeader>
 			<CardContent className="grid gap-4">
-				<OauthButtons />
+				{/* <OauthButtons /> */}
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t" />
